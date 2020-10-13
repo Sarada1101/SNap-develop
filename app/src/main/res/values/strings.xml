@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SNap</string>
+    <string name="passwordFormHint">パスワード</string>
+    <string name="emailFormHint">メールアドレス</string>
+    <string name="emailSignInButtonText">ログイン</string>
+    <string name="emailCreateAccountButtonText">新規登録</string>
+</resources>
