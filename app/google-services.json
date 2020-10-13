@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "343184854275",
+    "firebase_url": "https://snap-6cc78.firebaseio.com",
+    "project_id": "snap-6cc78",
+    "storage_bucket": "snap-6cc78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343184854275:android:8d8bab851e4c9d4d0f6d36",
+        "android_client_info": {
+          "package_name": "com.example.snap_develop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343184854275-8i753lbv31p17gqssin757pnpnv2oe5l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEjNet95MjKuxMTXnziBPyxN45D8VwfcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343184854275-8i753lbv31p17gqssin757pnpnv2oe5l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
