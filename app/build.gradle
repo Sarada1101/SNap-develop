@@ -53,7 +53,7 @@ tasks.withType(SpotBugsTask) {
     ignoreFailures = true
     effort = 'max'
     reportLevel = 'low'
-    reportsDir = file("$buildDir/reports/spotbugs")
+    reportsDir = file("$buildDir/reports")
     jvmArgs = ['-Duser.language=ja']
     reports {
         xml.enabled = true
