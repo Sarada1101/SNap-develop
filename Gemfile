@@ -1,3 +1,4 @@
-gem 'danger'
+source "https://rubygems.org"
+gem 'danger', '~> 8.2'
 gem 'danger-android_lint'
 gem 'danger-findbugs'
