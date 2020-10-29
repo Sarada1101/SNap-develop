@@ -2,6 +2,7 @@ import com.github.spotbugs.snom.SpotBugsTask
 
 apply plugin: 'com.android.application'
 apply plugin: "com.github.spotbugs"
+apply plugin: "checkstyle"
 
 android {
     compileSdkVersion 30
@@ -49,17 +50,38 @@ dependencies {
     compileOnly "org.projectlombok:lombok:1.16.18"
 }
 
-tasks.withType(SpotBugsTask) {
+spotbugs {
+    toolVersion = "4.1.1"
     ignoreFailures = true
     effort = 'max'
     reportLevel = 'low'
     reportsDir = file("$buildDir/reports")
     excludeFilter = file('../config/spotbugs/findbugs-android-exclude.xml')
     jvmArgs = ['-Duser.language=ja']
+}
+
+tasks.withType(SpotBugsTask) {
     reports {
         xml.enabled = true
         html.enabled = false
     }
 }
+
+checkstyle {
+    ignoreFailures = true
+    toolVersion = "8.36.1"
+    reportsDir = file("$buildDir/reports")
+}
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
+    source 'src'
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    classpath = files()
+}
+
 
 apply plugin: 'com.google.gms.google-services'
