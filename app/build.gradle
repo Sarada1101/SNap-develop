@@ -54,7 +54,7 @@ tasks.withType(SpotBugsTask) {
     effort = 'max'
     reportLevel = 'low'
     reportsDir = file("$buildDir/reports")
-    excludeFilter = file('config/spotbugs/findbugs-android-exclude.xml')
+    excludeFilter = file('../config/spotbugs/findbugs-android-exclude.xml')
     jvmArgs = ['-Duser.language=ja']
     reports {
         xml.enabled = true
