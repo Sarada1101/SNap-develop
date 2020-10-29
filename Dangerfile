@@ -10,6 +10,4 @@ findbugs.report
 github.dismiss_out_of_range_messages
 
 checkstyle_format.base_path = Dir.pwd
-Dir["*/app/build/reports/checkstyle.xml"].each do |file|
-  checkstyle_format.report file
-end
+checkstyle_format.report = "app/build/reports/checkstyle.xml"
