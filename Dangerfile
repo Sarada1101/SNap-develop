@@ -6,3 +6,7 @@ android_lint.lint(inline_mode: true) # PRコメントを行に直接書かれる
 findbugs.gradle_task = "spotBugs" #spotBugsを実行するためのコマンドを指定
 findbugs.report_file = "app/build/reports/debug.xml" # コマンド実行した結果、出力されるxmlファイルの場所を指定
 findbugs.report
+
+github.dismiss_out_of_range_messages
+checkstyle_format.base_path = Dir.pwd
+checkstyle_format.report 'app/build/reports/checkstyle.xml'
