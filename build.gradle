@@ -15,6 +15,7 @@ buildscript {
 
 plugins {
     id "com.github.spotbugs" version "4.5.1"
+    id "checkstyle"
 }
 
 allprojects {
