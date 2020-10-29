@@ -10,9 +10,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
 public class UserModel {
-    private              FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private static final String TAG = "EmailPassword";
 
     public FirebaseUser getCurrentUser() {
@@ -21,33 +20,35 @@ public class UserModel {
 
     public void createAccount(String email, String password) {
         Log.d(TAG, "createAccount:" + email);
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success");
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                }
-            }
-        });
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        }
+                    }
+                });
     }
 
     public void signIn(String email, String password) {
         Log.d(TAG, "signIn:" + email);
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success");
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                }
-            }
-        });
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                        }
+                    }
+                });
     }
 }
