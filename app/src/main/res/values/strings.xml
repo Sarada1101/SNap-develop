@@ -4,4 +4,5 @@
     <string name="emailFormHint">メールアドレス</string>
     <string name="emailSignInButtonText">ログイン</string>
     <string name="emailCreateAccountButtonText">新規登録</string>
+    <string name="title_activity_map">Map</string>
 </resources>
