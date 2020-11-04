@@ -28,6 +28,16 @@
             <PaintGroupHighlightMap />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/build/generated/ap_generated_sources/debug/out/com/example/snap_develop/databinding/ActivityAuthBindingImpl.java">
+          <value>
+            <PaintGroupHighlightMap />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/build/generated/data_binding_base_class_source_out/debug/out/com/example/snap_develop/databinding/ActivityAuthBinding.java">
+          <value>
+            <PaintGroupHighlightMap />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/build/reports/checkstyle.xml">
           <value>
             <PaintGroupHighlightMap />
@@ -103,6 +113,11 @@
             <PaintGroupHighlightMap />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/res/layout/activity_auth.xml">
+          <value>
+            <PaintGroupHighlightMap />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
           <value>
             <PaintGroupHighlightMap />
@@ -149,6 +164,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/config/spotbugs/findbugs-android-exclude.xml">
+          <value>
+            <PaintGroupHighlightMap />
+          </value>
+        </entry>
+        <entry key="/fragment.java">
           <value>
             <PaintGroupHighlightMap />
           </value>
