@@ -7,27 +7,28 @@
     tools:context=".activity.PostActivity">
 
     <Switch
-        android:id="@+id/switch2"
+        android:id="@+id/dangswitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="危険な情報"
+        android:text="@string/dangSwitch"
         tools:layout_editor_absoluteX="24dp"
         tools:layout_editor_absoluteY="340dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/picbutten"
+        android:layout_width="69dp"
         android:layout_height="wrap_content"
         android:clickable="true"
-        tools:layout_editor_absoluteX="339dp"
-        tools:layout_editor_absoluteY="301dp"
-        tools:srcCompat="@drawable/ic_launcher_background" />
+        tools:layout_editor_absoluteX="323dp"
+        tools:layout_editor_absoluteY="292dp"
+        tools:srcCompat="@android:drawable/ic_menu_add" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName2"
+        android:id="@+id/postEditText"
         android:layout_width="371dp"
         android:layout_height="179dp"
         android:ems="10"
+        android:hint="@string/textbox"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,13 +38,14 @@
         app:layout_constraintVertical_bias="0.127" />
 
     <Switch
-        android:id="@+id/switch3"
+        android:id="@+id/anonyswitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:text="匿名投稿　"
+        android:text="@string/tokumeiSwitch"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="292dp" />
+        tools:layout_editor_absoluteY="292dp"
+        tools:text="匿名投稿　" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
