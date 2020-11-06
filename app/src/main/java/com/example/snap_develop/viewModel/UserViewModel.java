@@ -7,25 +7,30 @@ import com.example.snap_develop.model.UserModel;
 import com.google.firebase.auth.FirebaseUser;
 
 public class UserViewModel extends ViewModel {
-    private MutableLiveData<String> createAccountResult;
+    private MutableLiveData<String> authResult;
     UserModel userModel = new UserModel();
 
     public void createAccount(String email, String password) {
-        userModel.createAccount(email, password, createAccountResult);
+        userModel.createAccount(email, password, authResult);
     }
 
     public MutableLiveData<String> getCreateAccountResult() {
-        if (createAccountResult == null) {
-            createAccountResult = new MutableLiveData<>();
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
         }
-        return createAccountResult;
+        return authResult;
     }
 
     public FirebaseUser getCurrentUser() {
         return userModel.getCurrentUser();
     }
 
+    public void signin(String email, String password) {
+        userModel.signIn(email, password, authResult);
+    }
+
     public void signOut() {
         userModel.signOut();
     }
 }
+
