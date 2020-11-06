@@ -9,6 +9,6 @@
     <string name="mailaddress">メールアドレス</string>
     <string name="password">パスワード</string>
     <string name="login">ログイン</string>
-    <string name="new">新規登録</string>
+    <string name="createacount">新規登録</string>
     <string name="snap">SNap</string>
 </resources>
