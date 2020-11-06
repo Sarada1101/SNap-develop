@@ -25,7 +25,7 @@ public class UserViewModel extends ViewModel {
         return userModel.getCurrentUser();
     }
 
-    public void signin(String email, String password) {
+    public void signIn(String email, String password) {
         userModel.signIn(email, password, authResult);
     }
 
