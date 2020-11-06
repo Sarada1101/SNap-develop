@@ -4,4 +4,11 @@
     <string name="emailFormHint">メールアドレス</string>
     <string name="emailSignInButtonText">ログイン</string>
     <string name="emailCreateAccountButtonText">新規登録</string>
+    <string name="SNap">snap</string>
+    <string name="メールアドレス">mailaddress</string>
+    <string name="mailaddress">メールアドレス</string>
+    <string name="password">パスワード</string>
+    <string name="login">ログイン</string>
+    <string name="new">新規登録</string>
+    <string name="snap">SNap</string>
 </resources>
