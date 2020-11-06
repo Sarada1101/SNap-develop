@@ -11,4 +11,7 @@
     <string name="login">ログイン</string>
     <string name="createacount">新規登録</string>
     <string name="snap">SNap</string>
+    <string name="anonymousSwitch">匿名投稿</string>
+    <string name="dangerSwitch">危険な情報</string>
+    <string name="textbox">投稿内容</string>
 </resources>
