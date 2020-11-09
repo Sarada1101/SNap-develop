@@ -11,4 +11,7 @@
     <string name="login">ログイン</string>
     <string name="createaccount">新規登録</string>
     <string name="snap">SNap</string>
+    <string name="replybutten">返信</string>
+    <string name="replyeditText">返信内容</string>
+    <string name="anonymousSwitch">匿名投稿</string>
 </resources>

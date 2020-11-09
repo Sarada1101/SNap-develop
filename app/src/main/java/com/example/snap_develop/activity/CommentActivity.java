@@ -1,10 +1,10 @@
 package com.example.snap_develop.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-public class activity_comment extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class CommentActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
