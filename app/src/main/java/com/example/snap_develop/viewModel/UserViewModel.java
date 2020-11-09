@@ -14,7 +14,7 @@ public class UserViewModel extends ViewModel {
         userModel.createAccount(email, password, authResult);
     }
 
-    public MutableLiveData<String> getCreateAccountResult() {
+    public MutableLiveData<String> getAuthResult() {
         if (authResult == null) {
             authResult = new MutableLiveData<>();
         }
