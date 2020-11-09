@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.snap_develop"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -58,7 +58,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     spotbugs 'com.github.spotbugs:spotbugs:4.1.4'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
-    compileOnly 'org.projectlombok:lombok:1.18.16'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
 }
 
 spotbugs {
