@@ -20,7 +20,7 @@ public class UserModel {
     }
 
     public void createAccount(String email, String password,
-            final MutableLiveData<String> authResult) {
+                              final MutableLiveData<String> authResult) {
         Log.d(TAG, "createAccount:" + email);
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
@@ -37,7 +37,8 @@ public class UserModel {
                 });
     }
 
-    public void signIn(String email, String password) {
+    public void signIn(String email, String password,
+                       final MutableLiveData<String> authResult) {
         Log.d(TAG, "signIn:" + email);
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
@@ -46,9 +47,11 @@ public class UserModel {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
+                            authResult.setValue("success");
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            authResult.setValue(String.valueOf(task.getException()));
                         }
                     }
                 });
