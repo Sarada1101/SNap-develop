@@ -32,6 +32,11 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         mBinding.postFloatingActionButton.setOnClickListener(this);
 
+        UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel.getAuthResult();
+        userViewModel.signIn("aaa@aaa.com", "aaaaaa");
+    }
+
     private void insertPost() {
         FirebaseUser firebaseUser = new ViewModelProvider(this).get(
                 UserViewModel.class).getCurrentUser();
