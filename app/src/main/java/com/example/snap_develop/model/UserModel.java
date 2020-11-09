@@ -24,7 +24,7 @@ public class UserModel extends FirestoreBase {
     }
 
     public void createAccount(String email, String password,
-                              final MutableLiveData<String> authResult) {
+            final MutableLiveData<String> authResult) {
         Log.d(TAG, "createAccount:" + email);
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
