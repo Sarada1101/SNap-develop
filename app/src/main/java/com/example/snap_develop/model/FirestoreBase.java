@@ -6,6 +6,7 @@ import com.example.snap_develop.util.LogUtil;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FirestoreBase {
+    protected FirebaseFirestore firestore = null;
 
     protected FirebaseFirestore firestore = null;
 
