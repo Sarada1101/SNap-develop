@@ -8,7 +8,6 @@ import com.example.snap_develop.bean.PostBean;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,10 +17,17 @@ public class PostModel extends FirestoreBase {
     private final String TAG = "Firestore";
 
     public void insertPost(PostBean postBean) {
-        this.connect();
         Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        post.put("picture", postBean.getPicture());
+        //TODO 現在地
+        post.put("datetime", postBean.getDatetime());
+        post.put("anonymous", postBean.isAnonymous());
+        post.put("danger", postBean.isDanger());
+        post.put("uid", postBean.getUid());
+        post.put("type", postBean.getType());
+
+        this.connect();
 
         firestore.collection("posts")
                 .add(post)
@@ -29,17 +35,18 @@ public class PostModel extends FirestoreBase {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         System.out.println(
-                                "DocumentSnapshot written with ID: " + documentReference.getId());
+                                "Documentwritten with ID: " + documentReference.getId());
                         Log.d(TAG,
-                                "DocumentSnapshot written with ID: " + documentReference.getId());
+                                "Document written with ID: " + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        System.out.println("Error adding document" + e);
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
+
+        //TODO usersコレクションにパスを挿入
     }
 }
