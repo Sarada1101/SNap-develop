@@ -52,7 +52,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         //checkPermission();
         System.out.println("-------------------------onMapReady---------------------------");
 
-        // Add a marker in Sydney and move the camera
 
         LatLng sampleLocation = new LatLng(33.590188, 130.420685);
         LatLng school = new LatLng(33.583422, 130.421152);

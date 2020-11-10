@@ -67,7 +67,7 @@ public class MapViewModel extends ViewModel {
     }
 
     public double[] getCenter(GoogleMap map) {
-        System.out.println("-------------------------getCenter---------------------------");
+        System.out.println("-------------------------getCenter--------------------------");
 
         CameraPosition cameraPos = map.getCameraPosition();
         LatLng centerLatLng = new LatLng(cameraPos.target.latitude, cameraPos.target.longitude);
