@@ -52,13 +52,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         //checkPermission();
         System.out.println("-------------------------onMapReady---------------------------");
 
-        // Add a marker in Sydney and move the camera
-
+        //博多駅の位置情報
         LatLng sampleLocation = new LatLng(33.590188, 130.420685);
+        //学校の位置情報
         LatLng school = new LatLng(33.583422, 130.421152);
+
         mMap.addMarker(new MarkerOptions().position(sampleLocation).title("現在地"));
         mMap.addMarker(new MarkerOptions().position(school).title("麻生情報ビジネス専門学校"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sampleLocation, 16.0f));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sampleLocation));
         mMap.setOnCameraIdleListener(this);
     }

@@ -54,9 +54,9 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    spotbugs 'com.github.spotbugs:spotbugs:4.1.4'
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
-    compileOnly 'org.projectlombok:lombok:1.18.16'
+    spotbugs 'com.github.spotbugs:spotbugs:4.1.1'
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
+    compileOnly "org.projectlombok:lombok:1.16.18"
 }
 
 spotbugs {
