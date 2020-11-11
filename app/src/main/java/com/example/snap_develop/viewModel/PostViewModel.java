@@ -13,6 +13,4 @@ public class PostViewModel extends ViewModel {
     public void insertPost(PostBean postBean) {
         postModel.insertPost(postBean);
     }
-    
-
 }
