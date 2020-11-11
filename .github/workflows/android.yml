@@ -23,16 +23,44 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-  build:
+  assembleDebug:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build with Gradle
-        run: ./gradelew assembleDebug
+      - name: gradlew assembleDebug
+        run: |
+          ./gradelew assembleDebug
+
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: gradlew lint
+        run: |
+          ./gradlew lint
+
+  spotbugsDebug:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: gradlew spotbugsDebug
+        run: |
+          ./gradlew spotbugsDebug
+
+  checkstyle:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: gradlew checkstyle
+        run: |
+          ./gradlew checkstyle
 
   danger:
-    needs: setup
+    needs: [assembleDebug, lint, spotbugsDebug, checkstyle]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -40,10 +68,6 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: "2.6"
-      - name: run .gradlew check
-        run: |
-          ./gradlew check
-          ./gradlew checkstyle
       - name: Cache Gems
         uses: actions/cache@v1
         with:
@@ -62,7 +86,7 @@ jobs:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notification:
-    needs: [build, danger]
+    needs: danger
     runs-on: ubuntu-latest
     steps:
       # 失敗したときのSlackへの通知
