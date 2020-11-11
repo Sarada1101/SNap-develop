@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class PostModel extends FirestoreBase {
 
-    private static final String TAG = "Firestore";
+    static final String TAG = "Firestore";
 
     public void insertPost(PostBean postBean) {
         Map<String, Object> post = new HashMap<>();
