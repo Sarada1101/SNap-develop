@@ -57,6 +57,21 @@ public class UserModel {
                 });
     }
 
+    public void insertUser(UserBean userBean) {
+        Map<String, Object> user = new HashMap<>();
+        user.put("uid", userBean.getUid());
+        user.put("name", userBean.getName());
+        user.put("message", userBean.getMessage());
+        user.put("icon", userBean.getIcon());
+        user.put("followNotice", userBean.isFollowNotice());
+        user.put("goodNotice", userBean.isGoodNotice());
+        user.put("commentNotice", userBean.isCommentNotice());
+
+        this.connect();
+
+        firestore.collection("users").document(userBean.getUid()).set(user);
+    }
+
     public void signOut() {
         firebaseAuth.signOut();
     }
