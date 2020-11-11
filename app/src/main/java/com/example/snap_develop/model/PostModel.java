@@ -16,7 +16,7 @@ public class PostModel extends FirestoreBase {
 
     private static final String TAG = "Firestore";
 
-    public void insertPost(PostBean postBean) {
+    public void insertPost(final PostBean postBean) {
         Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
         post.put("picture", postBean.getPicture());
@@ -29,24 +29,43 @@ public class PostModel extends FirestoreBase {
 
         this.connect();
 
+        //投稿を追加
         firestore.collection("posts")
                 .add(post)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        System.out.println(
-                                "Documentwritten with ID: " + documentReference.getId());
                         Log.d(TAG,
-                                "Document written with ID: " + documentReference.getId());
+                                "posts written with ID: " + documentReference.getId());
+
+                        //パスをusersコレクションに追加
+                        Map<String, Object> usersPost = new HashMap<>();
+                        usersPost.put("path", documentReference);
+                        firestore.collection("users")
+                                .document(postBean.getUid())
+                                .collection("post")
+                                .add(usersPost)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d(TAG,
+                                                "users/post written with ID: "
+                                                        + documentReference.getId());
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error adding users/post", e);
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        Log.w(TAG, "Error adding posts", e);
                     }
                 });
-
-        //TODO usersコレクションにパスを挿入
     }
 }
