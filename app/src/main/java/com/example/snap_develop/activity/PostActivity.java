@@ -1,7 +1,6 @@
 package com.example.snap_develop.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +32,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.postFloatingActionButton.setOnClickListener(this);
 
         UserViewModel userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        userViewModel.getAuthResult();
         userViewModel.signIn("aaa@aaa.com", "aaaaaa");
     }
 
@@ -43,7 +41,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         PostBean postBean = new PostBean();
 
         postBean.setMessage(String.valueOf(mBinding.postTextMultiLine.getText()));
-        postBean.setPicture("no_img.png");
+        //TODO 写真
         //TODO 現在地
         postBean.setDatetime(new Date());
         postBean.setAnonymous(mBinding.anonymousSwitch.isChecked());
@@ -58,7 +56,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.postFloatingActionButton) {
-            Log.d("insertPost", "success");
             insertPost();
         }
     }
