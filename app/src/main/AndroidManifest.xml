@@ -10,10 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.CommentActivity"></activity>
-        <activity android:name=".activity.TimeLineActivity"></activity>
         <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.PostActivity" />
-        <activity android:name=".activity.AuthActivity">
+        <activity android:name=".activity.AuthActivity" />
         <activity android:name=".FollowerListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,9 +22,6 @@
         </activity>
         <activity android:name=".FollowingListActivity"></activity>
         <activity android:name=".PostSearchActivity" />
-        <activity android:name=".activity.DisplayCommentActivity" />
-        <activity android:name=".activity.PostActivity" />
-        <activity android:name=".activity.AuthActivity" />
         <activity android:name=".activity.MapActivity" />
     </application>
 </manifest>
