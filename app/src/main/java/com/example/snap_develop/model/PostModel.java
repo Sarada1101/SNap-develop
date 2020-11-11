@@ -35,7 +35,7 @@ public class PostModel extends FirestoreBase {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         System.out.println(
-                                "Documentwritten with ID: " + documentReference.getId());
+                                "Document written with ID: " + documentReference.getId());
                         Log.d(TAG,
                                 "Document written with ID: " + documentReference.getId());
                     }
