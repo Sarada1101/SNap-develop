@@ -11,4 +11,12 @@
     <string name="login">ログイン</string>
     <string name="createaccount">新規登録</string>
     <string name="snap">SNap</string>
+    <string name="nameeditText">ユーザー名</string>
+    <string name="ideditText">ユーザーID</string>
+    <string name="dateeditText">年月日</string>
+    <string name="posteditText">投稿内容</string>
+    <string name="favoritebutten">いいね数</string>
+    <string name="locationeditText">位置情報</string>
+    <string name="dangerswitch">危険な情報</string>
+    <string name="posttextBox">投稿内容</string>
 </resources>
