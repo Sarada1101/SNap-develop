@@ -9,12 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< Updated upstream
         <activity android:name=".activity.CommentActivity"></activity>
-=======
         <activity android:name=".activity.TimeLineActivity"></activity>
-        <activity android:name=".activity.CommentActivity" />
->>>>>>> Stashed changes
+        <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.AuthActivity">
             <intent-filter>
