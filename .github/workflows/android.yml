@@ -72,7 +72,7 @@ jobs:
         if: failure()
         uses: rtCamp/action-slack-notify@v2.0.1
         env:
-          SLACK_CHANNEL: notify-android
+          SLACK_CHANNEL: snap_notice
           SLACK_ICON: https://github.com/actions.png?size=48
           SLACK_COLOR: "#ff0000"
           SLACK_TITLE: ":fire: Build Failure :fire:"
@@ -86,7 +86,7 @@ jobs:
         if: success()
         uses: rtCamp/action-slack-notify@v2.0.1
         env:
-          SLACK_CHANNEL: notify-android
+          SLACK_CHANNEL: snap_notice
           SLACK_ICON: https://github.com/actions.png?size=48
           SLACK_TITLE: ":rocket: Build Success :rocket:"
           SLACK_MESSAGE: |
