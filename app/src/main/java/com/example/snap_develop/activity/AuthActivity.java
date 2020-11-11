@@ -18,8 +18,8 @@ import com.example.snap_develop.viewModel.UserViewModel;
 
 public class AuthActivity extends AppCompatActivity implements View.OnClickListener {
 
-    UserViewModel userViewModel;
-    ActivityAuthBinding mBinding;
+    private UserViewModel userViewModel;
+    private ActivityAuthBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                 } else if (authResult.contains(
                         "The password is invalid or the user does not have a password.")) {
                     mBinding.passwordTextInputLayout.setError("パスワードが異なります");
-                    
+
                 } else if (authResult.contains("The given password is invalid.")) {
                     mBinding.passwordTextInputLayout.setError("パスワード6文字以上入力してください");
                 }
