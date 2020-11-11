@@ -7,7 +7,7 @@
     tools:context=".activity.CommentActivity">
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/posteditText"
         android:layout_width="344dp"
         android:layout_height="177dp"
         android:ems="10"
@@ -30,7 +30,7 @@
         tools:text="@string/replybutten" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/anonymousswitch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/anonymousSwitch"
