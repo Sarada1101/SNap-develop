@@ -86,7 +86,7 @@ checkstyle {
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
-    source 'src'
+    source 'src/main/java/com/example/snap_develop'
     reports {
         xml.enabled = true
         html.enabled = true
