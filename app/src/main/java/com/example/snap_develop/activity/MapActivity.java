@@ -77,7 +77,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
      * method will only be triggered once the user has installed Google Play services and returned
      * to the app.
      */
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         System.out.println("-------------------------onMapReady---------------------------");
@@ -162,7 +161,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         // 拒否していた場合(初回起動も含めて)
         else {
             System.out.println("---------------checkPermission:False-----------------");
-            requestLocationPermission();
 
             return false;
         }
@@ -209,6 +207,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             int requestCode,
             @NonNull String[] permissions,
             @NonNull int[] grantResults) {
+        firstAlert.dismiss();
 
         if (requestCode == REQUEST_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -234,9 +233,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 .setPositiveButton("許可", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        System.out.println("----------------firstAlertDismiss----------------");
-                        firstAlert.dismiss();
-                        
 
                         ActivityCompat.requestPermissions(MapActivity.this,
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
