@@ -165,7 +165,7 @@
         <module name="MemberName">
             <message key="name.invalidPattern"
                 value="Member name ''{0}'' must match pattern ''{1}''." />
-            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$" />
+            <!--            <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$" />-->
         </module>
         <module name="ParameterName">
             <message key="name.invalidPattern"
