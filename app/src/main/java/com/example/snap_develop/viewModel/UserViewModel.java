@@ -10,8 +10,20 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<String> authResult;
     UserModel userModel = new UserModel();
 
+    public FirebaseUser getCurrentUser() {
+        return userModel.getCurrentUser();
+    }
+
     public void createAccount(String email, String password) {
         userModel.createAccount(email, password, authResult);
+    }
+
+    public void signIn(String email, String password) {
+        userModel.signIn(email, password, authResult);
+    }
+    
+    public void signOut() {
+        userModel.signOut();
     }
 
     public MutableLiveData<String> getAuthResult() {
@@ -19,18 +31,6 @@ public class UserViewModel extends ViewModel {
             authResult = new MutableLiveData<>();
         }
         return authResult;
-    }
-
-    public FirebaseUser getCurrentUser() {
-        return userModel.getCurrentUser();
-    }
-
-    public void signIn(String email, String password) {
-        userModel.signIn(email, password, authResult);
-    }
-
-    public void signOut() {
-        userModel.signOut();
     }
 }
 
