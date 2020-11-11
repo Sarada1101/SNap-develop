@@ -17,7 +17,7 @@ public class PostModel extends FirestoreBase {
     private final String TAG = "Firestore";
     String postID = "";
 
-    public void insertPost(PostBean postBean) {
+    public void insertComment(PostBean postBean) {
         Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
         post.put("picture", postBean.getPicture());
