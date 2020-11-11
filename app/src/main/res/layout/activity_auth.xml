@@ -59,7 +59,7 @@
             android:id="@+id/signupButton"
             android:layout_width="100dp"
             android:layout_height="59dp"
-            android:text="@string/emailCreateAccountButtonText"
+            android:text="@string/createacount"
             tools:layout_editor_absoluteX="224dp"
             tools:layout_editor_absoluteY="469dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
