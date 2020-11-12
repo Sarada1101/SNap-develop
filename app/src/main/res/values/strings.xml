@@ -20,4 +20,6 @@
     <string name="Comment">コメント</string>
     <string name="DateTime">2020/11/6 12:00</string>
     <string name="search">キーワードを入力</string>
+    <string name="approvalPending">承認待ち</string>
+    <string name="followApplication">フォロー申請</string>
 </resources>
