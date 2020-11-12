@@ -33,4 +33,6 @@
     <string name="textbox">投稿内容</string>
     <string name="photoFABContentDescription">写真選択</string>
     <string name="postFABContentDescription">投稿</string>
+    <string name="approvalPending">承認待ち</string>
+    <string name="followApplication">フォロー申請</string>
 </resources>

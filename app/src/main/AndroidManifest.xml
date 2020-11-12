@@ -15,6 +15,7 @@
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.AuthActivity">
         <activity android:name=".activity.FollowerListActivity">
+        <activity android:name=".ApprovalPendingFollowListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
