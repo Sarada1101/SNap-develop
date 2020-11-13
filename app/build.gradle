@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     // Firebase
     implementation 'com.google.firebase:firebase-core:18.0.0'
-    implementation 'com.google.firebase:firebase-auth:20.0.0'  // Authentication
+    implementation 'com.google.firebase:firebase-auth:20.0.1'  // Authentication
     implementation 'com.google.firebase:firebase-analytics'  // Analytics
     implementation 'com.google.firebase:firebase-firestore:22.0.0'  // Firestore
     // Firebase
