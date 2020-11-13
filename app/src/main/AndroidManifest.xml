@@ -16,7 +16,8 @@
         <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.AuthActivity">
-          <intent-filter>
+        <activity android:name=".activity.FollowerListActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
