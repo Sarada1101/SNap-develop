@@ -1,20 +1,19 @@
 package com.example.snap_develop.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 
 import com.example.snap_develop.R;
+import com.example.snap_develop.model.MapModel;
 import com.example.snap_develop.viewModel.MapViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -23,20 +22,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnCameraIdleListener {
 
     private GoogleMap mMap;
     private MapViewModel mapViewModel = new MapViewModel();
+    public LatLng deviceLocation = new LatLng(0, 0);
+    MapModel mapModel = new MapModel();
+    FusedLocationProviderClient fusedLocationClient;
     //new ViewModelProvider(this).get(MapViewModel.class);
-    private FusedLocationProviderClient fusedLocationClient;
-    private Location location;
-    private double latitude;
-    private double longitude;
     private final int REQUEST_PERMISSION = 1000;
     AlertDialog firstAlert;
 
@@ -44,19 +39,20 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     //private ActivityMapBinding mBinding = DataBindingUtil.setContentView(this,R.layout
     // .activity_map);
 
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        if (!checkPermission()) {
-            requestLocationPermission();
-        } else {
-            getLastLocation();
-        }
+        mapViewModel.getDeviceLocationResult().observe(this, new Observer<LatLng>() {
+            @Override
+            public void onChanged(LatLng latLng) {
+                deviceLocation = latLng;
+                System.out.println(deviceLocation);
+            }
+        });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -82,60 +78,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         System.out.println("-------------------------onMapReady---------------------------");
         mMap = googleMap;
 
-        mMap.setOnCameraIdleListener(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        //現在地取得
+        if (!checkPermission()) {
+            requestLocationPermission();
+        } else {
+            //現在地取得
+            mapViewModel.getDeviceLocation(fusedLocationClient, mMap);
+        }
 
-        /*LatLng sampleLocation = new LatLng(latitude, longitude);
-        System.out.println("-------------------------sampleLocation---------------------------");
-        LatLng school = new LatLng(33.583422, 130.421152);
-        mMap.addMarker(new MarkerOptions().position(sampleLocation).title("現在地"));
-        mMap.addMarker(new MarkerOptions().position(school).title("麻生情報ビジネス専門学校"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sampleLocation, 16.0f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sampleLocation));
         mMap.setOnCameraIdleListener(this);
         mMap.moveCamera(CameraUpdateFactory.zoomTo(10.0f));
-        mMap.getUiSettings().setZoomControlsEnabled(true);*/
-    }
-
-    @SuppressLint("MissingPermission")
-    public void getLastLocation() {
-        System.out.println("--------------------getLastLocation-----------------------");
-        latitude = 0;
-        longitude = 0;
-
-        fusedLocationClient.getLastLocation()
-                .addOnCompleteListener(
-                        this,
-                        new OnCompleteListener<Location>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Location> task) {
-                                if (task.isSuccessful() && task.getResult() != null) {
-                                    location = task.getResult();
-
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                    System.out.println("緯度:" + latitude + ",経度" + longitude);
-
-                                    LatLng sampleLocation = new LatLng(latitude, longitude);
-                                    System.out.println(
-                                            "-------------------------sampleLocation"
-                                                    + "---------------------------");
-                                    LatLng school = new LatLng(33.583422, 130.421152);
-                                    mMap.addMarker(
-                                            new MarkerOptions().position(sampleLocation).title(
-                                                    "現在地"));
-                                    mMap.addMarker(new MarkerOptions().position(school).title(
-                                            "麻生情報ビジネス専門学校"));
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(sampleLocation));
-                                    mMap.moveCamera(CameraUpdateFactory.zoomTo(16.0f));
-                                    mMap.getUiSettings().setZoomControlsEnabled(true);
-                                } else {
-                                    Log.d("debug", "計測不能");
-
-                                }
-                            }
-                        });
+        mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     @Override
@@ -167,7 +121,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     // 許可を求める
-    private void requestLocationPermission() {
+    public void requestLocationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
             System.out.println("---------------requestLocationPermission:True-----------------");
@@ -215,7 +169,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         "---------------onRequestPermissionsResult:True-----------------");
 
                 // 使用が許可された時の対応
-                getLastLocation();
+                mapViewModel.getDeviceLocation(fusedLocationClient, mMap);
             } else {
                 System.out.println(
                         "---------------onRequestPermissionsResult:False-----------------");
@@ -226,6 +180,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         }
     }
 
+    //最終確認のアラート
     public void startFinalAlert() {
         new AlertDialog.Builder(this)
                 .setTitle("最終確認")
@@ -237,16 +192,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         ActivityCompat.requestPermissions(MapActivity.this,
                                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                 REQUEST_PERMISSION);
-
-                        // Intent でアプリ権限の設定画面に移行
-                        /*Intent intent = new Intent();
-                        intent.setAction(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        // BuildConfigは反映するのに時間がかかってエラーにることもある。待つ
-                        Uri uri = Uri.fromParts("com.example.snap_develop",
-                                BuildConfig.APPLICATION_ID, null);
-                        intent.setData(uri);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
                     }
                 })
                 .setNegativeButton("拒否", new DialogInterface.OnClickListener() {
@@ -259,4 +204,5 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 })
                 .show();
     }
+
 }
