@@ -19,7 +19,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnCameraIdleListener {
 
     private static final String TAG = MapActivity.class.toString();
-    private GoogleMap mMap;
+    private GoogleMap googleMap;
     private MapViewModel mapViewModel;
 
     //private ActivityMapBinding mBinding = DataBindingUtil.setContentView(this,R.layout
@@ -42,7 +42,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        this.googleMap = googleMap;
         //checkPermission();
         Log.d(TAG, new Object() {
         }.getClass().getEnclosingMethod().getName());
@@ -50,21 +50,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         LatLng sampleLocation = new LatLng(33.590188, 130.420685);
         LatLng school = new LatLng(33.583422, 130.421152);
         //マーカー設置
-        mMap.addMarker(new MarkerOptions().position(sampleLocation).title("現在地"));
-        mMap.addMarker(new MarkerOptions().position(school).title("麻生情報ビジネス専門学校"));
+        this.googleMap.addMarker(new MarkerOptions().position(sampleLocation).title("現在地"));
+        this.googleMap.addMarker(new MarkerOptions().position(school).title("麻生情報ビジネス専門学校"));
 
         //カメラ移動、縮尺調整
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sampleLocation, 16.0f));
-        mMap.setOnCameraIdleListener(this);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sampleLocation, 16.0f));
+        this.googleMap.setOnCameraIdleListener(this);
+        this.googleMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     @Override
     public void onCameraIdle() {
         Log.d(TAG, new Object() {
         }.getClass().getEnclosingMethod().getName());
-        double[] centerLatLon = mapViewModel.getCenter(mMap);
-        int radius = mapViewModel.getRadius(mMap);
+        double[] centerLatLon = mapViewModel.getCenter(googleMap);
+        int radius = mapViewModel.getRadius(googleMap);
     }
 
     //↓↓↓↓↓↓↓↓↓↓位置情報取得のパーミッション関係↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓//
