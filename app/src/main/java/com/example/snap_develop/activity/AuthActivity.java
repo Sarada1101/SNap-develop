@@ -3,6 +3,7 @@ package com.example.snap_develop.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.R;
 import com.example.snap_develop.databinding.ActivityAuthBinding;
+import com.example.snap_develop.util.LogUtil;
 import com.example.snap_develop.viewModel.UserViewModel;
 
 public class AuthActivity extends AppCompatActivity implements View.OnClickListener {
@@ -23,6 +25,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
@@ -68,6 +71,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void createAccount() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         String email = mBinding.emailTextInputEditText.getText().toString();
         String password = mBinding.passwordTextInputEditText.getText().toString();
 
@@ -80,6 +84,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void signIn() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         String email = mBinding.emailTextInputEditText.getText().toString();
         String password = mBinding.passwordTextInputEditText.getText().toString();
 
@@ -91,6 +96,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private boolean validateForm(String email, String password) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         boolean valid = true;
 
         if (TextUtils.isEmpty(email)) {

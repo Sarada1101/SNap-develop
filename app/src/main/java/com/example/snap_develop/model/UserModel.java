@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -17,21 +18,21 @@ import java.util.Map;
 
 public class UserModel extends FirestoreBase {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private static final String TAG = "EmailPassword";
 
     public FirebaseUser getCurrentUser() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         return firebaseAuth.getCurrentUser();
     }
 
     public void createAccount(String email, String password,
-                              final MutableLiveData<String> authResult) {
-        Log.d(TAG, "createAccount:" + email);
+            final MutableLiveData<String> authResult) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
+                            Log.d(LogUtil.getClassName(), "createUserWithEmail:success");
                             authResult.setValue("success");
                             UserBean userBean = new UserBean();
                             UserModel userModel = new UserModel();
@@ -45,7 +46,8 @@ public class UserModel extends FirestoreBase {
                             userBean.setPublicationArea("public");
                             insertUser(userBean);
                         } else {
-                            Log.w(TAG, "createUserWithEmail:failure:" + task.getException());
+                            Log.w(LogUtil.getClassName(),
+                                    "createUserWithEmail:failure:" + task.getException());
                             authResult.setValue(String.valueOf(task.getException()));
                         }
                     }
@@ -54,16 +56,17 @@ public class UserModel extends FirestoreBase {
 
     public void signIn(String email, String password,
             final MutableLiveData<String> authResult) {
-        Log.d(TAG, "signIn:" + email);
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
+                            Log.d(LogUtil.getClassName(), "createUserWithEmail:success");
                             authResult.setValue("success");
                         } else {
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Log.w(LogUtil.getClassName(), "createUserWithEmail:failure",
+                                    task.getException());
                             authResult.setValue(String.valueOf(task.getException()));
                         }
                     }
@@ -71,6 +74,7 @@ public class UserModel extends FirestoreBase {
     }
 
     public void insertUser(UserBean userBean) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         Map<String, Object> user = new HashMap<>();
         user.put("uid", userBean.getUid());
         user.put("name", userBean.getName());
@@ -86,6 +90,7 @@ public class UserModel extends FirestoreBase {
     }
 
     public void signOut() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         firebaseAuth.signOut();
     }
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.R;
+import com.example.snap_develop.util.LogUtil;
 import com.example.snap_develop.viewModel.MapViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +30,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
@@ -42,10 +44,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         this.googleMap = googleMap;
         //checkPermission();
-        Log.d(TAG, new Object() {
-        }.getClass().getEnclosingMethod().getName());
 
         LatLng sampleLocation = new LatLng(33.590188, 130.420685);
         LatLng school = new LatLng(33.583422, 130.421152);
@@ -61,8 +62,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onCameraIdle() {
-        Log.d(TAG, new Object() {
-        }.getClass().getEnclosingMethod().getName());
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         double[] centerLatLon = mapViewModel.getCenter(googleMap);
         int radius = mapViewModel.getRadius(googleMap);
     }
