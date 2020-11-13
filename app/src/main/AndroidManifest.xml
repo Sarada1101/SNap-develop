@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.snap_develop">
+    <!--
+        ACCESS_COARSE/FINE_LOCATIONのパーミッションは、
+        Google Maps Android API v2を利用する際には必要ありませんが、
+       「MyLocation」機能を利用する際には、
+        粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -39,13 +46,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
     </application>
-    <!--
-        ACCESS_COARSE/FINE_LOCATIONのパーミッションは、
-        Google Maps Android API v2を利用する際には必要ありませんが、
-       「MyLocation」機能を利用する際には、
-        粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
-    -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
 
