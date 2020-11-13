@@ -43,7 +43,7 @@ public class PostModel extends FirestoreBase {
                         usersPost.put("path", documentReference);
                         firestore.collection("users")
                                 .document(postBean.getUid())
-                                .collection("post")
+                                .collection("posts")
                                 .add(usersPost)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
