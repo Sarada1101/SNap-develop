@@ -3,49 +3,73 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.AuthActivity">
 
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/login"
+            app:layout_constraintStart_toStartOf="@+id/passwordTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/passwordTextInputLayout" />
+
+        <Button
+            android:id="@+id/createAccountButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="75dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/createacount"
+            app:layout_constraintEnd_toEndOf="@+id/passwordTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/passwordTextInputLayout" />
+
         <TextView
             android:id="@+id/snapTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
             android:text="@string/snap"
             android:textSize="50sp"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.050000012" />
 
-        <EditText
-            android:id="@+id/emailEditText"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailTextInputLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/mailaddress"
-            android:inputType="textPersonName"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="245dp" />
+            app:layout_constraintTop_toBottomOf="@+id/snapTextView">
 
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/mailaddress"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordTextInputLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="330dp" />
+            app:layout_constraintTop_toBottomOf="@+id/emailTextInputLayout">
 
         <Button
             android:id="@+id/loginButton"
@@ -59,8 +83,20 @@
             android:id="@+id/signupButton"
             android:layout_width="100dp"
             android:layout_height="59dp"
-            android:text="@string/emailCreateAccountButtonText"
+            android:text="@string/createacount"
             tools:layout_editor_absoluteX="224dp"
             tools:layout_editor_absoluteY="469dp" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <data>
+
+    </data>
 </layout>

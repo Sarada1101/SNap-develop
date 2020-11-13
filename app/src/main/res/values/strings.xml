@@ -9,7 +9,9 @@
     <string name="mailaddress">メールアドレス</string>
     <string name="password">パスワード</string>
     <string name="login">ログイン</string>
-    <string name="signup">新規登録</string>
+    <string name="createaccount">新規登録</string>
+    <string name="replybutten">返信</string>
+    <string name="replyeditText">返信内容</string>
     <string name="snap">SNap</string>
     <string name="username">ユーザー名</string>
     <string name="userID">ユーザーID</string>
@@ -22,4 +24,15 @@
     <string name="search">キーワードを入力</string>
     <string name="approvalPending">承認待ち</string>
     <string name="followApplication">フォロー申請</string>
+    <string name="createacount">新規登録</string>
+    <string name="nameTextEdit">ユーザー名</string>
+    <string name="idTextEdit">ユーザーID</string>
+    <string name="dateTextEdit">年月日</string>
+    <string name="contentsTextEdit">投稿内容</string>
+    <string name="favoriteTextEdit">いいね数</string>
+    <string name="anonymousSwitch">匿名投稿　</string>
+    <string name="dangerSwitch">危険な情報</string>
+    <string name="textbox">投稿内容</string>
+    <string name="photoFABContentDescription">写真選択</string>
+    <string name="postFABContentDescription">投稿</string>
 </resources>

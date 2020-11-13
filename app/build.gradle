@@ -10,16 +10,14 @@ android {
 
     defaultConfig {
         applicationId "com.example.snap_develop"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
+        multiDexEnabled true
 
-    dataBinding {
-        enabled = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -29,8 +27,8 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
     }
 
     lintOptions {
@@ -46,15 +44,18 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:18.0.0'
     implementation 'com.google.firebase:firebase-auth:20.0.0'  //Firebase Authentication
     implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'  //Firebase Firestore
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    spotbugs 'com.github.spotbugs:spotbugs:4.1.1'
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
-    compileOnly "org.projectlombok:lombok:1.16.18"
+    spotbugs 'com.github.spotbugs:spotbugs:4.1.4'
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
 }
 
 spotbugs {
@@ -82,7 +83,7 @@ checkstyle {
 
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/config/checkstyle/checkstyle.xml")
-    source 'src'
+    source 'src/main/java/com/example/snap_develop'
     reports {
         xml.enabled = true
         html.enabled = true
