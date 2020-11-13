@@ -22,4 +22,6 @@
     <string name="search">キーワードを入力</string>
     <string name="approvalPending">承認待ち</string>
     <string name="followApplication">フォロー申請</string>
+    <string name="applicatedButton">承認する</string>
+    <string name="reject">拒否</string>
 </resources>

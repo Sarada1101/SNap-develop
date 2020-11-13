@@ -9,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ApprovalPendingFollowListActivity extends AppCompatActivity {
+public class ApplicatedFollowListActivity extends AppCompatActivity {
+
     ListView lv;
     SimpleAdapter sAdapter;
     ArrayList<HashMap<String, String>> listData;
@@ -17,7 +18,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_approval_pending_follow_list);
+        setContentView(R.layout.activity_applicated_follow_list);
 
         listData = new ArrayList<HashMap<String, String>>();
 
@@ -33,9 +34,9 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity {
 
 
         sAdapter = new SimpleAdapter(this, listData,
-                R.layout.activity_approval_pending_follow_list_row,
+                R.layout.activity_applicated_follow_list_row,
                 new String[]{"usericon", "username", "userid"},
-                new int[]{R.id.userView, R.id.userName, R.id.userId});
+                new int[]{R.id.usrView, R.id.usrName, R.id.usrId});
         lv = (ListView) findViewById(R.id.applicatedFollowList);
         lv.setAdapter(sAdapter);
     }
