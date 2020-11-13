@@ -88,13 +88,13 @@ public class MapModel {
 
         float zoom = googleMap.getCameraPosition().zoom;
         int result = 0;
-        for (float key : radius.keySet()) {
-            if (zoom == 1.0 && key == 1.0f) {
-                result = radius.get(key);
-            } else if (zoom == 21.0 && key == 21.0f) {
-                result = radius.get(key);
-            } else if (key > zoom && key - 1 <= zoom) {
-                result = radius.get(key - 1);
+        for (Map.Entry<Float, Integer> key : radius.entrySet()) {
+            if (zoom == 1.0 && key.getKey() == 1.0f) {
+                result = radius.get(key.getKey());
+            } else if (zoom == 21.0 && key.getKey() == 21.0f) {
+                result = radius.get(key.getKey());
+            } else if (key.getKey() > zoom && key.getKey() - 1 <= zoom) {
+                result = radius.get(key.getKey() - 1);
             }
         }
         Log.d(TAG, String.format("zoomLevel:%s , radius:%sm", zoom, result));
