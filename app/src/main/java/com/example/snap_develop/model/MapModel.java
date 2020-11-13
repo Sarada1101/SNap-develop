@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -29,7 +30,7 @@ public class MapModel {
 
     @SuppressLint("MissingPermission")
     public LatLng fetchDeviceLocation(FusedLocationProviderClient fusedLocationClient) {
-
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         latitude = 0;
         longitude = 0;
 
@@ -58,8 +59,7 @@ public class MapModel {
     }
 
     public int getRadius(GoogleMap googleMap) {
-        Log.d(TAG, new Object() {
-        }.getClass().getEnclosingMethod().getName());
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         Map<Float, Integer> radius = new HashMap<Float, Integer>() {
             {
                 put(1.0f, 10000000);
@@ -102,8 +102,7 @@ public class MapModel {
     }
 
     public double[] getCenter(GoogleMap googleMap) {
-        Log.d(TAG, new Object() {
-        }.getClass().getEnclosingMethod().getName());
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         CameraPosition cameraPos = googleMap.getCameraPosition();
         LatLng centerLatLon = new LatLng(cameraPos.target.latitude, cameraPos.target.longitude);
         Log.d(TAG, String.format("lat:%s , lon:%s", centerLatLon.latitude, centerLatLon.longitude));
