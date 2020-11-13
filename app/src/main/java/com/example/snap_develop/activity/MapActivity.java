@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 
 import com.example.snap_develop.R;
-import com.example.snap_develop.model.MapModel;
 import com.example.snap_develop.viewModel.MapViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -29,16 +28,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mMap;
     private MapViewModel mapViewModel = new MapViewModel();
     public LatLng deviceLocation = new LatLng(0, 0);
-    MapModel mapModel = new MapModel();
     FusedLocationProviderClient fusedLocationClient;
-    //new ViewModelProvider(this).get(MapViewModel.class);
     private final int REQUEST_PERMISSION = 1000;
     AlertDialog firstAlert;
-
-    //private MapModel mapModel = new MapModel();
-    //private ActivityMapBinding mBinding = DataBindingUtil.setContentView(this,R.layout
-    // .activity_map);
-
 
     @Override
 
