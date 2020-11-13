@@ -11,14 +11,21 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.TimeLIneActivity"></activity>
         <activity android:name=".activity.activity_comment" />
+        <activity android:name=".activity.CommentActivity"></activity>
+        <activity android:name=".activity.TimeLineActivity"></activity>
+        <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.AuthActivity">
-            <intent-filter>
+          <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.FollowerListActivity" />
+        <activity android:name=".activity.FollowingListActivity"></activity>
+        <activity android:name=".activity.PostSearchActivity" />
+        <activity android:name=".activity.DisplayCommentActivity" />
+        <activity android:name=".activity.MapActivity" />
     </application>
-
 </manifest>
