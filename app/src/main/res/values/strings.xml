@@ -1,5 +1,4 @@
 <resources>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false" />
     <string name="app_name">SNap</string>
     <string name="passwordFormHint">パスワード</string>
     <string name="emailFormHint">メールアドレス</string>
