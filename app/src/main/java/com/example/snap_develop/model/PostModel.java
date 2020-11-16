@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class PostModel extends FirestoreBase {
 
-    private static final String TAG = "Firestore";
+    public void insertPost(final PostBean postBean) {
 
     public void insertPost(PostBean postBean) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
