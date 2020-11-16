@@ -110,7 +110,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         if (!checkPermission()) {
             requestLocationPermission();
         } else {
-            //現在地取得
+            requestLocationPermission();
             mapViewModel.getDeviceLocation(fusedLocationClient, mMap);
         }
 
@@ -156,7 +156,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     //↓↓↓↓↓↓↓↓↓↓位置情報取得のパーミッション関係↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓//
-    /*public void checkPermission() {
+    public boolean checkPermission() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         // 既に許可している
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -164,10 +165,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             System.out.println("---------------checkPermission:True-----------------");
 
             return true;
-
+        } else {
             deviceLocation = mapModel.fetchDeviceLocation(fusedLocationClient);
         }
-        // 拒否していた場合(初回起動も含めて)
+            // 拒否していた場合(初回起動も含めて)
         else {
             System.out.println("---------------checkPermission:False-----------------");
 
@@ -189,8 +190,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     .setPositiveButton("許可", new DialogInterface.OnClickListener() {
     private void requestLocationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)) {
-
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
             System.out.println("---------------requestLocationPermission:True-----------------");
             deviceLocation = mapModel.fetchDeviceLocation(fusedLocationClient);
 
