@@ -11,6 +11,6 @@ public class PostViewModel extends ViewModel {
     PostModel postModel = new PostModel();
 
     public void insertPost(PostBean postBean) {
-        postModel.insertPost(postBean);
+        postModel.insertComment(postBean);
     }
 }

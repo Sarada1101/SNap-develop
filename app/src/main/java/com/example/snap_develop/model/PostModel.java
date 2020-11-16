@@ -21,7 +21,6 @@ public class PostModel extends FirestoreBase {
         Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
         post.put("picture", postBean.getPicture());
-        //TODO 現在地
         post.put("datetime", postBean.getDatetime());
         post.put("anonymous", postBean.isAnonymous());
         post.put("danger", postBean.isDanger());
@@ -49,7 +48,6 @@ public class PostModel extends FirestoreBase {
                     }
                 });
 
-        //TODO usersコレクションにパスを挿入
         firestore.collection("users")
                 .document(postBean.getUid())
                 .collection("posts")
