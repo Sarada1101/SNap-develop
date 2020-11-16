@@ -20,7 +20,7 @@
             android:text="@string/approvalPending" />
 
         <Button
-            android:id="@+id/Button02"
+            android:id="@+id/followApplicatedButton"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"

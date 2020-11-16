@@ -36,7 +36,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity {
         sAdapter = new SimpleAdapter(this, listData,
                 R.layout.activity_approval_pending_follow_list_row,
                 new String[]{"usericon", "username", "userid"},
-                new int[]{R.id.userView, R.id.userName, R.id.userId});
+                new int[]{R.id.userImageView, R.id.userNameTextView, R.id.userIdTextView});
         lv = (ListView) findViewById(R.id.approvalPendingList);
         lv.setAdapter(sAdapter);
     }
