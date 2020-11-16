@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.snap_develop.bean.PostBean;
+import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -17,7 +18,8 @@ public class PostModel extends FirestoreBase {
     private final String TAG = "Firestore";
     String postID = "";
 
-    public void insertComment(PostBean postBean) {
+    public void insertPost(PostBean postBean) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
         post.put("picture", postBean.getPicture());
