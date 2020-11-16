@@ -25,7 +25,9 @@ jobs:
       - name: gradlew assembleDebug
         run: ./gradlew assembleDebug
       - name: gradlew lint
-        run: ./gradlew lint --stacktrace
+        run: |
+          export GOOGLE_MAPS_KEY=${{ secrets.GOOGLE_MAPS_KEY }}
+          ./gradlew lint --stacktrace
       - name: gradlew spotbugsDebug
         run: ./gradlew spotbugsDebug
       - name: Set up Ruby 2.6
