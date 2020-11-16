@@ -22,11 +22,12 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: gradlew
-        run: |
-          ./gradlew assembleDebug
-          ./gradlew lint
-          ./gradlew spotbugsDebug
+      - name: gradlew assembleDebug
+        run: ./gradlew assembleDebug
+      - name: gradlew lint
+        run: ./gradlew lint
+      - name: gradlew spotbugsDebug
+        run: ./gradlew spotbugsDebug
       - name: Set up Ruby 2.6
         uses: actions/setup-ruby@v1
         with:
