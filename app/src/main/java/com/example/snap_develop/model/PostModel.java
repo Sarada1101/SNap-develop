@@ -16,8 +16,6 @@ import java.util.Map;
 public class PostModel extends FirestoreBase {
 
     public void insertPost(final PostBean postBean) {
-
-    public void insertPost(PostBean postBean) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
@@ -37,8 +35,9 @@ public class PostModel extends FirestoreBase {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG,
-                                "posts written with ID: " + documentReference.getId());
+                        Log.d(LogUtil.getClassName(),
+                                String.format("posts add document ID: %s",
+                                        documentReference.getId()));
 
                         //パスをusersコレクションに追加
                         Map<String, Object> usersPost = new HashMap<>();
@@ -50,15 +49,15 @@ public class PostModel extends FirestoreBase {
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        Log.d(TAG,
-                                                "users/post written with ID: "
-                                                        + documentReference.getId());
+                                        Log.d(LogUtil.getClassName(),
+                                                String.format("users/post add document ID: %s",
+                                                        documentReference.getId()));
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error adding users/post", e);
+                                        Log.w(LogUtil.getClassName(), e);
                                     }
                                 });
                     }
@@ -66,7 +65,7 @@ public class PostModel extends FirestoreBase {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding posts", e);
+                        Log.w(LogUtil.getClassName(), e);
                     }
                 });
     }
