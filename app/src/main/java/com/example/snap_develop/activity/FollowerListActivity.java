@@ -1,10 +1,12 @@
-package com.example.snap_develop;
+package com.example.snap_develop.activity;
 
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.snap_develop.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
