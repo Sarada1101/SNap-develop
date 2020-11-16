@@ -35,6 +35,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener,
         GoogleMap.OnCameraIdleListener {
 
 
@@ -133,12 +135,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     @Override
-    public void onCameraIdle() {
-        System.out.println("-------------------------onCameraIdle---------------------------");
-        double[] centerInfo = mapViewModel.getCenter(mMap);
+    public void onMyLocationClick(@NonNull Location location) {
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+    }
         System.out.println("中心座標＞＞＞X：" + centerInfo[0] + "、Y：" + centerInfo[1]);
 
-        mapViewModel.getRadius(mMap);
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
     }
 
     //↓↓↓↓↓↓↓↓↓↓位置情報取得のパーミッション関係↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓//
