@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.UserActivity"></activity>
+        <activity android:name=".activity.UserUpdateActivity"></activity>
+        <activity android:name=".activity.UserActivity" />
         <activity android:name=".activity.TimeLIneActivity" />
         <activity android:name=".activity.activity_comment" />
         <activity android:name=".activity.PostActivity" />
