@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -101,7 +101,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        System.out.println("-------------------------onMapReady---------------------------");
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         this.googleMap = googleMap;
         if (checkPermission()) {
             //現在地取得
@@ -162,14 +162,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED) {
-            System.out.println("---------------checkPermission:True-----------------");
+            Log.i(LogUtil.getClassName(), "checkPermission:True");
 
             return true;
         } else {
             deviceLocation = mapModel.fetchDeviceLocation(fusedLocationClient);
         }
             // 拒否していた場合(初回起動も含めて)
-        else {
+            Log.i(LogUtil.getClassName(), "checkPermission:False");
             System.out.println("---------------checkPermission:False-----------------");
 
             return false;
@@ -189,7 +189,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     .setMessage("アプリに現在地情報へのアクセスを許可しますか？")
                     .setPositiveButton("許可", new DialogInterface.OnClickListener() {
     private void requestLocationPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
             System.out.println("---------------requestLocationPermission:True-----------------");
