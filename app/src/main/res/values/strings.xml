@@ -19,4 +19,9 @@
     <string name="locationeditText">位置情報</string>
     <string name="dangerswitch">危険な情報</string>
     <string name="posttextBox">投稿内容</string>
+    <string name="approvalbutten">フォロー承認/申請</string>
+    <string name="changeButten">変更</string>
+    <string name="profileeditText">プロフィール表示欄</string>
+    <string name="followButten">フォロー</string>
+    <string name="followerButten">フォロワー</string>
 </resources>
