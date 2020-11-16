@@ -62,12 +62,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-
-        mapViewModel.getDeviceLocationResult().observe(this, new Observer<LatLng>() {
+        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        mapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
             @Override
-            public void onChanged(LatLng latLng) {
-                deviceLocation = latLng;
-                System.out.println(deviceLocation);
+            public void onChanged(@Nullable final LatLng latLng) {
+                //カメラ移動、縮尺調整
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
+                googleMap.setOnCameraIdleListener(MapActivity.this);
+                googleMap.getUiSettings().setZoomControlsEnabled(true);
             }
         });
 
@@ -98,10 +100,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         System.out.println("-------------------------onMapReady---------------------------");
-        mMap = googleMap;
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
+        this.googleMap = googleMap;
+        if (checkPermission()) {
+            //現在地取得
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            mapViewModel.getDeviceLocation(fusedLocationClient);
         if (!checkPermission()) {
             requestLocationPermission();
         } else {
