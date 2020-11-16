@@ -34,4 +34,5 @@
     <string name="title_activity_map">Map</string>
     <string name="photoFABContentDescription">写真選択</string>
     <string name="postFABContentDescription">投稿</string>
+    <string name="title_activity_map">Map</string>
 </resources>

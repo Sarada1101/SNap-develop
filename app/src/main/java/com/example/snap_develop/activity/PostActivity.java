@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.databinding.ActivityPostBinding;
+import com.example.snap_develop.util.LogUtil;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,6 +25,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
@@ -38,6 +40,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void insertPost() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         FirebaseUser firebaseUser = new ViewModelProvider(this).get(
                 UserViewModel.class).getCurrentUser();
         PostBean postBean = new PostBean();
