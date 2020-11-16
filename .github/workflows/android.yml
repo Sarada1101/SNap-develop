@@ -25,7 +25,7 @@ jobs:
       - name: gradlew assembleDebug
         run: ./gradlew assembleDebug
       - name: gradlew lint
-        run: ./gradlew lint
+        run: ./gradlew lint --stacktrace
       - name: gradlew spotbugsDebug
         run: ./gradlew spotbugsDebug
       - name: Set up Ruby 2.6
