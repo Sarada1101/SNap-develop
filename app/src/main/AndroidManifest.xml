@@ -8,14 +8,8 @@
         粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the "MyLocation" functionality.
-    -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,22 +17,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.SettingActivity">
-        <activity android:name=".activity.CommentActivity"></activity>
-        <activity android:name=".activity.TimeLineActivity"></activity>
-        <activity android:name=".activity.DisplayCommentActivity" />
-        <activity android:name=".activity.PostActivity" />
+        <activity android:name=".activity.ApprovalPendingFollowListActivity" />
+        <activity android:name=".activity.ApplicatedFollowListActivity" />
         <activity android:name=".activity.AuthActivity">
-        <activity android:name=".activity.FollowerListActivity">
-        <activity android:name=".activity.ApprovalPendingFollowListActivity">
-        <activity android:name=".activity.ApplicatedFollowListActivity">
-        <activity android:name=".activity.AuthActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.FollowerListActivity" />
         <activity android:name=".activity.FollowingListActivity" />
+        <activity
+            android:name=".activity.MapActivity"
+            android:label="@string/title_activity_map" />
+        <activity android:name=".activity.PostActivity" />
+        <activity android:name=".activity.PostSearchActivity" />
+        <activity android:name=".activity.SettingActivity" />
+
         <!--
             Google MapsベースのAPIのAPIキーは文字列リソースとして定義されています。
             ファイル「res/values/google_maps_api.xml」を参照）。
@@ -46,18 +44,6 @@
             公開用の APK の署名に使用されるリリースキーを含め、暗号化キーごとに異なる API キーが必要です。
             デバッグターゲットとリリースターゲットのキーは src/debug/ と src/release/ で定義できます。
         -->
-        <activity
-            android:name=".activity.MapActivity"
-            android:label="@string/title_activity_map">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activity.PostActivity" />
-        <activity android:name=".activity.PostSearchActivity" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
