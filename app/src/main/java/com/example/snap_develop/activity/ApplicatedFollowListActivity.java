@@ -38,7 +38,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity {
         sAdapter = new SimpleAdapter(this, listData,
                 R.layout.activity_applicated_follow_list_row,
                 new String[]{"usericon", "username", "userid"},
-                new int[]{R.id.usrView, R.id.usrName, R.id.usrId});
+                new int[]{R.id.userImageView, R.id.userNameTextView, R.id.userIdTextView});
         lv = (ListView) findViewById(R.id.applicatedFollowList);
         lv.setAdapter(sAdapter);
     }

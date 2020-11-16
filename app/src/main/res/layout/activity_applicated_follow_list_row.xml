@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/usrView"
+        android:id="@+id/userImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -17,26 +17,26 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/usrName"
+        android:id="@+id/userNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/username"
-        app:layout_constraintBottom_toBottomOf="@+id/usrView"
-        app:layout_constraintStart_toEndOf="@+id/usrView"
-        app:layout_constraintTop_toTopOf="@+id/usrView" />
+        app:layout_constraintBottom_toBottomOf="@+id/userImageView"
+        app:layout_constraintStart_toEndOf="@+id/userImageView"
+        app:layout_constraintTop_toTopOf="@+id/userImageView" />
 
     <TextView
-        android:id="@+id/usrId"
+        android:id="@+id/userIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/userID"
-        app:layout_constraintBottom_toBottomOf="@+id/usrName"
-        app:layout_constraintStart_toEndOf="@+id/usrName"
-        app:layout_constraintTop_toTopOf="@+id/usrName" />
+        app:layout_constraintBottom_toBottomOf="@+id/userNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/userNameTextView"
+        app:layout_constraintTop_toTopOf="@+id/userNameTextView" />
 
     <Button
         android:id="@+id/approvalButton"
@@ -45,9 +45,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/applicatedButton"
-        app:layout_constraintBottom_toBottomOf="@+id/usrId"
-        app:layout_constraintStart_toEndOf="@+id/usrId"
-        app:layout_constraintTop_toTopOf="@+id/usrId" />
+        app:layout_constraintBottom_toBottomOf="@+id/userIdTextView"
+        app:layout_constraintStart_toEndOf="@+id/userIdTextView"
+        app:layout_constraintTop_toTopOf="@+id/userIdTextView" />
 
     <Button
         android:id="@+id/rejectButton"
