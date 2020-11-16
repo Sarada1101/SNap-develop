@@ -1,8 +1,10 @@
-package com.example.snap_develop;
+package com.example.snap_develop.activity;
+
+import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import com.example.snap_develop.R;
 
 public class SettingActivity extends AppCompatActivity {
 
