@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.UserUpdateActivity">
+
+    <EditText
+        android:id="@+id/editTextTextPersonName3"
+        android:layout_width="297dp"
+        android:layout_height="54dp"
+        android:ems="10"
+        android:hint="@string/nameUpdate"
+        android:inputType="textPersonName"
+        android:shadowColor="#070707"
+        android:textColorHighlight="#020202"
+        android:textColorHint="#100F0F"
+        android:textColorLink="#100E0E"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.412"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.236" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName4"
+        android:layout_width="297dp"
+        android:layout_height="157dp"
+        android:ems="10"
+        android:hint="@string/profireUpdate"
+        android:inputType="textPersonName"
+        android:textColor="#050505"
+        android:textColorHint="#0C0B0B"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.412"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName3"
+        app:layout_constraintVertical_bias="0.055" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="73dp"
+        android:layout_height="73dp"
+        app:srcCompat="@drawable/ic_baseline_add_circle_24"
+        tools:layout_editor_absoluteX="47dp"
+        tools:layout_editor_absoluteY="67dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -53,4 +53,6 @@
     <string name="profileeditText">プロフィール表示欄</string>
     <string name="followButten">フォロー</string>
     <string name="followerButten">フォロワー</string>
+    <string name="nameUpdate">名前</string>
+    <string name="profireUpdate">プロフィール</string>
 </resources>
