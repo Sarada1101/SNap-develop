@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/userView"
+        android:id="@+id/userImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -17,25 +17,25 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/userName"
+        android:id="@+id/userNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/userView"
-        app:layout_constraintStart_toEndOf="@+id/userView"
-        app:layout_constraintTop_toTopOf="@+id/userView"
+        app:layout_constraintBottom_toBottomOf="@+id/userImageView"
+        app:layout_constraintStart_toEndOf="@+id/userImageView"
+        app:layout_constraintTop_toTopOf="@+id/userImageView"
         tools:text="@string/username" />
 
     <TextView
-        android:id="@+id/userId"
+        android:id="@+id/userIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
         android:text="@string/userID"
-        app:layout_constraintBottom_toBottomOf="@+id/userName"
-        app:layout_constraintStart_toEndOf="@+id/userName"
-        app:layout_constraintTop_toTopOf="@+id/userName" />
+        app:layout_constraintBottom_toBottomOf="@+id/userNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/userNameTextView"
+        app:layout_constraintTop_toTopOf="@+id/userNameTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
