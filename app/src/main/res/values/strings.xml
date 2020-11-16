@@ -37,4 +37,5 @@
     <string name="postFABContentDescription">投稿</string>
     <string name="approvalPending">承認待ち</string>
     <string name="followApplication">フォロー申請</string>
+    <string name="title_activity_map">Map</string>
 </resources>
