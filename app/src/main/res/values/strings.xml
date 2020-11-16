@@ -22,6 +22,20 @@
     <string name="Comment">コメント</string>
     <string name="DateTime">2020/11/6 12:00</string>
     <string name="search">キーワードを入力</string>
+    <string name="approvalPending">承認待ち</string>
+    <string name="followApplication">フォロー申請</string>
+    <string name="applicatedButton">承認する</string>
+    <string name="reject">拒否</string>
+    <string name="DisclosureRange">公開範囲設定</string>
+    <string name="theEntire">全体に公開</string>
+    <string name="あ" />
+    <string name="follower">フォロワーのみに公開</string>
+    <string name="anonymous">匿名投稿</string>
+    <string name="notification">通知設定</string>
+    <string name="followed">フォローされたとき通知</string>
+    <string name="gooded">いいねされたとき通知</string>
+    <string name="commented">コメント通知</string>
+    <string name="touristSpot">近くの観光地を通知</string>
     <string name="createacount">新規登録</string>
     <string name="nameTextEdit">ユーザー名</string>
     <string name="idTextEdit">ユーザーID</string>
@@ -33,5 +47,7 @@
     <string name="textbox">投稿内容</string>
     <string name="photoFABContentDescription">写真選択</string>
     <string name="postFABContentDescription">投稿</string>
+    <string name="approvalPending">承認待ち</string>
+    <string name="followApplication">フォロー申請</string>
     <string name="title_activity_map">Map</string>
 </resources>
