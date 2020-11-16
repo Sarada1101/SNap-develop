@@ -1,31 +1,50 @@
 package com.example.snap_develop.viewModel;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.UserModel;
+import com.example.snap_develop.util.LogUtil;
 import com.google.firebase.auth.FirebaseUser;
 
 public class UserViewModel extends ViewModel {
-    private MutableLiveData<String> createAccountResult;
+    private MutableLiveData<String> authResult;
     UserModel userModel = new UserModel();
 
-    public void createAccount(String email, String password) {
-        userModel.createAccount(email, password, createAccountResult);
-    }
-
-    public MutableLiveData<String> getCreateAccountResult() {
-        if (createAccountResult == null) {
-            createAccountResult = new MutableLiveData<>();
-        }
-        return createAccountResult;
-    }
-
     public FirebaseUser getCurrentUser() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         return userModel.getCurrentUser();
     }
 
+    public void createAccount(String email, String password) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        userModel.createAccount(email, password, authResult);
+    }
+
+    public void signIn(String email, String password) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        userModel.signIn(email, password, authResult);
+    }
+
+    public void insertUser(UserBean userBean) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        userModel.insertUser(userBean);
+    }
+
     public void signOut() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         userModel.signOut();
     }
+
+    public MutableLiveData<String> getAuthResult() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
+        }
+        return authResult;
+    }
 }
+
