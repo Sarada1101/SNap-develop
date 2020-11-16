@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.activity_comment">
+    tools:context=".activity.CommentActivity">
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/posteditText"
         android:layout_width="344dp"
         android:layout_height="177dp"
         android:ems="10"
+        android:hint="@string/replyeditText"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,18 +21,19 @@
         app:layout_constraintVertical_bias="0.189" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/replybutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="返信"
         tools:layout_editor_absoluteX="286dp"
-        tools:layout_editor_absoluteY="50dp" />
+        tools:layout_editor_absoluteY="50dp"
+        tools:text="@string/replybutten" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/anonymousswitch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="匿名投稿"
+        android:text="@string/anonymousSwitch"
         tools:layout_editor_absoluteX="34dp"
         tools:layout_editor_absoluteY="306dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
