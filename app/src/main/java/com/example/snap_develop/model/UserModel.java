@@ -8,16 +8,23 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class UserModel extends FirestoreBase {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final static String SUCCESS = "success";
 
     public FirebaseUser getCurrentUser() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
@@ -33,7 +40,7 @@ public class UserModel extends FirestoreBase {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(LogUtil.getClassName(), "createUserWithEmail:success");
-                            authResult.setValue("success");
+                            authResult.setValue(SUCCESS);
                             UserBean userBean = new UserBean();
                             UserModel userModel = new UserModel();
                             userBean.setUid(userModel.getCurrentUser().getUid());
@@ -63,7 +70,7 @@ public class UserModel extends FirestoreBase {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(LogUtil.getClassName(), "createUserWithEmail:success");
-                            authResult.setValue("success");
+                            authResult.setValue(SUCCESS);
                         } else {
                             Log.w(LogUtil.getClassName(), "createUserWithEmail:failure",
                                     task.getException());
@@ -92,5 +99,64 @@ public class UserModel extends FirestoreBase {
     public void signOut() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         firebaseAuth.signOut();
+    }
+
+    public void updateUser(UserBean userBean, byte[] data,
+            final MutableLiveData<String> updateResult) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+
+        //画像をstorageに保存
+        imgUpload(data, userBean.getIcon());
+
+        this.connect();
+
+        firestore.collection("users")
+                .document(userBean.getUid())
+                .update(
+                        "name", userBean.getName(),
+                        "message", userBean.getMessage(),
+                        "icon", userBean.getIcon()
+                )
+                .addOnCompleteListener(
+                        new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d(LogUtil.getClassName(), "updateUser:success");
+                                updateResult.setValue(SUCCESS);
+                            }
+                        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(LogUtil.getClassName(), "updateUser:failure", e);
+                        updateResult.setValue(String.valueOf(e));
+                    }
+                });
+    }
+
+    //storageに画像をアップロードするメソッド
+    public void imgUpload(byte[] data, String path) {
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReference();
+
+        // Create a reference
+        StorageReference userImagesRef = storageRef.child(path);
+
+        UploadTask uploadTask = userImagesRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                System.out.println("--------No upload------");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type,
+                // etc.
+                // ...
+                System.out.println("--------Yes upload-------");
+            }
+        });
     }
 }
