@@ -62,10 +62,10 @@ public class UserModel extends FirestoreBase {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(LogUtil.getClassName(), "createUserWithEmail:success");
+                            Log.d(LogUtil.getClassName(), "signInUserWithEmail:success");
                             authResult.setValue("success");
                         } else {
-                            Log.w(LogUtil.getClassName(), "createUserWithEmail:failure",
+                            Log.w(LogUtil.getClassName(), "signInUserWithEmail:failure",
                                     task.getException());
                             authResult.setValue(String.valueOf(task.getException()));
                         }
