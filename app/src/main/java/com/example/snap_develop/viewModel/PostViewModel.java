@@ -14,6 +14,7 @@ public class PostViewModel extends ViewModel {
     PostModel postModel = new PostModel();
 
     public void insertPost(PostBean postBean) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         postModel.insertPost(postBean);
     }
 }
