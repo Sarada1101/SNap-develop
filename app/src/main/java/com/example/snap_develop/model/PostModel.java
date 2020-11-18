@@ -9,25 +9,30 @@ import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PostModel extends FirestoreBase {
+public class PostModel extends Firebase {
 
     public void insertPost(final PostBean postBean) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
-        post.put("picture", postBean.getPicture());
-        //TODO 現在地
+        post.put("picture", postBean.getPhotoName());
+        post.put("geopoint", new GeoPoint(postBean.getLatLng().latitude,
+                postBean.getLatLng().longitude));
         post.put("datetime", postBean.getDatetime());
         post.put("anonymous", postBean.isAnonymous());
         post.put("danger", postBean.isDanger());
         post.put("uid", postBean.getUid());
         post.put("type", postBean.getType());
 
-        this.connect();
+        this.firestoreConnect();
+        this.storageConnect();
 
         //投稿を追加
         firestore.collection("posts")
@@ -55,6 +60,25 @@ public class PostModel extends FirestoreBase {
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), e);
+                                    }
+                                });
+
+                        StorageReference imagesRef = storage.getReference().child(
+                                String.format("postPhoto/%s/%s", postBean.getUid(),
+                                        postBean.getPhotoName()));
+                        imagesRef.putFile(postBean.getPhoto()).addOnSuccessListener(
+                                new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Log.d(LogUtil.getClassName(),
+                                                String.format("postPhoto/%s/%s", postBean.getUid(),
+                                                        postBean.getPhotoName()));
+                                    }
+                                }).addOnFailureListener(
+                                new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Log.w(LogUtil.getClassName(), e);
