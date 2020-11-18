@@ -18,9 +18,9 @@ public class PostModel extends FirestoreBase {
     private final String TAG = "Firestore";
     String postID = "";
 
-    public void insertPost(PostBean postBean) {
+    public void insertPost(final PostBean postBean) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        Map<String, Object> post = new HashMap<>();
+        final Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
         post.put("picture", postBean.getPicture());
         post.put("datetime", postBean.getDatetime());
@@ -41,6 +41,26 @@ public class PostModel extends FirestoreBase {
 
                         Log.d(TAG,
                                 "Document written with ID: " + postID);
+
+                        //パスをusersコレクションに追加
+                        Map<String, Object> usersPost = new HashMap<>();
+                        usersPost.put("path", documentReference);
+                        firestore.collection("users")
+                                .document(postBean.getUid())
+                                .collection("posts")
+                                .add(post)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d(TAG,
+                                                "Document written with ID: " + postID);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -50,22 +70,7 @@ public class PostModel extends FirestoreBase {
                     }
                 });
 
-        firestore.collection("users")
-                .document(postBean.getUid())
-                .collection("posts")
-                .add(post)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG,
-                                "Document written with ID: " + postID);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding document", e);
-            }
-        });
+
     }
 }
 
