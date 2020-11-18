@@ -17,6 +17,9 @@
         <activity android:name=".activity.TimelineActivity"></activity>
         <activity android:name=".activity.ApprovalPendingFollowListActivity" />
         <activity android:name=".activity.ApplicatedFollowListActivity" />
+        <activity android:name=".activity.UserActivity">
+
+        </activity>
         <activity android:name=".activity.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,6 +38,7 @@
         <activity android:name=".activity.PostSearchActivity" />
         <activity android:name=".activity.SettingActivity" />
     </application>
+
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
