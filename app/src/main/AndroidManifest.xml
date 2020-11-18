@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.snap_develop">
-    <!--
-        ACCESS_COARSE/FINE_LOCATIONのパーミッションは、
-        Google Maps Android API v2を利用する際には必要ありませんが、
-       「MyLocation」機能を利用する際には、
-        粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
-    -->
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,16 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.TimelineActivity"></activity>
-        <activity android:name=".activity.ApprovalPendingFollowListActivity" />
-        <activity android:name=".activity.ApplicatedFollowListActivity" />
-        <activity android:name=".activity.AuthActivity">
+        <activity android:name=".activity.TimelineActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.ApprovalPendingFollowListActivity" />
+        <activity android:name=".activity.ApplicatedFollowListActivity" />
+        <activity android:name=".activity.AuthActivity"></activity>
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.FollowerListActivity" />
@@ -35,8 +30,9 @@
         <activity android:name=".activity.PostSearchActivity" />
         <activity android:name=".activity.SettingActivity" />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 </manifest>

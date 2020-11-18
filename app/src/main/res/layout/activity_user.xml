@@ -89,7 +89,7 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+        app:layout_constraintTop_toTopOf="parent"></View>
 
     <Button
         android:id="@+id/button4"
@@ -126,6 +126,7 @@
         android:orientation="horizontal" />
 
     <ListView
+        android:id="@+id/postList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="59dp"

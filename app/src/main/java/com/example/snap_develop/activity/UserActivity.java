@@ -6,13 +6,15 @@ import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.snap_develop.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class UserActivity extends AppCompatActivity {
     ListView lv;
     SimpleAdapter sAdapter;
-    ArrayList<HashMap<String, String>> listDate;
+    ArrayList<HashMap<String, String>> listData;
 
 
     @Override
@@ -20,7 +22,7 @@ public class UserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        listDate = new ArrayList<HashMap<String, String>>();
+        listData = new ArrayList<HashMap<String, String>>();
 
         HashMap<String, String> data1 = new HashMap<String, String>();
         data1.put("", "");
@@ -36,14 +38,14 @@ public class UserActivity extends AppCompatActivity {
 
 
         sAdapter = new SimpleAdapter(this, listData,
-                R.layout.list_row,
+                R.layout.list_user,
                 new String[]{"", "", ""},
                 new int[]{R.id.userpicture, R.id.username, R.id.userid, R.id.date,
                         R.id.postcontents, R.id.postpicture,
                         R.id.comment, R.id.favorite, R.id.favoritequantity, R.id.location,
-                        R.id.rocationinfomation});
+                        R.id.locationinfomation});
 
-        lv = (ListView) findViewById(R.id.lstvStr);
+        lv = (ListView) findViewById(R.id.postList);
         lv.setAdapter(sAdapter);
 
     }
