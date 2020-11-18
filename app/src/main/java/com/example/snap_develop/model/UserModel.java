@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserModel extends FirestoreBase {
+public class UserModel extends Firebase {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     public FirebaseUser getCurrentUser() {
@@ -84,7 +84,7 @@ public class UserModel extends FirestoreBase {
         user.put("goodNotice", userBean.isGoodNotice());
         user.put("commentNotice", userBean.isCommentNotice());
 
-        this.connect();
+        this.firestoreConnect();
 
         firestore.collection("users").document(userBean.getUid()).set(user);
     }
