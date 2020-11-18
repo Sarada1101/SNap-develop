@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.snap_develop.R;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimeLineActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
