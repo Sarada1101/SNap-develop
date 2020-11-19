@@ -18,9 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.ApprovalPendingFollowListActivity" />
-        <activity android:name=".activity.ApplicatedFollowListActivity">
-
-        </activity>
+        <activity android:name=".activity.ApplicatedFollowListActivity" />
         <activity android:name=".activity.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
