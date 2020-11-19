@@ -13,6 +13,14 @@
     <string name="replybutten">返信</string>
     <string name="replyeditText">返信内容</string>
     <string name="snap">SNap</string>
+    <string name="nameeditText">ユーザー名</string>
+    <string name="ideditText">ユーザーID</string>
+    <string name="dateeditText">年月日</string>
+    <string name="posteditText">投稿内容</string>
+    <string name="favoritebutten">いいね数</string>
+    <string name="locationeditText">位置情報</string>
+    <string name="dangerswitch">危険な情報</string>
+    <string name="posttextBox">投稿内容</string>
     <string name="username">ユーザー名</string>
     <string name="userID">ユーザーID</string>
     <string name="comment">コメントする</string>
@@ -48,4 +56,11 @@
     <string name="approvalPending">承認待ち</string>
     <string name="followApplication">フォロー申請</string>
     <string name="title_activity_map">Map</string>
+    <string name="approvalbutten">フォロー承認/申請</string>
+    <string name="changeButten">変更</string>
+    <string name="profileeditText">プロフィール表示欄</string>
+    <string name="followButten">フォロー</string>
+    <string name="followerButten">フォロワー</string>
+    <string name="nameUpdate">名前</string>
+    <string name="profireUpdate">プロフィール</string>
 </resources>

@@ -36,7 +36,9 @@
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.PostSearchActivity" />
         <activity android:name=".activity.SettingActivity" />
-
+        <activity android:name=".activity.TimelineActivity" />
+        <activity android:name=".activity.UserActivity" />
+        <activity android:name=".activity.UserUpdateActivity" />
         <!--
             Google MapsベースのAPIのAPIキーは文字列リソースとして定義されています。
             ファイル「res/values/google_maps_api.xml」を参照）。
@@ -48,6 +50,4 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
     </application>
-
 </manifest>
-

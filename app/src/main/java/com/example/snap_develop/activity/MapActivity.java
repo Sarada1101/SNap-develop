@@ -48,6 +48,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
             @Override
             public void onChanged(@Nullable final LatLng latLng) {
+                Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
                 //カメラ移動、縮尺調整
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
                 googleMap.setOnCameraIdleListener(MapActivity.this);

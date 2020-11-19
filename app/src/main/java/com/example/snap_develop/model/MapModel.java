@@ -26,21 +26,23 @@ public class MapModel {
     public void getDeviceLocation(FusedLocationProviderClient fusedLocationClient,
             final MutableLiveData<LatLng> deviceLatLng) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        Task<Location> getLastLocation = fusedLocationClient.getLastLocation();
-        getLastLocation.addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    location = task.getResult();
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    Log.i(LogUtil.getClassName(),
-                            String.format("lat:%s , lon:%s", latLng.latitude, latLng.longitude));
-                    deviceLatLng.setValue(latLng);
-                } else {
-                    Log.d(LogUtil.getClassName(), String.valueOf(task.getException()));
-                }
-            }
-        });
+        fusedLocationClient.getLastLocation().addOnCompleteListener(
+                new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            location = task.getResult();
+                            LatLng latLng = new LatLng(location.getLatitude(),
+                                    location.getLongitude());
+                            Log.i(LogUtil.getClassName(),
+                                    String.format("lat:%s , lon:%s", latLng.latitude,
+                                            latLng.longitude));
+                            deviceLatLng.setValue(latLng);
+                        } else {
+                            Log.d(LogUtil.getClassName(), String.valueOf(task.getException()));
+                        }
+                    }
+                });
     }
 
     public int getRadius(GoogleMap googleMap) {
