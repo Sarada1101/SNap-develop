@@ -7,6 +7,7 @@ import android.widget.SimpleAdapter;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.snap_develop.R;
+import com.example.snap_develop.viewModel.FollowViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class UserActivity extends AppCompatActivity {
     ListView lv;
     SimpleAdapter sAdapter;
     ArrayList<HashMap<String, String>> listData;
-
+    FollowViewModel followViewModel = new FollowViewModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,6 @@ public class UserActivity extends AppCompatActivity {
         data2.put("", "");
         listData.add(data2);
 
-
         sAdapter = new SimpleAdapter(this, listData,
                 R.layout.list_user,
                 new String[]{"", "", ""},
@@ -47,6 +47,16 @@ public class UserActivity extends AppCompatActivity {
 
         lv = (ListView) findViewById(R.id.postList);
         lv.setAdapter(sAdapter);
+    }
 
+    //フォロー申請ボタンが押されたときに動くonClickメソッド
+    public void followApplicated() {
+
+        //テストデータ
+        String myUid = "UtJFmruiiBS28WH333AE6YHEjf72";
+        String applicatedUid = "nGBoEuFPNBf9LmpLuFA6aGKshBr1";
+
+        followViewModel.insertApplicatedFollow(applicatedUid, myUid);
+        followViewModel.insertApprovalPendingFollow(applicatedUid, myUid);
     }
 }
