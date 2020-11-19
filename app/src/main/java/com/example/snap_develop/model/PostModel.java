@@ -20,7 +20,7 @@ public class PostModel extends Firebase {
 
     public void insertPost(final PostBean postBean) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        Map<String, Object> post = new HashMap<>();
+        final Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
         post.put("picture", postBean.getPhotoName());
         post.put("geopoint", new GeoPoint(postBean.getLatLng().latitude,
@@ -45,12 +45,12 @@ public class PostModel extends Firebase {
                                         documentReference.getId()));
 
                         //パスをusersコレクションに追加
-                        Map<String, Object> usersPost = new HashMap<>();
-                        usersPost.put("path", documentReference);
+                        Map<String, Object> path = new HashMap<>();
+                        path.put("path", documentReference);
                         firestore.collection("users")
                                 .document(postBean.getUid())
                                 .collection("posts")
-                                .add(usersPost)
+                                .add(path)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
@@ -90,6 +90,73 @@ public class PostModel extends Firebase {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(LogUtil.getClassName(), e);
+                    }
+                });
+    }
+
+
+    public void insertComment(final PostBean postBean) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        final Map<String, Object> post = new HashMap<>();
+        post.put("message", postBean.getMessage());
+        post.put("datetime", postBean.getDatetime());
+        post.put("anonymous", postBean.isAnonymous());
+        post.put("uid", postBean.getUid());
+        post.put("type", postBean.getType());
+
+        this.firestoreConnect();
+
+        //コメントを追加
+        firestore.collection("posts")
+                .add(post)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(LogUtil.getClassName(),
+                                String.format("posts add document ID: %s",
+                                        documentReference.getId()));
+
+                        //パスをusersコレクションに追加
+                        Map<String, Object> path = new HashMap<>();
+                        path.put("path", documentReference);
+                        firestore.collection("users")
+                                .document(postBean.getUid())
+                                .collection("posts")
+                                .add(path)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d(LogUtil.getClassName(),
+                                                String.format("users/post add document ID: %s",
+                                                        documentReference.getId()));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), e);
+                                    }
+                                });
+                        //パスをpostsコレクションに追加
+                        path.put("path", documentReference);
+                        firestore.collection("posts")
+                                .document(postBean.getUid())
+                                .collection("comments")
+                                .add(path)
+                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Log.d(LogUtil.getClassName(),
+                                                String.format("posts/comments add document ID: %s",
+                                                        documentReference.getId()));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), e);
+                                    }
+                                });
                     }
                 });
     }
