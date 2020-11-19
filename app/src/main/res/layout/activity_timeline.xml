@@ -1,116 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.TimelineActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="54dp"
-        android:layout_height="51dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/nameeditText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.235"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="69dp"
-        android:layout_height="14dp"
-        android:text="@string/ideditText"
-        android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.461"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.055" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="69dp"
-        android:layout_height="14dp"
-        android:text="@string/dateeditText"
-        android:textSize="8sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.953"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.055" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName2"
-        android:layout_width="407dp"
-        android:layout_height="175dp"
-        android:ems="10"
-        android:hint="@string/posteditText"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.12" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="406dp"
-        android:layout_height="214dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.468"
-        app:srcCompat="#ACA3B8" />
-
-    <ImageView
-        android:id="@+id/favoriteimage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_baseline_favorite_24"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="473dp" />
-
-    <ImageView
-        android:id="@+id/locationimage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_baseline_location_on_24"
-        tools:layout_editor_absoluteX="96dp"
-        tools:layout_editor_absoluteY="473dp" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/favoritebutten"
-        tools:layout_editor_absoluteX="40dp"
-        tools:layout_editor_absoluteY="473dp" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/locationeditText"
-        tools:layout_editor_absoluteX="120dp"
-        tools:layout_editor_absoluteY="473dp" />
-
+    <ListView
+        android:id="@+id/timeLineListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="88dp"
+        tools:layout_editor_absoluteY="175dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

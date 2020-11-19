@@ -18,7 +18,6 @@ public class UserActivity extends AppCompatActivity {
     ArrayList<HashMap<String, String>> listData;
     FollowViewModel followViewModel = new FollowViewModel();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,14 +38,14 @@ public class UserActivity extends AppCompatActivity {
         listData.add(data2);
 
         sAdapter = new SimpleAdapter(this, listData,
-                R.layout.list_row,
+                R.layout.list_user,
                 new String[]{"", "", ""},
                 new int[]{R.id.userpicture, R.id.username, R.id.userid, R.id.date,
                         R.id.postcontents, R.id.postpicture,
                         R.id.comment, R.id.favorite, R.id.favoritequantity, R.id.location,
-                        R.id.rocationinfomation});
+                        R.id.locationinfomation});
 
-        lv = (ListView) findViewById(R.id.lstvStr);
+        lv = (ListView) findViewById(R.id.postList);
         lv.setAdapter(sAdapter);
     }
 
