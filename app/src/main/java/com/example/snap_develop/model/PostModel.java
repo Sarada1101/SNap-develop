@@ -3,17 +3,25 @@ package com.example.snap_develop.model;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.util.LogUtil;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PostModel extends Firebase {
@@ -159,5 +167,54 @@ public class PostModel extends Firebase {
                                 });
                     }
                 });
+    }
+
+    public void fetchTimeLine(List<String> uidList,
+            final MutableLiveData<List<PostBean>> postList) {
+        this.firestoreConnect();
+
+        final List<PostBean> setList = new ArrayList<>();
+
+        //フォローしている人のそれぞれの投稿を取得
+        for (String uid : uidList) {
+            firestore.collection("posts")
+                    .whereEqualTo("uid", uid)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    System.out.println(
+                                            "------------------success--------------------");
+                                    System.out.println(document.getData());
+
+                                    PostBean addPost = new PostBean();
+                                    addPost.setAnonymous(document.getBoolean("anonymous"));
+                                    addPost.setDanger(document.getBoolean("danger"));
+                                    addPost.setDatetime(document.getDate("datetime"));
+                                    LatLng geopoint = new LatLng(
+                                            document.getGeoPoint("geopoint").getLatitude(),
+                                            document.getGeoPoint("geopoint").getLongitude());
+                                    addPost.setLatLng(geopoint);
+                                    addPost.setMessage(document.getString("message"));
+                                    addPost.setPhotoName(document.getString("picture"));
+                                    addPost.setType(document.getString("type"));
+                                    addPost.setUid(document.getString("uid"));
+                                    setList.add(addPost);
+                                }
+                                postList.setValue(setList);
+                            } else {
+                                System.out.println("------------------else" + task.getException() + "--------------------");
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println("--------err:" + e + "----------");
+                        }
+                    });
+        }
     }
 }
