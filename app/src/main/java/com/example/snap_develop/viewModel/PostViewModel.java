@@ -30,9 +30,10 @@ public class PostViewModel extends ViewModel {
     }
 
     public void fetchTimeLine(List<String> uidList) {
-        System.out.println("--------------------fetchTimeLine----------------------");
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         timeLine = new MutableLiveData<>();
         postModel.fetchTimeLine(uidList, timeLine);
+    }
 
 
     public void insertComment(PostBean postBean) {
