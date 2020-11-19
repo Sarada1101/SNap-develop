@@ -13,18 +13,18 @@ import com.google.firebase.firestore.DocumentReference;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FollowModel extends FirestoreBase {
+public class FollowModel extends Firebase {
 
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を拒否しようとしている人のuid
-    //申請して許可を待っている人のapplicated_followsのドキュメントIDが申請を拒否しようとしている人のuidのとこを削除
+    //申請を拒否しようとしている人のapplicated_followsのドキュメントIDが申請して許可を待っている人のuidのとこを削除
     public void deleteApplicatedFollow(String userPath, String myUid) {
-        this.connect();
+        this.firestoreConnect();
 
         firestore.collection("users")
-                .document(userPath)
-                .collection("applicated_follows")
                 .document(myUid)
+                .collection("applicated_follows")
+                .document(userPath)
                 .delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -43,14 +43,14 @@ public class FollowModel extends FirestoreBase {
 
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を拒否しようとしている人のuid
-    //申請を拒否しようとしている人のapproval_pending_followsのドキュメントIDが申請して許可を待っている人のuidのとこを削除
+    //申請して許可を待っている人のapproval_pending_followsのドキュメントIDが申請を拒否しようとしている人のuidのとこを削除
     public void deleteApprovalPendingFollow(String userPath, String myUid) {
-        this.connect();
+        this.firestoreConnect();
 
         firestore.collection("users")
-                .document(myUid)
-                .collection("approval_pending_follows")
                 .document(userPath)
+                .collection("approval_pending_follows")
+                .document(myUid)
                 .delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -70,7 +70,7 @@ public class FollowModel extends FirestoreBase {
     //myUid : 申請を許可した人のuid
     //申請を許可した人のfollowerのコレクションの中に申請して許可を待っている人のuidのパスを追加
     public void insertFollower(String userPath, String myUid) {
-        this.connect();
+        this.firestoreConnect();
 
         DocumentReference followerPath = firestore.collection("users").document(userPath);
 
@@ -101,7 +101,7 @@ public class FollowModel extends FirestoreBase {
     //myUid : 申請を許可した人のuid
     //申請して許可を待っている人のfollowingのコレクションの中に申請を許可した人のuidのパスを追加
     public void insertFollowing(String userPath, String myUid) {
-        this.connect();
+        this.firestoreConnect();
 
         DocumentReference followingPath = firestore.collection("users").document(myUid);
 
