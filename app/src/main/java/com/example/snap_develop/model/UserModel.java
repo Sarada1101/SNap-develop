@@ -21,7 +21,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserModel extends FirestoreBase {
+public class UserModel extends Firebase {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private final static String SUCCESS = "success";
@@ -69,10 +69,10 @@ public class UserModel extends FirestoreBase {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(LogUtil.getClassName(), "createUserWithEmail:success");
-                            authResult.setValue(SUCCESS);
+                            Log.d(LogUtil.getClassName(), "signInUserWithEmail:success");
+                            authResult.setValue("success");
                         } else {
-                            Log.w(LogUtil.getClassName(), "createUserWithEmail:failure",
+                            Log.w(LogUtil.getClassName(), "signInUserWithEmail:failure",
                                     task.getException());
                             authResult.setValue(String.valueOf(task.getException()));
                         }
@@ -91,7 +91,7 @@ public class UserModel extends FirestoreBase {
         user.put("goodNotice", userBean.isGoodNotice());
         user.put("commentNotice", userBean.isCommentNotice());
 
-        this.connect();
+        this.firestoreConnect();
 
         firestore.collection("users").document(userBean.getUid()).set(user);
     }
