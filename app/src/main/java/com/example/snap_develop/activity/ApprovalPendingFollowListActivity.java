@@ -1,28 +1,25 @@
 package com.example.snap_develop.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.snap_develop.R;
-import com.example.snap_develop.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FollowerListActivity extends AppCompatActivity {
+public class ApprovalPendingFollowListActivity extends AppCompatActivity {
     ListView lv;
     SimpleAdapter sAdapter;
     ArrayList<HashMap<String, String>> listData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_follower_list);
+        setContentView(R.layout.activity_approval_pending_follow_list);
 
         listData = new ArrayList<HashMap<String, String>>();
 
@@ -36,10 +33,11 @@ public class FollowerListActivity extends AppCompatActivity {
         data2.put("userid", "ijdsbf");
         listData.add(data2);
 
-        sAdapter = new SimpleAdapter(this, listData, R.layout.activity_follower_list_row,
+        sAdapter = new SimpleAdapter(this, listData,
+                R.layout.activity_approval_pending_follow_list_row,
                 new String[]{"usericon", "username", "userid"},
-                new int[]{R.id.followerIconView, R.id.followerNameView, R.id.followerIdView});
-        lv = (ListView) findViewById(R.id.followerList);
+                new int[]{R.id.userImageView, R.id.userNameTextView, R.id.userIdTextView});
+        lv = (ListView) findViewById(R.id.approvalPendingList);
         lv.setAdapter(sAdapter);
     }
 }

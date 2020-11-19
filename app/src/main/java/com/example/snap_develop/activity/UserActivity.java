@@ -1,45 +1,52 @@
 package com.example.snap_develop.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.snap_develop.R;
-import com.example.snap_develop.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FollowerListActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity {
     ListView lv;
     SimpleAdapter sAdapter;
     ArrayList<HashMap<String, String>> listData;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_follower_list);
+        setContentView(R.layout.activity_user);
 
         listData = new ArrayList<HashMap<String, String>>();
 
         HashMap<String, String> data1 = new HashMap<String, String>();
-        data1.put("username", "西山大成");
-        data1.put("userid", "t1233");
+        data1.put("", "");
+        data1.put("", "");
+        data1.put("", "");
         listData.add(data1);
 
         HashMap<String, String> data2 = new HashMap<String, String>();
-        data2.put("username", "井上r");
-        data2.put("userid", "ijdsbf");
+        data2.put("", "");
+        data2.put("", "");
+        data2.put("", "");
         listData.add(data2);
 
-        sAdapter = new SimpleAdapter(this, listData, R.layout.activity_follower_list_row,
-                new String[]{"usericon", "username", "userid"},
-                new int[]{R.id.followerIconView, R.id.followerNameView, R.id.followerIdView});
-        lv = (ListView) findViewById(R.id.followerList);
+
+        sAdapter = new SimpleAdapter(this, listData,
+                R.layout.list_user,
+                new String[]{"", "", ""},
+                new int[]{R.id.userpicture, R.id.username, R.id.userid, R.id.date,
+                        R.id.postcontents, R.id.postpicture,
+                        R.id.comment, R.id.favorite, R.id.favoritequantity, R.id.location,
+                        R.id.locationinfomation});
+
+        lv = (ListView) findViewById(R.id.postList);
         lv.setAdapter(sAdapter);
+
     }
 }
