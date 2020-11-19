@@ -7,6 +7,9 @@
        「MyLocation」機能を利用する際には、
         粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
     -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.TimelineActivity"></activity>
         <activity android:name=".activity.ApprovalPendingFollowListActivity" />
         <activity android:name=".activity.ApplicatedFollowListActivity">
 
@@ -37,10 +39,19 @@
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.PostSearchActivity" />
         <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.TimelineActivity" />
+        <activity android:name=".activity.UserActivity" />
+        <activity android:name=".activity.UserUpdateActivity" />
+        <!--
+            Google MapsベースのAPIのAPIキーは文字列リソースとして定義されています。
+            ファイル「res/values/google_maps_api.xml」を参照）。
+            API キーは、APK の署名に使用される暗号化キーにリンクされていることに注意してください。
+            公開用の APK の署名に使用されるリリースキーを含め、暗号化キーごとに異なる API キーが必要です。
+            デバッグターゲットとリリースターゲットのキーは src/debug/ と src/release/ で定義できます。
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
     </application>
-
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
