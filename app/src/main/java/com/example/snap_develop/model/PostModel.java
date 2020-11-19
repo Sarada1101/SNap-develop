@@ -45,12 +45,12 @@ public class PostModel extends Firebase {
                                         documentReference.getId()));
 
                         //パスをusersコレクションに追加
-                        Map<String, Object> usersPost = new HashMap<>();
-                        usersPost.put("path", documentReference);
+                        Map<String, Object> path = new HashMap<>();
+                        path.put("path", documentReference);
                         firestore.collection("users")
                                 .document(postBean.getUid())
                                 .collection("posts")
-                                .add(usersPost)
+                                .add(path)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
@@ -161,4 +161,3 @@ public class PostModel extends Firebase {
                 });
     }
 }
-
