@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PostViewModel extends ViewModel {
     MutableLiveData<PostBean> post;
-    MutableLiveData<List<PostBean>> timeLine;
+    MutableLiveData<List<PostBean>> postList;
     PostModel postModel = new PostModel();
 
     public void insertPost(PostBean postBean) {
@@ -22,17 +22,18 @@ public class PostViewModel extends ViewModel {
     }
 
 
-    public MutableLiveData<List<PostBean>> getTimeLine() {
-        if (timeLine == null) {
-            timeLine = new MutableLiveData<>();
+    public MutableLiveData<List<PostBean>> getPostList() {
+        if (postList == null) {
+            postList = new MutableLiveData<>();
         }
-        return timeLine;
+        return postList;
     }
 
     public void fetchTimeLine(List<String> uidList) {
-        System.out.println("--------------------fetchTimeLine----------------------");
-        timeLine = new MutableLiveData<>();
-        postModel.fetchTimeLine(uidList, timeLine);
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        postList = new MutableLiveData<>();
+        postModel.fetchTimeLine(uidList, postList);
+    }
 
 
     public void insertComment(PostBean postBean) {

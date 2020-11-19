@@ -6,8 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.snap_develop.bean.PostBean;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.example.snap_develop.util.LogUtil;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -169,13 +170,12 @@ public class PostModel extends Firebase {
     }
 
     public void fetchTimeLine(List<String> uidList,
-            final MutableLiveData<List<PostBean>> timeLine) {
-        this.connect();
+            final MutableLiveData<List<PostBean>> postList) {
+        this.firestoreConnect();
 
-        final List<PostBean> postList = new ArrayList<>();
+        final List<PostBean> setList = new ArrayList<>();
 
-        System.out.println("---------------fetchTimeLine:model-----------------");
-
+        //フォローしている人のそれぞれの投稿を取得
         for (String uid : uidList) {
             firestore.collection("posts")
                     .whereEqualTo("uid", uid)
@@ -193,20 +193,19 @@ public class PostModel extends Firebase {
                                     addPost.setAnonymous(document.getBoolean("anonymous"));
                                     addPost.setDanger(document.getBoolean("danger"));
                                     addPost.setDatetime(document.getDate("datetime"));
-                                    GeoPoint geopoint = new GeoPoint(
+                                    LatLng geopoint = new LatLng(
                                             document.getGeoPoint("geopoint").getLatitude(),
                                             document.getGeoPoint("geopoint").getLongitude());
-                                    addPost.setLat(geopoint.getLatitude());
-                                    addPost.setLon(geopoint.getLongitude());
+                                    addPost.setLatLng(geopoint);
                                     addPost.setMessage(document.getString("message"));
-                                    addPost.setPicture(document.getString("picture"));
+                                    addPost.setPhotoName(document.getString("picture"));
                                     addPost.setType(document.getString("type"));
                                     addPost.setUid(document.getString("uid"));
-                                    postList.add(addPost);
+                                    setList.add(addPost);
                                 }
-                                timeLine.setValue(postList);
+                                postList.setValue(setList);
                             } else {
-                                System.out.println("------------------else--------------------");
+                                System.out.println("------------------else" + task.getException() + "--------------------");
                             }
                         }
                     })
