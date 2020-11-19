@@ -28,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.UserActivity"></activity>
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.FollowerListActivity" />
