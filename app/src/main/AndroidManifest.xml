@@ -19,9 +19,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.ApprovalPendingFollowListActivity" />
         <activity android:name=".activity.ApplicatedFollowListActivity" />
-        <activity android:name=".activity.UserActivity">
-
-        </activity>
         <activity android:name=".activity.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AuthActivity"></activity>
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.FollowerListActivity" />

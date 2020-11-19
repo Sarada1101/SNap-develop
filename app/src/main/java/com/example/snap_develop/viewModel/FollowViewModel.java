@@ -11,6 +11,25 @@ public class FollowViewModel extends ViewModel {
 
     FollowModel followModel = new FollowModel();
 
+    public void deleteApplicatedFollow(String userPath, String myUid) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        followModel.deleteApplicatedFollow(userPath, myUid);
+    }
+
+    public void deleteApprovalPendingFollow(String userPath, String myUid) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        followModel.deleteApprovalPendingFollow(userPath, myUid);
+    }
+
+    public void insertFollower(String userPath, String myUid) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        followModel.insertFollower(userPath, myUid);
+    }
+
+    public void insertFollowing(String userPath, String myUid) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        followModel.insertFollowing(userPath, myUid);
+    }
     public void insertApplicatedFollow(String userPath, String myUid) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         followModel.insertApplicatedFollow(userPath, myUid);
@@ -18,6 +37,6 @@ public class FollowViewModel extends ViewModel {
 
     public void insertApprovalPendingFollow(String userPath, String myUid) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        followModel.insertApprovalPendingFollow(userPath, myUid);
     }
+        followModel.insertApprovalPendingFollow(userPath, myUid);
 }
