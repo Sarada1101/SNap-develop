@@ -170,10 +170,10 @@ public class PostModel extends Firebase {
     }
 
     public void fetchTimeLine(List<String> uidList,
-            final MutableLiveData<List<PostBean>> timeLine) {
+            final MutableLiveData<List<PostBean>> postList) {
         this.firestoreConnect();
 
-        final List<PostBean> postList = new ArrayList<>();
+        final List<PostBean> setList = new ArrayList<>();
 
         //フォローしている人のそれぞれの投稿を取得
         for (String uid : uidList) {
@@ -201,9 +201,9 @@ public class PostModel extends Firebase {
                                     addPost.setPhotoName(document.getString("picture"));
                                     addPost.setType(document.getString("type"));
                                     addPost.setUid(document.getString("uid"));
-                                    postList.add(addPost);
+                                    setList.add(addPost);
                                 }
-                                timeLine.setValue(postList);
+                                postList.setValue(setList);
                             } else {
                                 System.out.println("------------------else" + task.getException() + "--------------------");
                             }
