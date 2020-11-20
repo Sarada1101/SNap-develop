@@ -108,7 +108,7 @@ public class UserModel extends Firebase {
         //画像をstorageに保存
         imgUpload(data, userBean.getIcon());
 
-        this.connect();
+        this.firestoreConnect();
 
         firestore.collection("users")
                 .document(userBean.getUid())

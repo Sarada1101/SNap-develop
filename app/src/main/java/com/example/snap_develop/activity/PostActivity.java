@@ -74,7 +74,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private void insertPost() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mapViewModel.getDeviceLocation(fusedLocationClient);
+        mapViewModel.fetchDeviceLocation(fusedLocationClient);
     }
 
     private void pickPhoto() {

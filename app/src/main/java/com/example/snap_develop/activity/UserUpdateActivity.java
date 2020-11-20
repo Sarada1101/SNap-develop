@@ -24,7 +24,7 @@ public class UserUpdateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_update);
+        setContentView(R.layout.activity_userupdate);
 
         mUserViewModel.getUpdateResult().observe(this, new Observer<String>() {
             @Override

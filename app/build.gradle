@@ -49,7 +49,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'  // Analytics
     implementation 'com.google.firebase:firebase-firestore:22.0.0'  // Firestore
     implementation 'com.google.firebase:firebase-storage:19.2.0'  // CloudStorage
-    // Firebase
+
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"  // LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"  // ViewModel
@@ -57,15 +57,13 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    // test
     // SpotBugs
     spotbugs 'com.github.spotbugs:spotbugs:4.1.4'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
-    // SpotBugs
     // lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
-    // lombok
+
     implementation 'com.google.android.gms:play-services-location:17.1.0'  // Google Maps
     implementation 'com.google.android.gms:play-services-maps:17.0.0'  // Google Maps
 }
