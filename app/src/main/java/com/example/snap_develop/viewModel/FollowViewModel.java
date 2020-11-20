@@ -30,6 +30,7 @@ public class FollowViewModel extends ViewModel {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         followModel.insertFollowing(userPath, myUid);
     }
+
     public void insertApplicatedFollow(String userPath, String myUid) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         followModel.insertApplicatedFollow(userPath, myUid);
@@ -37,6 +38,6 @@ public class FollowViewModel extends ViewModel {
 
     public void insertApprovalPendingFollow(String userPath, String myUid) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-    }
         followModel.insertApprovalPendingFollow(userPath, myUid);
+    }
 }

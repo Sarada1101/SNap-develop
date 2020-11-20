@@ -171,6 +171,7 @@ public class PostModel extends Firebase {
                 });
     }
 
+
     public void fetchTimeLine(List<String> uidList,
             final MutableLiveData<List<PostBean>> postList) {
         this.firestoreConnect();

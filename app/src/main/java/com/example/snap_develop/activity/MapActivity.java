@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -14,8 +13,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.R;
+import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.util.LogUtil;
 import com.example.snap_develop.viewModel.MapViewModel;
+import com.example.snap_develop.viewModel.PostViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,9 +24,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
+
+import java.util.List;
 
 import javax.annotation.Nullable;
-
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
@@ -36,11 +40,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
 
-    FusedLocationProviderClient fusedLocationClient;
-    private final int REQUEST_PERMISSION = 1000;
-    private GoogleMap googleMap;
-    private MapViewModel mapViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
@@ -49,6 +48,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+
+        //デバイスの現在地を取得したら実行
+        mMapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
             @Override
             public void onChanged(@Nullable final LatLng latLng) {
                 Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
@@ -78,13 +80,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Manipulates the map once available. This callback is triggered when the map is ready to be
-     * used. This is where we can add markers or lines, add listeners or move the camera. In this
-     * case, we just add a marker near Sydney, Australia. If Google Play services is not installed
-     * on the device, the user will be prompted to install it inside the SupportMapFragment. This
-     * method will only be triggered once the user has installed Google Play services and returned
-     * to the app.
+
+    /*
+    使用可能になったらマップを操作します。
+    このコールバックは、マップが使用可能な状態になったときにトリガーされます。
+    ここでは、マーカーや線を追加したり、リスナーを追加したり、カメラを動かしたりすることができます。
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -98,23 +98,25 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         } else {
             requestLocationPermission();
         }
+        //自分の位置をMapに表示する
         googleMap.setMyLocationEnabled(true);
         googleMap.setOnMyLocationButtonClickListener(this);
         googleMap.setOnMyLocationClickListener(this);
     }
+
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
     }
 
+
     @Override
     public boolean onMyLocationButtonClick() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
         return false;
     }
+
 
     public void onCameraIdle() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
@@ -122,7 +124,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mPostViewModel.fetchMapPostList(visibleRegion);
     }
 
-    //↓↓↓↓↓↓↓↓↓↓位置情報取得のパーミッション関係↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓//
+
+    //----------位置情報取得のパーミッション関係----------//
     public boolean checkPermission() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         // 既に許可している
@@ -137,6 +140,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             return false;
         }
     }
+
 
     // 許可を求める
     private void requestLocationPermission() {
