@@ -92,8 +92,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         this.mGoogleMap = googleMap;
         if (checkPermission()) {
             //現在地取得
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-            mapViewModel.getDeviceLocation(fusedLocationClient);
+            FusedLocationProviderClient fusedLocationClient =
+                    LocationServices.getFusedLocationProviderClient(this);
             mMapViewModel.fetchDeviceLocation(fusedLocationClient);
         } else {
             requestLocationPermission();
@@ -141,6 +141,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     // 許可を求める
     private void requestLocationPermission() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        int REQUEST_PERMISSION = 1000;
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
     }
