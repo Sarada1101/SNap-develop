@@ -25,7 +25,8 @@ public class MapViewModel extends ViewModel {
         return deviceLatLng;
     }
 
-    public void getDeviceLocation(FusedLocationProviderClient fusedLocationClient) {
+
+    public void fetchDeviceLocation(FusedLocationProviderClient fusedLocationClient) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         mMapModel.fetchDeviceLocation(fusedLocationClient, deviceLatLng);
     }

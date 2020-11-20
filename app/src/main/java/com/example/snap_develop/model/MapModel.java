@@ -23,7 +23,7 @@ public class MapModel {
     private Location mLocation;
 
     @SuppressLint("MissingPermission")
-    public void getDeviceLocation(FusedLocationProviderClient fusedLocationClient,
+    public void fetchDeviceLocation(FusedLocationProviderClient fusedLocationClient,
             final MutableLiveData<LatLng> deviceLatLng) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         fusedLocationClient.getLastLocation().addOnCompleteListener(
