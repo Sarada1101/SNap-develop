@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.VisibleRegion;
 
 public class MapViewModel extends ViewModel {
 
-    MapModel mapModel = new MapModel();
+    private final MapModel mMapModel = new MapModel();
     private MutableLiveData<LatLng> deviceLatLng;
 
     public MutableLiveData<LatLng> getDeviceLatLng() {
@@ -26,7 +26,7 @@ public class MapViewModel extends ViewModel {
 
     public void getDeviceLocation(FusedLocationProviderClient fusedLocationClient) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        mapModel.getDeviceLocation(fusedLocationClient, deviceLatLng);
+        mMapModel.fetchDeviceLocation(fusedLocationClient, deviceLatLng);
     }
 
     public int getRadius(GoogleMap googleMap) {

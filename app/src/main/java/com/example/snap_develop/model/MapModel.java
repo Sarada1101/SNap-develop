@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class MapModel {
 
-    private Location location;
+    private Location mLocation;
 
     @SuppressLint("MissingPermission")
     public void getDeviceLocation(FusedLocationProviderClient fusedLocationClient,
@@ -31,9 +31,9 @@ public class MapModel {
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
-                            location = task.getResult();
-                            LatLng latLng = new LatLng(location.getLatitude(),
-                                    location.getLongitude());
+                            mLocation = task.getResult();
+                            LatLng latLng = new LatLng(mLocation.getLatitude(),
+                                    mLocation.getLongitude());
                             Log.i(LogUtil.getClassName(),
                                     String.format("lat:%s , lon:%s", latLng.latitude,
                                             latLng.longitude));

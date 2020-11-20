@@ -32,6 +32,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMyLocationClickListener,
         GoogleMap.OnCameraIdleListener {
 
+    private GoogleMap mGoogleMap;
+    private MapViewModel mMapViewModel;
+    private PostViewModel mPostViewModel;
 
     FusedLocationProviderClient fusedLocationClient;
     private final int REQUEST_PERMISSION = 1000;
@@ -44,15 +47,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
-        mapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
+        mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
+        mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
             @Override
             public void onChanged(@Nullable final LatLng latLng) {
                 Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
                 //カメラ移動、縮尺調整
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
-                googleMap.setOnCameraIdleListener(MapActivity.this);
-                googleMap.getUiSettings().setZoomControlsEnabled(true);
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
+                mGoogleMap.setOnCameraIdleListener(MapActivity.this);
+                mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+            }
+        });
+
         //地図画面に表示する投稿リストを取得したら実行
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
             @Override
@@ -83,11 +89,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        this.googleMap = googleMap;
+        this.mGoogleMap = googleMap;
         if (checkPermission()) {
             //現在地取得
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             mapViewModel.getDeviceLocation(fusedLocationClient);
+            mMapViewModel.fetchDeviceLocation(fusedLocationClient);
         } else {
             requestLocationPermission();
         }
