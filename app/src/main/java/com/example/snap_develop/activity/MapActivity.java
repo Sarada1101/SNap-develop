@@ -105,12 +105,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
     }
 
     @Override
     public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         // Return false so that we don't consume the event and the default behavior still occurs
         // (the camera animates to the user's current position).
         return false;

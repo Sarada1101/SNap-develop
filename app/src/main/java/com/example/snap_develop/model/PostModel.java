@@ -51,7 +51,7 @@ public class PostModel extends Firebase {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(LogUtil.getClassName(),
-                                String.format("posts add document ID: %s",
+                                String.format("add posts document ID: %s",
                                         documentReference.getId()));
 
                         //パスをusersコレクションに追加
@@ -65,7 +65,7 @@ public class PostModel extends Firebase {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
                                         Log.d(LogUtil.getClassName(),
-                                                String.format("users/post add document ID: %s",
+                                                String.format("add users/posts document ID: %s",
                                                         documentReference.getId()));
                                     }
                                 })
@@ -207,7 +207,8 @@ public class PostModel extends Firebase {
                                 }
                                 postList.setValue(setList);
                             } else {
-                                System.out.println("------------------else" + task.getException() + "--------------------");
+                                System.out.println("------------------else" + task.getException()
+                                        + "--------------------");
                             }
                         }
                     })

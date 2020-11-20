@@ -18,6 +18,7 @@ public class MapViewModel extends ViewModel {
     private MutableLiveData<LatLng> deviceLatLng;
 
     public MutableLiveData<LatLng> getDeviceLatLng() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         if (deviceLatLng == null) {
             deviceLatLng = new MutableLiveData<>();
         }
