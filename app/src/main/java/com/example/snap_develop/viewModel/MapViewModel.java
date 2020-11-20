@@ -31,10 +31,6 @@ public class MapViewModel extends ViewModel {
         mMapModel.fetchDeviceLocation(fusedLocationClient, deviceLatLng);
     }
 
-    public int getRadius(GoogleMap googleMap) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        return mapModel.getRadius(googleMap);
-    }
 
     public VisibleRegion fetchVisibleRegion(GoogleMap googleMap) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
