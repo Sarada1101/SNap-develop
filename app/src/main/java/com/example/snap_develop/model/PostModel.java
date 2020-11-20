@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +21,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -216,5 +218,62 @@ public class PostModel extends Firebase {
                         }
                     });
         }
+    }
+
+
+    public void fetchMapPostList(final VisibleRegion visibleRegion,
+            final MutableLiveData<List<PostBean>> postList) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+
+        //表示されている地図の北東と南西の緯度経度
+        final double topLatitude = visibleRegion.latLngBounds.northeast.latitude;
+        final double rightLongitude = visibleRegion.latLngBounds.northeast.longitude;
+        final double bottomLatitude = visibleRegion.latLngBounds.southwest.latitude;
+        final double leftLongitude = visibleRegion.latLngBounds.southwest.longitude;
+
+        this.firestoreConnect();
+
+        final List<PostBean> postBeanList = new ArrayList<>();
+
+        //datetimeが1時間前より大きいかつ、typeがpostの投稿を取得する
+        firestore.collection("posts")
+                .whereGreaterThan("datetime", new Date(System.currentTimeMillis() - 1000 * 60 * 60))
+                .whereEqualTo("type", "post")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                GeoPoint geoPoint = document.getGeoPoint("geopoint");
+                                double lat = geoPoint.getLatitude();
+                                double lon = geoPoint.getLongitude();
+                                //投稿位置が画面内に入るなら
+                                if ((lat <= topLatitude && lon <= rightLongitude) &&
+                                        (lat >= bottomLatitude && lon >= leftLongitude)) {
+                                    PostBean postBean = new PostBean();
+                                    postBean.setUid(document.getString("uid"));
+                                    postBean.setMessage(document.getString("message"));
+                                    postBean.setLatLng(new LatLng(lat, lon));
+                                    Log.d(LogUtil.getClassName(),
+                                            String.format("get post document ID: %s",
+                                                    document.getId()));
+                                    postBeanList.add(postBean);
+                                } else {
+                                    Log.d(LogUtil.getClassName(),
+                                            String.format("out of range post document ID: %s",
+                                                    document.getId()));
+                                }
+                            }
+                            postList.setValue(postBeanList);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(LogUtil.getClassName(), e);
+                    }
+                });
     }
 }

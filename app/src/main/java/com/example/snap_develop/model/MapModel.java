@@ -88,10 +88,11 @@ public class MapModel {
         return result;
     }
 
-    public double[] getCenter(GoogleMap googleMap) {
+    //表示されている地図の北東と南西の緯度経度を取得
+    public VisibleRegion fetchVisibleRegion(GoogleMap googleMap) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        CameraPosition cameraPos = googleMap.getCameraPosition();
-        LatLng centerLatLon = new LatLng(cameraPos.target.latitude, cameraPos.target.longitude);
+        Projection projection = googleMap.getProjection();
+        return projection.getVisibleRegion();
         Log.d(LogUtil.getClassName(),
                 String.format("lat:%s , lon:%s", centerLatLon.latitude, centerLatLon.longitude));
         return new double[]{centerLatLon.latitude, centerLatLon.longitude};

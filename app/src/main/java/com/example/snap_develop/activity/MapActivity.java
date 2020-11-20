@@ -53,6 +53,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
                 googleMap.setOnCameraIdleListener(MapActivity.this);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
+        //地図画面に表示する投稿リストを取得したら実行
+        mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
+            @Override
+            public void onChanged(List<PostBean> postList) {
+                Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+                for (PostBean postBean : postList) {
+                    mGoogleMap.addMarker(new MarkerOptions()
+                            .title(postBean.getMessage())
+                            .position(postBean.getLatLng()));
+                }
             }
         });
 
@@ -101,8 +111,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     public void onCameraIdle() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        double[] centerLatLon = mapViewModel.getCenter(googleMap);
-        int radius = mapViewModel.getRadius(googleMap);
+        VisibleRegion visibleRegion = mMapViewModel.fetchVisibleRegion(mGoogleMap);
+        mPostViewModel.fetchMapPostList(visibleRegion);
     }
 
     //↓↓↓↓↓↓↓↓↓↓位置情報取得のパーミッション関係↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓//

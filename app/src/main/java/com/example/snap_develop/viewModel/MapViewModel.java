@@ -10,6 +10,7 @@ import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.VisibleRegion;
 
 public class MapViewModel extends ViewModel {
 
@@ -33,8 +34,8 @@ public class MapViewModel extends ViewModel {
         return mapModel.getRadius(googleMap);
     }
 
-    public double[] getCenter(GoogleMap googleMap) {
+    public VisibleRegion fetchVisibleRegion(GoogleMap googleMap) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        return mapModel.getCenter(googleMap);
+        return mMapModel.fetchVisibleRegion(googleMap);
     }
 }
