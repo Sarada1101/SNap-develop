@@ -139,7 +139,7 @@ public class FollowModel extends Firebase {
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を許可した人のuid
     //申請を許可した人のfollowerのコレクションの中に申請して許可を待っている人のuidのパスを追加
-    public void insertFollower(String userPath, String myUid) {
+    public void insertFollower(String userPath, final String myUid) {
         this.firestoreConnect();
 
         DocumentReference followerPath = firestore.collection("users").document(userPath);
@@ -163,6 +163,41 @@ public class FollowModel extends Firebase {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(LogUtil.getClassName(), "insertFollower:failure:" + e);
+            }
+        });
+
+        firestore.collection("users")
+                .document(myUid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("follower_count")));
+                        updateCount++;
+
+                        firestore.collection("users")
+                                .document(myUid)
+                                .update("follower_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(follower_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(follower_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(following_count):failure", e);
             }
         });
     }
@@ -198,16 +233,16 @@ public class FollowModel extends Firebase {
         });
     }
 
-    public void fetchFollowingList(String userPath,
+    public void fetchFollowerList(String userPath,
             final MutableLiveData<List<UserBean>> followList) {
         this.firestoreConnect();
 
         final List<DocumentReference> refList = new ArrayList<>();
-        final List<UserBean> followingUserList = new ArrayList<>();
+        final List<UserBean> followerUserList = new ArrayList<>();
 
         firestore.collection("users")
                 .document(userPath)
-                .collection("following")
+                .collection("follower")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -236,12 +271,12 @@ public class FollowModel extends Firebase {
                                                             addBean.setFollowNotice(doc.getBoolean("follow_notice"));
                                                             addBean.setGoodNotice(doc.getBoolean("good_notice"));
                                                             addBean.setPublicationArea(doc.getString("publication_area"));
-                                                            followingUserList.add(addBean);
-                                                            followList.setValue(followingUserList);
+                                                            followerUserList.add(addBean);
+                                                            followList.setValue(followerUserList);
                                                             Log.d(LogUtil.getClassName(),
-                                                                    "getFollowingList:success");
+                                                                    "getFollowerList:success");
                                                         } else {
-                                                            Log.w(LogUtil.getClassName(), "getFollowingList:failure",
+                                                            Log.w(LogUtil.getClassName(), "getFollowerList:failure",
                                                                     task.getException());
                                                         }
 
@@ -273,8 +308,7 @@ public class FollowModel extends Firebase {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "fetchCount(" + countPath + "):failure",
-                        e);
+                Log.w(LogUtil.getClassName(), "fetchCount(" + countPath + "):failure", e);
             }
         });
     }

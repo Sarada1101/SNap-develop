@@ -61,10 +61,10 @@ public class FollowViewModel extends ViewModel {
         followModel.insertApprovalPendingFollow(userPath, myUid);
     }
 
-    public void fetchFollowingList(String userPath) {
+    public void fetchFollowerList(String userPath) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
 
-        followModel.fetchFollowingList(userPath, followList);
+        followModel.fetchFollowerList(userPath, followList);
     }
 
     public void fetchCount(String userPath, String countPath) {

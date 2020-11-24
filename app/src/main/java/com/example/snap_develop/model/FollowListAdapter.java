@@ -9,8 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.snap_develop.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,6 +17,7 @@ public class FollowListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private int layoutID;
     ArrayList<HashMap<String, Object>> dataList;
+    int[] id;
 
     static class ViewHolder {
         TextView name;
@@ -26,10 +25,11 @@ public class FollowListAdapter extends BaseAdapter {
         ImageView icon;
     }
 
-    public FollowListAdapter(Context context, ArrayList<HashMap<String, Object>> dataList, int rowLayout) {
+    public FollowListAdapter(Context context, ArrayList<HashMap<String, Object>> dataList, int rowLayout, int[] idList) {
         this.inflater = LayoutInflater.from(context);
         this.layoutID = rowLayout;
         this.dataList = dataList;
+        this.id = idList;
     }
 
     @Override
@@ -54,16 +54,18 @@ public class FollowListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(layoutID, null);
             holder = new ViewHolder();
-            holder.icon = convertView.findViewById(R.id.iconImageView);
-            holder.name = convertView.findViewById(R.id.nameTextView);
-            holder.uid = convertView.findViewById(R.id.idTextView);
+            holder.name = convertView.findViewById(id[0]);
+            holder.uid = convertView.findViewById(id[1]);
+            holder.icon = convertView.findViewById(id[2]);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.icon.setImageBitmap((Bitmap) dataList.get(position).get("usericon"));
+        System.out.println(holder.name);
+        System.out.println((String) dataList.get(position).get("username"));
         holder.name.setText((String) dataList.get(position).get("username"));
         holder.uid.setText((String) dataList.get(position).get("userid"));
+        holder.icon.setImageBitmap((Bitmap) dataList.get(position).get("usericon"));
 
         return convertView;
     }
