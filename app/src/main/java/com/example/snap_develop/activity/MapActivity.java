@@ -1,12 +1,12 @@
 package com.example.snap_develop.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
@@ -21,9 +21,10 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
 
@@ -32,9 +33,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
-        GoogleMap.OnMyLocationButtonClickListener,
-        GoogleMap.OnMyLocationClickListener,
-        GoogleMap.OnCameraIdleListener {
+        GoogleMap.OnCameraIdleListener,
+        GoogleMap.OnInfoWindowClickListener,
+        View.OnClickListener {
 
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
@@ -76,7 +77,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         });
 
         // SupportMapFragmentを取得し、マップが使用可能になったら通知を受けることができる
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
@@ -90,7 +91,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        this.mGoogleMap = googleMap;
+        mGoogleMap = googleMap;
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
+        mGoogleMap.getUiSettings().setIndoorLevelPickerEnabled(true);
+        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
         if (checkPermission()) {
             //現在地取得
             FusedLocationProviderClient fusedLocationClient =
@@ -100,22 +105,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             requestLocationPermission();
         }
         //自分の位置をMapに表示する
-        googleMap.setMyLocationEnabled(true);
-        googleMap.setOnMyLocationButtonClickListener(this);
-        googleMap.setOnMyLocationClickListener(this);
-    }
-
-
-    @Override
-    public void onMyLocationClick(@NonNull Location location) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-    }
-
-
-    @Override
-    public boolean onMyLocationButtonClick() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        return false;
+        mGoogleMap.setMyLocationEnabled(true);
         //マーカーのウィンドウにClickListener
         mGoogleMap.setOnInfoWindowClickListener(this);
     }
@@ -152,6 +142,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
     }
+
     // マーカーのウィンドウをタップ時のイベント
     @Override
     public void onInfoWindowClick(Marker marker) {
@@ -163,4 +154,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         startActivity(intent);
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }
