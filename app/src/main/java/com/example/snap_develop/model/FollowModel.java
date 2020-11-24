@@ -3,14 +3,21 @@ package com.example.snap_develop.model;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
+import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FollowModel extends Firebase {
@@ -77,6 +84,7 @@ public class FollowModel extends Firebase {
             }
         });
     }
+
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を拒否しようとしている人のuid
     //申請を拒否しようとしている人のapplicated_followsのドキュメントIDが申請して許可を待っている人のuidのとこを削除
@@ -186,6 +194,87 @@ public class FollowModel extends Firebase {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(LogUtil.getClassName(), "insertFollowing:failure:" + e);
+            }
+        });
+    }
+
+    public void fetchFollowingList(String userPath,
+            final MutableLiveData<List<UserBean>> followList) {
+        this.firestoreConnect();
+
+        final List<DocumentReference> refList = new ArrayList<>();
+        final List<UserBean> followingUserList = new ArrayList<>();
+
+        firestore.collection("users")
+                .document(userPath)
+                .collection("following")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(LogUtil.getClassName(), "getRefList:success");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                refList.add(document.getDocumentReference("path"));
+                            }
+                            for (DocumentReference ref : refList) {
+                                ref.get()
+                                        .addOnCompleteListener(
+                                                new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(
+                                                            @NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            DocumentSnapshot doc = task.getResult();
+                                                            UserBean addBean =
+                                                                    new UserBean();
+                                                            addBean.setIcon(doc.getString("icon"));
+                                                            addBean.setMessage(doc.getString("message"));
+                                                            addBean.setName(doc.getString("name"));
+                                                            addBean.setUid(doc.getId());
+                                                            addBean.setCommentNotice(doc.getBoolean("comment_notice"));
+                                                            addBean.setFollowNotice(doc.getBoolean("follow_notice"));
+                                                            addBean.setGoodNotice(doc.getBoolean("good_notice"));
+                                                            addBean.setPublicationArea(doc.getString("publication_area"));
+                                                            followingUserList.add(addBean);
+                                                            followList.setValue(followingUserList);
+                                                            Log.d(LogUtil.getClassName(),
+                                                                    "getFollowingList:success");
+                                                        } else {
+                                                            Log.w(LogUtil.getClassName(), "getFollowingList:failure",
+                                                                    task.getException());
+                                                        }
+
+                                                    }
+                                                });
+                            }
+                        } else {
+                            Log.w(LogUtil.getClassName(), "getRefList:failure",
+                                    task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void fetchCount(String userPath, final String countPath, final MutableLiveData<Integer> userCount) {
+        this.firestoreConnect();
+
+        firestore.collection("users")
+                .document(userPath)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Log.d(LogUtil.getClassName(), "fetchCount(" + countPath + "):success");
+                        DocumentSnapshot doc = task.getResult();
+
+                        userCount.setValue(Integer.valueOf(String.valueOf(doc.get(countPath))));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "fetchCount(" + countPath + "):failure",
+                        e);
             }
         });
     }
