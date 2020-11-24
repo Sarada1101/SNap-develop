@@ -67,9 +67,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             public void onChanged(List<PostBean> postList) {
                 Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
                 for (PostBean postBean : postList) {
-                    mGoogleMap.addMarker(new MarkerOptions()
+                    Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                             .title(postBean.getMessage())
                             .position(postBean.getLatLng()));
+                    marker.setTag(postBean.getPostPath());
                 }
             }
         });
