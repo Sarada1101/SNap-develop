@@ -116,6 +116,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public boolean onMyLocationButtonClick() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         return false;
+        //マーカーのウィンドウにClickListener
+        mGoogleMap.setOnInfoWindowClickListener(this);
     }
 
 
@@ -150,4 +152,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, REQUEST_PERMISSION);
     }
+    // マーカーのウィンドウをタップ時のイベント
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        String postPath = marker.getTag().toString();
+        Log.d(LogUtil.getClassName(), String.format("postPath: %s", postPath));
+        Intent intent = new Intent(MapActivity.this, DisplayCommentActivity.class);
+        intent.putExtra("postPath", postPath);
+        startActivity(intent);
+    }
+
 }
