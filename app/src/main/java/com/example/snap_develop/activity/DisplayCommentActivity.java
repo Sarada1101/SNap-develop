@@ -1,5 +1,6 @@
 package com.example.snap_develop.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ public class DisplayCommentActivity extends AppCompatActivity {
     ListView lv;
     SimpleAdapter sAdapter;
     ArrayList<HashMap<String, String>> listData;
+    String postPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,5 +49,10 @@ public class DisplayCommentActivity extends AppCompatActivity {
 
         lv = (ListView) findViewById(R.id.commentListView);
         lv.setAdapter(sAdapter);
+
+        //地図画面からタップされたマーカーの投稿のパスを取得
+        Intent intent = getIntent();
+        postPath = intent.getStringExtra("postPath");
+        Log.d(LogUtil.getClassName(), String.format("postPath: %s", postPath));
     }
 }
