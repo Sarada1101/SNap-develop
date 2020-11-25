@@ -3,14 +3,21 @@ package com.example.snap_develop.model;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
+import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FollowModel extends Firebase {
@@ -18,7 +25,7 @@ public class FollowModel extends Firebase {
     //userPath : 申請された人のuid
     //myUid : 申請した人のuid
     //フォロー申請された人のapplicated_followsに申請された人のuidのパスを追加
-    public void insertApplicatedFollow(String userPath, String myUid) {
+    public void insertApplicatedFollow(final String userPath, String myUid) {
         System.out.println("-----------------insertApplicated----------------");
 
         this.firestoreConnect();
@@ -46,12 +53,47 @@ public class FollowModel extends Firebase {
                 Log.w(LogUtil.getClassName(), "insertApplicatedFoolow:failure:" + e);
             }
         });
+
+        firestore.collection("users")
+                .document(userPath)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("applicated_count")));
+                        updateCount++;
+
+                        firestore.collection("users")
+                                .document(userPath)
+                                .update("applicated_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(applicated_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+            }
+        });
     }
 
     //userPath : 申請された人のuid
     //myUid : 申請した人のuid
     //フォロー申請した人のapproval_pending_followsに申請した人のuidのパスを追加
-    public void insertApprovalPendingFollow(String userPath, String myUid) {
+    public void insertApprovalPendingFollow(String userPath, final String myUid) {
         this.firestoreConnect();
 
         DocumentReference approvalPath = firestore.collection("users").document(userPath);
@@ -77,10 +119,11 @@ public class FollowModel extends Firebase {
             }
         });
     }
+
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を拒否しようとしている人のuid
     //申請を拒否しようとしている人のapplicated_followsのドキュメントIDが申請して許可を待っている人のuidのとこを削除
-    public void deleteApplicatedFollow(String userPath, String myUid) {
+    public void deleteApplicatedFollow(String userPath, final String myUid) {
         this.firestoreConnect();
 
         firestore.collection("users")
@@ -101,12 +144,47 @@ public class FollowModel extends Firebase {
                 Log.w(LogUtil.getClassName(), "deleteApplicatedFollow:failure:" + e);
             }
         });
+
+        firestore.collection("users")
+                .document(myUid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("applicated_count")));
+                        updateCount--;
+
+                        firestore.collection("users")
+                                .document(myUid)
+                                .update("applicated_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(applicated_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+            }
+        });
     }
 
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を拒否しようとしている人のuid
     //申請して許可を待っている人のapproval_pending_followsのドキュメントIDが申請を拒否しようとしている人のuidのとこを削除
-    public void deleteApprovalPendingFollow(String userPath, String myUid) {
+    public void deleteApprovalPendingFollow(final String userPath, String myUid) {
         this.firestoreConnect();
 
         firestore.collection("users")
@@ -186,6 +264,85 @@ public class FollowModel extends Firebase {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(LogUtil.getClassName(), "insertFollowing:failure:" + e);
+            }
+        });
+    }
+
+    public void fetchApplicatedList(String userPath, final MutableLiveData<List<UserBean>> followList) {
+        this.firestoreConnect();
+
+        final List<DocumentReference> refList = new ArrayList<>();
+        final List<UserBean> followingUserList = new ArrayList<>();
+
+        firestore.collection("users")
+                .document(userPath)
+                .collection("applicated_follows")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(LogUtil.getClassName(), "getRefList:success");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                refList.add(document.getDocumentReference("path"));
+                            }
+                            for (DocumentReference ref : refList) {
+                                ref.get()
+                                        .addOnCompleteListener(
+                                                new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(
+                                                            @NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            DocumentSnapshot doc = task.getResult();
+                                                            UserBean addBean =
+                                                                    new UserBean();
+                                                            addBean.setIcon(doc.getString("icon"));
+                                                            addBean.setMessage(doc.getString("message"));
+                                                            addBean.setName(doc.getString("name"));
+                                                            addBean.setUid(doc.getId());
+                                                            addBean.setCommentNotice(doc.getBoolean("comment_notice"));
+                                                            addBean.setFollowNotice(doc.getBoolean("follow_notice"));
+                                                            addBean.setGoodNotice(doc.getBoolean("good_notice"));
+                                                            addBean.setPublicationArea(doc.getString("publication_area"));
+                                                            followingUserList.add(addBean);
+                                                            followList.setValue(followingUserList);
+                                                            Log.d(LogUtil.getClassName(),
+                                                                    "fetchApplicatedList:success");
+                                                        } else {
+                                                            Log.w(LogUtil.getClassName(), "fetchApplicatedList:failure",
+                                                                    task.getException());
+                                                        }
+
+                                                    }
+                                                });
+                            }
+                        } else {
+                            Log.w(LogUtil.getClassName(), "getRefList:failure",
+                                    task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void fetchCount(String userPath, final String countPath, final MutableLiveData<Integer> userCount) {
+        this.firestoreConnect();
+
+        firestore.collection("users")
+                .document(userPath)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Log.d(LogUtil.getClassName(), "fetchCount(" + countPath + "):success");
+                        DocumentSnapshot doc = task.getResult();
+
+                        userCount.setValue(Integer.valueOf(String.valueOf(doc.get(countPath))));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "fetchCount(" + countPath + "):failure", e);
             }
         });
     }
