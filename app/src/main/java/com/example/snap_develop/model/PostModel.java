@@ -254,9 +254,9 @@ public class PostModel extends Firebase {
                                 if ((lat <= topLatitude && lon <= rightLongitude) &&
                                         (lat >= bottomLatitude && lon >= leftLongitude)) {
                                     PostBean postBean = new PostBean();
-                                    postBean.setUid(document.getString("uid"));
                                     postBean.setMessage(document.getString("message"));
                                     postBean.setLatLng(new LatLng(lat, lon));
+                                    postBean.setPostPath(document.getReference().getPath());
                                     Log.d(LogUtil.getClassName(),
                                             String.format("get post document ID: %s",
                                                     document.getId()));
