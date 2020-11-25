@@ -1,5 +1,7 @@
 package com.example.snap_develop.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserModel extends Firebase {
@@ -158,5 +161,34 @@ public class UserModel extends Firebase {
                 System.out.println("--------Yes upload-------");
             }
         });
+    }
+
+    public void fetchIconBmp(List<UserBean> userList, final MutableLiveData<Map<String, Bitmap>> iconList) {
+        this.storageConnect();
+
+        final Map<String, Bitmap> addMap = new HashMap<>();
+
+        for (final UserBean bean : userList) {
+            StorageReference iconRef = storage.getReference().child(bean.getUid()).child(bean.getIcon());
+
+            System.out.println(iconRef);
+
+            final long ONE_MEGABYTE = 1024 * 1024 * 5;
+            iconRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Log.d(LogUtil.getClassName(), "getIconBmp:success");
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    addMap.put(bean.getUid(), bitmap);
+                    iconList.setValue(addMap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.w(LogUtil.getClassName(), "getIconBmp:failure", exception);
+                }
+            });
+
+        }
     }
 }
