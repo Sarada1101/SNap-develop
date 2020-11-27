@@ -20,7 +20,7 @@ public class PostBean implements Serializable {
     private Date datetime;
     private boolean danger;
     private boolean anonymous;
-    private String path;
+    private String postPath;
     private String uid;
     private String type;
     private String parentPost;
