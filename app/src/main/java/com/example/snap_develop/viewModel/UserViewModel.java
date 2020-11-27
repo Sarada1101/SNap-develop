@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class UserViewModel extends ViewModel {
     private MutableLiveData<String> authResult;
     private MutableLiveData<String> updateResult;
+    private MutableLiveData<UserBean> user;
     UserModel userModel = new UserModel();
 
     public FirebaseUser getCurrentUser() {
@@ -45,6 +46,14 @@ public class UserViewModel extends ViewModel {
         userModel.updateUser(userBean, data, updateResult);
     }
 
+    public void fetchUserInfo(String uid) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        if (user == null) {
+            user = new MutableLiveData<>();
+        }
+        userModel.fetchUserInfo(uid, user);
+    }
+
     public MutableLiveData<String> getAuthResult() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         if (authResult == null) {
@@ -59,6 +68,14 @@ public class UserViewModel extends ViewModel {
             updateResult = new MutableLiveData<>();
         }
         return updateResult;
+    }
+
+    public MutableLiveData<UserBean> getUser() {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        if (user == null) {
+            user = new MutableLiveData<>();
+        }
+        return user;
     }
 }
 
