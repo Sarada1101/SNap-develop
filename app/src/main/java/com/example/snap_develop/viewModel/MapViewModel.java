@@ -1,39 +1,41 @@
 package com.example.snap_develop.viewModel;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.model.MapModel;
-import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
 
+import timber.log.Timber;
+
 public class MapViewModel extends ViewModel {
 
     private final MapModel mMapModel = new MapModel();
-    private MutableLiveData<LatLng> deviceLatLng;
+    private MutableLiveData<LatLng> mDeviceLatLng;
 
     public MutableLiveData<LatLng> getDeviceLatLng() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        if (deviceLatLng == null) {
-            deviceLatLng = new MutableLiveData<>();
+        Timber.i(MyDebugTree.START_LOG);
+        if (mDeviceLatLng == null) {
+            mDeviceLatLng = new MutableLiveData<>();
         }
-        return deviceLatLng;
+        return mDeviceLatLng;
     }
 
 
     public void fetchDeviceLocation(FusedLocationProviderClient fusedLocationClient) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        mMapModel.fetchDeviceLocation(fusedLocationClient, deviceLatLng);
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "fusedLocationClient", fusedLocationClient));
+        mMapModel.fetchDeviceLocation(fusedLocationClient, mDeviceLatLng);
     }
 
 
     public VisibleRegion fetchVisibleRegion(GoogleMap googleMap) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "googleMap", googleMap));
         return mMapModel.fetchVisibleRegion(googleMap);
     }
 }
