@@ -7,7 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.snap_develop.BuildConfig;
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,7 +18,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -28,31 +27,27 @@ import java.util.Map;
 import timber.log.Timber;
 
 public class UserModel extends Firebase {
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final static String SUCCESS = "success";
-    private final static String TAG = LogUtil.getClassName();
-
-    public UserModel() {
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-    }
 
     public FirebaseUser getCurrentUser() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         return firebaseAuth.getCurrentUser();
     }
 
-    public void createAccount(String email, String password,
-            final MutableLiveData<String> authResult) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+
+    public void createAccount(String email, String password, final MutableLiveData<String> authResult) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "authResult", authResult));
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Timber.i(MyDebugTree.START_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
                         if (task.isSuccessful()) {
-                            Log.d(LogUtil.getClassName(), "createUserWithEmail:success");
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
                             authResult.setValue(SUCCESS);
                             UserBean userBean = new UserBean();
                             UserModel userModel = new UserModel();
@@ -66,35 +61,48 @@ public class UserModel extends Firebase {
                             userBean.setPublicationArea("public");
                             insertUser(userBean);
                         } else {
-                            Log.w(LogUtil.getClassName(),
-                                    "createUserWithEmail:failure:" + task.getException());
+                            Timber.i(MyDebugTree.FAILURE_LOG);
+                            Timber.e(task.getException().toString());
                             authResult.setValue(String.valueOf(task.getException()));
                         }
                     }
                 });
     }
 
-    public void signIn(String email, String password,
-            final MutableLiveData<String> authResult) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+
+    public void signIn(String email, String password, final MutableLiveData<String> authResult) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "authResult", authResult));
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Timber.i(MyDebugTree.START_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
                         if (task.isSuccessful()) {
-                            Log.d(LogUtil.getClassName(), "signInUserWithEmail:success");
-                            authResult.setValue("success");
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                            authResult.setValue(SUCCESS);
                         } else {
-                            Log.w(LogUtil.getClassName(), "signInUserWithEmail:failure",
-                                    task.getException());
+                            Timber.i(MyDebugTree.FAILURE_LOG);
+                            Timber.e(task.getException().toString());
                             authResult.setValue(String.valueOf(task.getException()));
                         }
                     }
                 });
     }
 
+
+    public void signOut() {
+        Timber.i(MyDebugTree.START_LOG);
+        firebaseAuth.signOut();
+    }
+
+
     public void insertUser(UserBean userBean) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
+
         Map<String, Object> user = new HashMap<>();
         user.put("uid", userBean.getUid());
         user.put("name", userBean.getName());
@@ -106,17 +114,30 @@ public class UserModel extends Firebase {
 
         this.firestoreConnect();
 
-        firestore.collection("users").document(userBean.getUid()).set(user);
+        // users/{uid}
+        firestore.collection("users")
+                .document(userBean.getUid())
+                .set(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
     }
 
-    public void signOut() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        firebaseAuth.signOut();
-    }
 
     public void updateUser(UserBean userBean, byte[] data,
             final MutableLiveData<String> updateResult) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
 
         //画像をstorageに保存
         imgUpload(data, userBean.getIconName());
@@ -147,22 +168,29 @@ public class UserModel extends Firebase {
                 });
     }
 
+
     public void fetchUserInfo(final String uid, final MutableLiveData<UserBean> user) {
-        Timber.tag(TAG).i(LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "udi", uid, "user", user));
+
         this.firestoreConnect();
         this.storageConnect();
 
         final UserBean userBean = new UserBean();
 
         //datetimeが1時間前より大きいかつ、typeがpostの投稿を取得する
+        //users/{uid}
         firestore.collection("users")
                 .document(uid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Timber.tag(TAG).i(LogUtil.getLogMessage());
+                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
                         if (task.isSuccessful()) {
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
                             DocumentSnapshot document = task.getResult();
                             userBean.setName(document.getString("name"));
                             userBean.setUid(document.getId());
@@ -173,8 +201,8 @@ public class UserModel extends Firebase {
                         }
 
                         final long ONE_MEGABYTE = 1024 * 1024;
+                        // icon/{uid}/{iconName}
                         storage.getReference()
-                                // icon/{uid}/{iconName}
                                 .child("icon")
                                 .child(uid)
                                 .child(userBean.getIconName())
@@ -182,7 +210,7 @@ public class UserModel extends Firebase {
                                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                     @Override
                                     public void onSuccess(byte[] aByte) {
-                                        Timber.tag(TAG).i(LogUtil.getLogMessage());
+                                        Timber.i(MyDebugTree.SUCCESS_LOG);
                                         Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
                                         userBean.setIcon(bitmap);
                                         user.setValue(userBean);
@@ -191,7 +219,8 @@ public class UserModel extends Firebase {
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Timber.tag(TAG).e(LogUtil.getLogMessage(), e);
+                                        Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.e(e.toString());
                                     }
                                 });
                     }
@@ -199,13 +228,15 @@ public class UserModel extends Firebase {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(LogUtil.getClassName(), e);
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
                 });
     }
 
     //storageに画像をアップロードするメソッド
     public void imgUpload(byte[] data, String path) {
+        Timber.i(MyDebugTree.START_LOG);
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference();
 
