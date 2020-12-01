@@ -7,9 +7,12 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.R;
 import com.example.snap_develop.util.LogUtil;
+import com.example.snap_develop.viewModel.PostViewModel;
+import com.example.snap_develop.viewModel.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +22,8 @@ public class DisplayCommentActivity extends AppCompatActivity {
     SimpleAdapter sAdapter;
     ArrayList<HashMap<String, String>> listData;
     String postPath;
+    UserViewModel userViewModel;
+    PostViewModel postViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,5 +59,16 @@ public class DisplayCommentActivity extends AppCompatActivity {
         Intent intent = getIntent();
         postPath = intent.getStringExtra("postPath");
         Log.d(LogUtil.getClassName(), String.format("postPath: %s", postPath));
+
+        //テストデータ
+        String testPost = "5tz1lsaRGKHt59ntjiRj";
+        String testUser = "UtJFmruiiBS28WH333AE6YHEjf72";
+
+        postViewModel = new ViewModelProvider(this).get(PostViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        //いいねが押されたときに動くメソッド
+        postViewModel.addGood(testPost);                      //good_countを１増やす処理
+        userViewModel.insertGoodPosts(testUser, testPost);    //good_postsにいいねされた投稿のパスを追加する処理
     }
 }
