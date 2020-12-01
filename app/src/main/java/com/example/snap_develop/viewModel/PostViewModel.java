@@ -47,8 +47,8 @@ public class PostViewModel extends ViewModel {
         postModel.fetchMapPostList(visibleRegion, postList);
     }
 
-    public void addGood(String postPath) {
+    public void addGood(String userPath, String postPath) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        postModel.addGood(postPath);
+        postModel.addGood(userPath, postPath);
     }
 }

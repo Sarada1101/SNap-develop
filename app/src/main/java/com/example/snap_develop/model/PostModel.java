@@ -280,43 +280,88 @@ public class PostModel extends Firebase {
                 });
     }
 
-    public void addGood(final String postPath) {
+    public void addGood(final String userPath, final String postPath) {
         this.firestoreConnect();
 
-        firestore.collection("posts")
-                .document(postPath)
+        final DocumentReference goodPost = firestore.collection("posts").document(postPath);
+
+        firestore.collection("users")
+                .document(userPath)
+                .collection("good_posts")
+                .whereEqualTo("path", goodPost)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot doc = task.getResult();
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.getResult().isEmpty()) {
+                            firestore.collection("posts")
+                                    .document(postPath)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            DocumentSnapshot doc = task.getResult();
 
-                        Integer updateGood = Integer.valueOf(String.valueOf(doc.get("good_count")));
-                        updateGood++;
+                                            Integer updateGood = Integer.valueOf(String.valueOf(doc.get("good_count")));
+                                            updateGood++;
 
-                        firestore.collection("posts")
-                                .document(postPath)
-                                .update("good_count", updateGood)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Log.d(LogUtil.getClassName(), "update(good_count):success");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(LogUtil.getClassName(), "update(good_count):failure", e);
-                                    }
-                                });
+                                            firestore.collection("posts")
+                                                    .document(postPath)
+                                                    .update("good_count", updateGood)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Log.d(LogUtil.getClassName(), "update(good_count):success");
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.w(LogUtil.getClassName(), "update(good_count):failure", e);
+                                                        }
+                                                    });
 
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(LogUtil.getClassName(), "update(good_count):failure", e);
+                                }
+                            });
+
+                            Map<String, Object> addData = new HashMap<>();
+                            addData.put("path", goodPost);
+
+                            firestore.collection("users")
+                                    .document(userPath)
+                                    .collection("good_posts")
+                                    .document(postPath)
+                                    .set(addData)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Log.d(LogUtil.getClassName(), "insertGoodPath:success");
+                                            System.out.println(
+                                                    "-----------------insertGoodPath:comp----------------");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w(LogUtil.getClassName(), "insertGoodPath:failure:" + e);
+                                        }
+                                    });
+                        } else {
+                            Log.w(LogUtil.getClassName(), "Already good");
+                        }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "update(good_count):failure", e);
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(LogUtil.getClassName(), "insertGoodPath:failure:" + e);
+                    }
+                });
     }
 
 }

@@ -68,7 +68,6 @@ public class DisplayCommentActivity extends AppCompatActivity {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         //いいねが押されたときに動くメソッド
-        postViewModel.addGood(testPost);                      //good_countを１増やす処理
-        userViewModel.insertGoodPosts(testUser, testPost);    //good_postsにいいねされた投稿のパスを追加する処理
+        postViewModel.addGood(testUser, testPost);
     }
 }

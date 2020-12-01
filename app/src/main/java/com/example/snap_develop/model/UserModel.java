@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -260,34 +259,5 @@ public class UserModel extends Firebase {
                 System.out.println("--------Yes upload-------");
             }
         });
-    }
-
-    public void insertGoodPosts(String userPath, final String postPath) {
-        this.firestoreConnect();
-
-        DocumentReference goodPost = firestore.collection("posts").document(postPath);
-
-        Map<String, Object> addData = new HashMap<>();
-        addData.put("path", goodPost);
-
-        firestore.collection("users")
-                .document(userPath)
-                .collection("good_posts")
-                .document(postPath)
-                .set(addData)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.d(LogUtil.getClassName(), "insertGoodPath:success");
-                        System.out.println(
-                                "-----------------insertGoodPath:comp----------------");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(LogUtil.getClassName(), "insertGoodPath:failure:" + e);
-                    }
-                });
     }
 }

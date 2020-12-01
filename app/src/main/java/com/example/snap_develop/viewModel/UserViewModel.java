@@ -91,10 +91,5 @@ public class UserViewModel extends ViewModel {
         }
         userModel.fetchUserInfo(uid, user);
     }
-
-    public void insertGoodPosts(String userPath, String postPath) {
-        Timber.i(MyDebugTree.START_LOG);
-        userModel.insertGoodPosts(userPath, postPath);
-    }
 }
 
