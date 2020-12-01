@@ -20,4 +20,38 @@
             android:layout_height="match_parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <LinearLayout
+        android:id="@+id/buttonLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/timelineImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_menu_recent_history"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/mapImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_baseline_location_on_24"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/userImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_baseline_account_circle_24"
+            tools:ignore="ContentDescription" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
