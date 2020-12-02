@@ -63,4 +63,5 @@
     <string name="followerButten">フォロワー</string>
     <string name="nameUpdate">名前</string>
     <string name="profireUpdate">プロフィール</string>
+    <string name="comma">, </string>
 </resources>

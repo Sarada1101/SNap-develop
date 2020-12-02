@@ -30,10 +30,30 @@ public class PostViewModel extends ViewModel {
         return postList;
     }
 
+    public MutableLiveData<PostBean> getPost() {
+        if (post == null) {
+            post = new MutableLiveData<>();
+        }
+        return post;
+    }
+
     public void fetchTimeLine(List<String> uidList) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         postList = new MutableLiveData<>();
         postModel.fetchTimeLine(uidList, postList);
+    }
+
+    public void fetchPost(String postPath) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        post = new MutableLiveData<>();
+        postModel.fetchPost(postPath, post);
+
+    }
+
+    public void fetchPostCommentList(List<String> commentList) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        postList = new MutableLiveData<>();
+        postModel.fetchPostCommentList(commentList, postList);
     }
 
 

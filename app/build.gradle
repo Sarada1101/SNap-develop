@@ -24,7 +24,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [google_maps_key: System.getenv("GOOGLE_MAPS_KEY")]
         }
     }
 

@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -159,4 +160,36 @@ public class UserModel extends Firebase {
             }
         });
     }
+
+    //ユーザー情報を取得するメソッド
+    public void fetchUserInfo(String userId,
+            final MutableLiveData<UserBean> user) {
+        this.firestoreConnect();
+
+        firestore.collection("users")
+                .document("userId")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+
+                        UserBean addUser = new UserBean();
+                        addUser.setName(document.getString("name"));
+
+                        user.setValue(addUser);
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("--------err:" + e + "----------");
+                    }
+                });
+
+    }
+
+
+    //ここまで
 }

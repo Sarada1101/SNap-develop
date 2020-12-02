@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -221,6 +222,93 @@ public class PostModel extends Firebase {
                     });
         }
     }
+
+    //ここから
+    public void fetchPost(String postPath,
+            final MutableLiveData<PostBean> post) {
+        this.firestoreConnect();
+
+        final List<PostBean> setList = new ArrayList<>();
+
+        firestore.collection("posts")
+                .document(postPath)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+
+                        PostBean addPost = new PostBean();
+                        addPost.setAnonymous(document.getBoolean("anonymous"));
+                        addPost.setDanger(document.getBoolean("danger"));
+                        addPost.setDatetime(document.getDate("datetime"));
+                        addPost.setGoodCount(document.getLong("good_count"));
+                        addPost.setMessage(document.getString("message"));
+                        addPost.setPhotoName(document.getString("picture"));
+                        addPost.setUid(document.getString("uid"));
+
+                        GeoPoint geoPoint = document.getGeoPoint("geopoint");
+                        double lat = geoPoint.getLatitude();
+                        double lon = geoPoint.getLongitude();
+                        addPost.setLatLng(new LatLng(lat, lon));
+
+                        post.setValue(addPost);
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("--------err:" + e + "----------");
+                    }
+                });
+
+    }
+
+    public void fetchPostCommentList(List<String> commentList,
+            final MutableLiveData<List<PostBean>> postList) {
+        this.firestoreConnect();
+
+        final List<PostBean> setList = new ArrayList<>();
+
+        //フォローしている人のそれぞれの投稿を取得
+        for (String postPath : commentList) {
+            firestore.collection("posts")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    System.out.println(
+                                            "------------------success--------------------");
+                                    System.out.println(document.getData());
+
+                                    PostBean addComment = new PostBean();
+                                    addComment.setAnonymous(document.getBoolean("anonymous"));
+                                    addComment.setDatetime(document.getDate("datetime"));
+                                    addComment.setMessage(document.getString("message"));
+                                    addComment.setUid(document.getString("uid"));
+                                    setList.add(addComment);
+                                }
+                                postList.setValue(setList);
+                            } else {
+                                System.out.println("------------------else" + task.getException()
+                                        + "--------------------");
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println("--------err:" + e + "----------");
+                        }
+                    });
+        }
+    }
+
+
+    //ここまで
 
 
     public void fetchMapPostList(final VisibleRegion visibleRegion,

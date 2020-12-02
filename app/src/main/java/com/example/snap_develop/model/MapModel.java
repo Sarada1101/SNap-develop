@@ -60,4 +60,7 @@ public class MapModel {
         Projection projection = googleMap.getProjection();
         return projection.getVisibleRegion();
     }
+
+    //現在地の取得を取得
+//    public
 }
