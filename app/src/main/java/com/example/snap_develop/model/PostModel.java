@@ -335,24 +335,24 @@ public class PostModel extends Firebase {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()) {
-                                QueryDocumentSnapshot document = task.getResult())
-                                    System.out.println(
-                                            "------------------success--------------------");
-                                    System.out.println(document.getData());
+                                DocumentSnapshot document = task.getResult();
+                                System.out.println(
+                                        "------------------success--------------------");
+                                System.out.println(document.getData());
 
-                                    PostBean addPost = new PostBean();
-                                    addPost.setAnonymous(document.getBoolean("anonymous"));
-                                    addPost.setDanger(document.getBoolean("danger"));
-                                    addPost.setDatetime(document.getDate("datetime"));
-                                    LatLng geopoint = new LatLng(
-                                            document.getGeoPoint("geopoint").getLatitude(),
-                                            document.getGeoPoint("geopoint").getLongitude());
-                                    addPost.setLatLng(geopoint);
-                                    addPost.setMessage(document.getString("message"));
-                                    addPost.setPhotoName(document.getString("picture"));
-                                    addPost.setType(document.getString("type"));
-                                    addPost.setUid(document.getString("uid"));
-                                    setList.add(addPost);
+                                PostBean addPost = new PostBean();
+                                addPost.setAnonymous(document.getBoolean("anonymous"));
+                                addPost.setDanger(document.getBoolean("danger"));
+                                addPost.setDatetime(document.getDate("datetime"));
+                                LatLng geopoint = new LatLng(
+                                        document.getGeoPoint("geopoint").getLatitude(),
+                                        document.getGeoPoint("geopoint").getLongitude());
+                                addPost.setLatLng(geopoint);
+                                addPost.setMessage(document.getString("message"));
+                                addPost.setPhotoName(document.getString("picture"));
+                                addPost.setType(document.getString("type"));
+                                addPost.setUid(document.getString("uid"));
+                                setList.add(addPost);
 
                                 postBeanList.setValue(setList);
                             } else {
