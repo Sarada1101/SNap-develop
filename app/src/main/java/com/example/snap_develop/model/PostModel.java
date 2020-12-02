@@ -14,12 +14,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -173,7 +178,7 @@ public class PostModel extends Firebase {
 
 
     public void fetchTimeLine(List<String> uidList,
-            final MutableLiveData<List<PostBean>> postList) {
+                              final MutableLiveData<List<PostBean>> postList) {
         this.firestoreConnect();
 
         final List<PostBean> setList = new ArrayList<>();
@@ -224,7 +229,7 @@ public class PostModel extends Firebase {
 
 
     public void fetchMapPostList(final VisibleRegion visibleRegion,
-            final MutableLiveData<List<PostBean>> postList) {
+                                 final MutableLiveData<List<PostBean>> postList) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
 
         //表示されている地図の北東と南西の緯度経度
@@ -277,5 +282,92 @@ public class PostModel extends Firebase {
                         Log.w(LogUtil.getClassName(), e);
                     }
                 });
+    }
+
+    static class MySqlConnect {
+        static Connection getConnection() throws Exception {
+            Class.forName("com.mysql.jdbc.Driver");
+            //各設定
+            String url = "jdbc:mysql://localhost:3306/sNap";
+            String user = "root";
+            String pass = "root";
+            //データベースに接続
+            Connection con = DriverManager.getConnection(url, user, pass);
+            return con;
+        }
+    }
+
+    public void fetchSearchPost(String searchWord,
+                                final MutableLiveData<List<PostBean>> postBeanList) {
+
+        final List<String> idList = new ArrayList<>();
+        final List<PostBean> setList = new ArrayList<>();
+
+        try {
+            //データベースに接続
+            Connection con = MySqlConnect.getConnection();
+            //ステートメントオブジェクトを作成
+            PreparedStatement stmt = null;
+
+            //SQL
+            stmt = con.prepareStatement("select * from posts where message like ?;");
+            stmt.setString(1, "%" + searchWord + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            this.firestoreConnect();
+
+            while (rs.next()) {
+                idList.add(rs.getString("documentID"));
+            }
+
+            //オブジェクトを解放
+            rs.close();
+            stmt.close();
+            con.close();
+
+        } catch (Exception e) {
+        }
+        for (String docId : idList) {
+            firestore.collection("posts")
+                    .document(docId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QueryDocumentSnapshot document = task.getResult())
+                                    System.out.println(
+                                            "------------------success--------------------");
+                                    System.out.println(document.getData());
+
+                                    PostBean addPost = new PostBean();
+                                    addPost.setAnonymous(document.getBoolean("anonymous"));
+                                    addPost.setDanger(document.getBoolean("danger"));
+                                    addPost.setDatetime(document.getDate("datetime"));
+                                    LatLng geopoint = new LatLng(
+                                            document.getGeoPoint("geopoint").getLatitude(),
+                                            document.getGeoPoint("geopoint").getLongitude());
+                                    addPost.setLatLng(geopoint);
+                                    addPost.setMessage(document.getString("message"));
+                                    addPost.setPhotoName(document.getString("picture"));
+                                    addPost.setType(document.getString("type"));
+                                    addPost.setUid(document.getString("uid"));
+                                    setList.add(addPost);
+
+                                postBeanList.setValue(setList);
+                            } else {
+                                System.out.println("------------------else" + task.getException()
+                                        + "--------------------");
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println("--------err:" + e + "----------");
+                        }
+                    });
+        }
+
     }
 }

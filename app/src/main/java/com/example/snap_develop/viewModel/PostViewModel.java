@@ -46,4 +46,11 @@ public class PostViewModel extends ViewModel {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         postModel.fetchMapPostList(visibleRegion, postList);
     }
+
+    public void fetchSearchPost(String searchWord) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        postList = new MutableLiveData<>();
+        postModel.fetchSearchPost(searchWord, postList);
+    }
+
 }

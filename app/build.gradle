@@ -24,7 +24,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [google_maps_key: System.getenv("GOOGLE_MAPS_KEY")]
         }
     }
 
@@ -58,7 +57,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     // SpotBugs
-    spotbugs 'com.github.spotbugs:spotbugs:4.1.4'
+    spotbugs 'com.github.spotbugs:spotbugs:4.2.0'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
     // lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
@@ -101,5 +100,8 @@ task checkstyle(type: Checkstyle) {
     classpath = files()
 }
 
+dependencies {
+    implementation files('libs/mysql-connector-java-8.0.22.jar')
+}
 
 apply plugin: 'com.google.gms.google-services'
