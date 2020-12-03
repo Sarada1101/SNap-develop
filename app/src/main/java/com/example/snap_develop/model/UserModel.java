@@ -107,7 +107,7 @@ public class UserModel extends Firebase {
         user.put("uid", userBean.getUid());
         user.put("name", userBean.getName());
         user.put("message", userBean.getMessage());
-        user.put("icon", userBean.getIcon());
+        user.put("icon", userBean.getIconName());
         user.put("followNotice", userBean.isFollowNotice());
         user.put("goodNotice", userBean.isGoodNotice());
         user.put("commentNotice", userBean.isCommentNotice());
@@ -171,7 +171,7 @@ public class UserModel extends Firebase {
 
     public void fetchUserInfo(final String uid, final MutableLiveData<UserBean> user) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "udi", uid, "user", user));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "user", user));
 
         this.firestoreConnect();
         this.storageConnect();
@@ -186,7 +186,7 @@ public class UserModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                        Timber.i(MyDebugTree.START_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
 
                         if (task.isSuccessful()) {
@@ -200,17 +200,19 @@ public class UserModel extends Firebase {
                             userBean.setFollowerCount(document.getLong("follower_count"));
                         }
 
-                        final long ONE_MEGABYTE = 1024 * 1024;
+                        final long ONE_MEGABYTE = 1024 * 1024 * 5;
                         // icon/{uid}/{iconName}
                         storage.getReference()
                                 .child("icon")
-                                .child(uid)
+                                .child(userBean.getUid())
                                 .child(userBean.getIconName())
                                 .getBytes(ONE_MEGABYTE)
                                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                     @Override
                                     public void onSuccess(byte[] aByte) {
                                         Timber.i(MyDebugTree.SUCCESS_LOG);
+                                        Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                userBean.getIconName()));
                                         Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
                                         userBean.setIcon(bitmap);
                                         user.setValue(userBean);
@@ -220,6 +222,8 @@ public class UserModel extends Firebase {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                userBean.getIconName()));
                                         Timber.e(e.toString());
                                     }
                                 });

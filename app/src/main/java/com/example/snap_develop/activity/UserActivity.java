@@ -1,95 +1,81 @@
 package com.example.snap_develop.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.snap_develop.BuildConfig;
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.adapter.UserAdapter;
+import com.example.snap_develop.bean.PostBean;
+import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityUserBinding;
-import com.example.snap_develop.util.LogUtil;
-import com.example.snap_develop.viewModel.FollowViewModel;
+import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import timber.log.Timber;
 
 public class UserActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ListView lv;
-    SimpleAdapter sAdapter;
-    ArrayList<HashMap<String, String>> listData;
-    FollowViewModel mFollowViewModel;
-    UserViewModel mUserViewModel;
-    ActivityUserBinding mBinding;
-    private final static String TAG = LogUtil.getClassName();
+    ListView mListView;
+    private UserViewModel mUserViewModel;
+    private PostViewModel mPostViewModel;
+    private ActivityUserBinding mActivityUserBinding;
+    private UserAdapter mUserAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-
-        Timber.tag(TAG).i(LogUtil.getLogMessage());
-
-        mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
+        mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
+        mActivityUserBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
 
-        mBinding.followButton.setOnClickListener(this);
-        mBinding.followerButton.setOnClickListener(this);
+        mActivityUserBinding.followButton.setOnClickListener(this);
+        mActivityUserBinding.followerButton.setOnClickListener(this);
 
-        String uid = null;
-        try {
-            // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
-            uid = getIntent().getStringExtra("uid");
-            Log.w(LogUtil.getClassName(), uid);
-        } catch (NullPointerException e) {
+        String uid;
+        // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
+        uid = getIntent().getStringExtra("uid");
+        if (uid == null) {
             // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
             uid = mUserViewModel.getCurrentUser().getUid();
-            Log.w(LogUtil.getClassName(), uid);
         }
-        mBinding.setUserViewModel(mUserViewModel);
-        mBinding.setLifecycleOwner(this);
+        Timber.i(String.format("%s=%s", "uid", uid));
 
+        // ユーザー情報を取得したら投稿リストを取得する
+        final String finalUid = uid;
+        mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
+            @Override
+            public void onChanged(UserBean userBean) {
+                mPostViewModel.fetchPostList(finalUid);
+            }
+        });
         mUserViewModel.fetchUserInfo(uid);
 
-
-//        listData = new ArrayList<HashMap<String, String>>();
-//
-//        HashMap<String, String> data1 = new HashMap<String, String>();
-//        data1.put("", "");
-//        data1.put("", "");
-//        data1.put("", "");
-//        listData.add(data1);
-//
-//        HashMap<String, String> data2 = new HashMap<String, String>();
-//        data2.put("", "");
-//        data2.put("", "");
-//        data2.put("", "");
-//        listData.add(data2);
-//
-//        sAdapter = new SimpleAdapter(this, listData,
-//                R.layout.list_user,
-//                new String[]{"", "", ""},
-//                new int[]{R.id.userpicture, R.id.username, R.id.userid, R.id.date,
-//                        R.id.postcontents, R.id.postpicture,
-//                        R.id.comment, R.id.favorite, R.id.favoritequantity, R.id.location,
-//                        R.id.locationinfomation});
-//
-//        lv = (ListView) findViewById(R.id.postList);
-//        lv.setAdapter(sAdapter);
+        // 投稿リストを取得したらリストを表示する
+        mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
+            @Override
+            public void onChanged(List<PostBean> postList) {
+                ArrayList<PostBean> dataList = (ArrayList<PostBean>) postList;
+                mUserAdapter = new UserAdapter(UserActivity.this, dataList, mUserViewModel.getUser().getValue(),
+                        R.layout.list_user);
+                mListView = mActivityUserBinding.postList;
+                mListView.setAdapter(mUserAdapter);
+            }
+        });
+        mActivityUserBinding.setUserViewModel(mUserViewModel);
+        mActivityUserBinding.setLifecycleOwner(this);
     }
 
     //フォロー申請ボタンが押されたときに動くonClickメソッド
