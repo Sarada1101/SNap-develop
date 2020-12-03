@@ -169,12 +169,12 @@ public class UserModel extends Firebase {
         final Map<String, Bitmap> addMap = new HashMap<>();
 
         for (final UserBean bean : userList) {
-            StorageReference iconRef = storage.getReference().child(bean.getUid()).child(bean.getIcon());
+            StorageReference iconRef = storage.getReference().child("icon").child(bean.getUid()).child(bean.getIcon());
 
             System.out.println(iconRef);
 
-            final long ONE_MEGABYTE = 1024 * 1024;
-            iconRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+            iconRef.getBytes(FIVE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Log.d(LogUtil.getClassName(), "getIconBmp:success");

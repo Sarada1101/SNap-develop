@@ -2,6 +2,7 @@ package com.example.snap_develop.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,27 +10,34 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.snap_develop.R;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FollowListAdapter extends BaseAdapter {
 
+    public static final String TEXT = "TEXT";
+    public static final String IMAGE = "IMAGE";
     private LayoutInflater inflater;
     private int layoutID;
-    ArrayList<HashMap<String, Object>> dataList;
+    ArrayList<HashMap<String, HashMap<String, Object>>> dataList;
+    HashMap<String, Integer> textViewData;
+    HashMap<String, Integer> imageViewData;
+    List<String> textKeyList;
+    List<String> imageKeyList;
 
-    static class ViewHolder {
-        TextView name;
-        TextView uid;
-        ImageView icon;
-    }
-
-    public FollowListAdapter(Context context, ArrayList<HashMap<String, Object>> dataList, int rowLayout) {
+    public FollowListAdapter(Context context, ArrayList<HashMap<String, HashMap<String, Object>>> dataList, int rowLayout,
+            Map<String, HashMap<String, Integer>> viewData, HashMap<String, List<String>> keyData) {
         this.inflater = LayoutInflater.from(context);
         this.layoutID = rowLayout;
         this.dataList = dataList;
+        this.textViewData = viewData.get(TEXT);
+        this.imageViewData = viewData.get(IMAGE);
+        this.textKeyList = keyData.get(TEXT);
+        this.imageKeyList = keyData.get(IMAGE);
     }
 
     @Override
@@ -38,8 +46,8 @@ public class FollowListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
-        return position;
+    public HashMap<String, HashMap<String, Object>> getItem(int position) {
+        return this.dataList.get(position);
     }
 
     @Override
@@ -49,21 +57,49 @@ public class FollowListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
         if (convertView == null) {
             convertView = inflater.inflate(layoutID, null);
-            holder = new ViewHolder();
-            holder.icon = convertView.findViewById(R.id.iconImageView);
-            holder.name = convertView.findViewById(R.id.nameTextView);
-            holder.uid = convertView.findViewById(R.id.idTextView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
         }
-        holder.icon.setImageBitmap((Bitmap) dataList.get(position).get("usericon"));
-        holder.name.setText((String) dataList.get(position).get("username"));
-        holder.uid.setText((String) dataList.get(position).get("userid"));
+
+        HashMap<String, HashMap<String, Object>> nextData = getItem(position);
+        HashMap<String, Object> nextTextData = nextData.get(TEXT);
+        HashMap<String, Object> nextImageData = nextData.get(IMAGE);
+
+        TextView setTextView = null;
+        for (String key : textKeyList) {
+            if (key != "danger") {
+                setTextView = convertView.findViewById(textViewData.get(key));
+            }
+
+            if (key == "anoymous") {
+                if (!(Boolean) nextTextData.get("anoymous")) {
+                    setTextView.setVisibility(View.INVISIBLE);
+                    //ConstraintLayout userInfo = convertView.findViewById(R.id.userInfo);
+                    //userInfo.setVisibility(View.VISIBLE);
+                } else {
+                    setTextView.setVisibility(View.VISIBLE);
+                    //ConstraintLayout userInfo = convertView.findViewById(R.id.userInfo);
+                    //userInfo.setVisibility(View.INVISIBLE);
+                }
+            } else if (key == "danger") {
+                if ((Boolean) nextTextData.get("danger")) {
+                    ConstraintLayout timeLinePost = convertView.findViewById(textViewData.get("danger"));
+                    timeLinePost.setBackgroundColor(Color.rgb(255, 100, 100));
+                }
+            } else {
+                setTextView.setText((String) nextTextData.get(key));
+            }
+        }
+
+        for (String key : imageKeyList) {
+            ImageView setImageView = convertView.findViewById(imageViewData.get(key));
+            setImageView.setImageBitmap((Bitmap) nextImageData.get(key));
+            if (key == "postPicture") {
+                if (nextImageData.get(key) == null) {
+                    setImageView.setVisibility(View.GONE);
+                }
+            }
+        }
 
         return convertView;
     }
