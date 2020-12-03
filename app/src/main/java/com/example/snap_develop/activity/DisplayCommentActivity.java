@@ -9,6 +9,7 @@ import android.widget.SimpleAdapter;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
+
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.R;
@@ -35,6 +36,8 @@ public class DisplayCommentActivity extends AppCompatActivity {
     SimpleAdapter sAdapter;
     ArrayList<HashMap<String, String>> listData;
     String postPath;
+    UserViewModel userViewModel;
+    PostViewModel postViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

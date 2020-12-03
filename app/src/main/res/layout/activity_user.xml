@@ -1,140 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profire"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activity.UserActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <Button
-        android:id="@+id/changebutton"
-        android:layout_width="94dp"
-        android:layout_height="40dp"
-        android:text="@string/changeButten"
-        android:textSize="8sp"
-        tools:layout_editor_absoluteX="272dp"
-        tools:layout_editor_absoluteY="114dp" />
+    <data>
 
-    <Button
-        android:id="@+id/approvalButton"
-        android:layout_width="94dp"
-        android:layout_height="40dp"
-        android:text="@string/approvalbutten"
-        android:textColor="#000000"
-        android:textColorHint="#070707"
-        android:textSize="8sp"
-        tools:layout_editor_absoluteX="272dp"
-        tools:layout_editor_absoluteY="78dp" />
+        <variable
+            name="userViewModel"
+            type="com.example.snap_develop.viewModel.UserViewModel" />
 
-    <FrameLayout
-        android:id="@+id/contents_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/background_light"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_view">
+        <import type="android.view.View" />
+    </data>
 
-    </FrameLayout>
-
-    <ImageView
-        android:id="@+id/userImage"
-        android:layout_width="88dp"
-        android:layout_height="88dp"
-        app:srcCompat="@drawable/ic_baseline_account_circle_24"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="74dp" />
-
-    <LinearLayout
-        android:id="@+id/footer_view"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
-
-    <TextView
-        android:id="@+id/ideditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/idTextEdit"
-        tools:layout_editor_absoluteX="106dp"
-        tools:layout_editor_absoluteY="127dp" />
-
-    <TextView
-        android:id="@+id/nameeditText"
-        android:layout_width="101dp"
-        android:layout_height="34dp"
-        android:text="@string/nameTextEdit"
-        android:textSize="20sp"
-        tools:layout_editor_absoluteX="89dp"
-        tools:layout_editor_absoluteY="93dp" />
-
-    <TextView
-        android:id="@+id/profileeditText"
-        android:layout_width="410dp"
-        android:layout_height="87dp"
-        android:text="@string/profileeditText"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="166dp" />
-
-    <View
-        android:id="@+id/header_view"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="207dp"
-        android:layout_height="50dp"
-        android:text="@string/followButten"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="253dp" />
-
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="207dp"
-        android:layout_height="50dp"
-        android:text="@string/followerButten"
-        tools:layout_editor_absoluteX="203dp"
-        tools:layout_editor_absoluteY="253dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" />
-
-    <ListView
-        android:id="@+id/postList"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/userInfoConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="59dp"
-        android:layout_marginTop="300dp"
-        app:layout_constraintBottom_toBottomOf="@+id/footer_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:context=".activity.UserActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/profileUpdateButton"
+            android:layout_width="94dp"
+            android:layout_height="40dp"
+            android:text="@string/changeButten"
+            android:textSize="8sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/followRequestButton" />
+
+        <Button
+            android:id="@+id/followRequestButton"
+            android:layout_width="94dp"
+            android:layout_height="40dp"
+            android:text="@string/approvalbutten"
+            android:textColor="#000000"
+            android:textColorHint="#070707"
+            android:textSize="8sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/contents_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/background_light"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/iconImageView"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:imageBitmap="@{userViewModel.user.icon}" />
+
+        <LinearLayout
+            android:id="@+id/followButtonLinerLayout"
+            android:layout_width="410dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/messageTextView">
+
+            <Button
+                android:id="@+id/followerButton"
+                android:layout_width="205dp"
+                android:layout_height="wrap_content"
+                android:text="@{userViewModel.user.followingCount.toString() + @string/followButtonText}" />
+
+            <Button
+                android:id="@+id/followButton"
+                android:layout_width="205dp"
+                android:layout_height="wrap_content"
+                android:text="@{userViewModel.user.followerCount.toString() + @string/followerButtonText}" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/postList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/followButtonLinerLayout" />
+
+        <TextView
+            android:id="@+id/idTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{userViewModel.user.uid}"
+            android:textSize="8sp"
+            app:layout_constraintEnd_toEndOf="@+id/nameTextView"
+            app:layout_constraintStart_toEndOf="@+id/iconImageView"
+            app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{userViewModel.user.name}"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/followRequestButton"
+            app:layout_constraintStart_toEndOf="@+id/iconImageView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/messageTextView"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:text="@{userViewModel.user.message}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconImageView" />
+
+        <LinearLayout
+            android:id="@+id/buttonLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageButton
+                android:id="@+id/timelineImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_menu_recent_history"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/mapImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_location_on_24"
+                tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/userImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_account_circle_24"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

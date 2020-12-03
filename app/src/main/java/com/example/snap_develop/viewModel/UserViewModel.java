@@ -1,14 +1,14 @@
 package com.example.snap_develop.viewModel;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.UserModel;
-import com.example.snap_develop.util.LogUtil;
 import com.google.firebase.auth.FirebaseUser;
+
+import timber.log.Timber;
 
 public class UserViewModel extends ViewModel {
     private MutableLiveData<String> authResult;
@@ -16,35 +16,64 @@ public class UserViewModel extends ViewModel {
     private MutableLiveData<UserBean> user;
     UserModel userModel = new UserModel();
 
+    public MutableLiveData<String> getAuthResult() {
+        Timber.i(MyDebugTree.START_LOG);
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
+        }
+        return authResult;
+    }
+
+
+    public MutableLiveData<String> getUpdateResult() {
+        Timber.i(MyDebugTree.START_LOG);
+        if (updateResult == null) {
+            updateResult = new MutableLiveData<>();
+        }
+        return updateResult;
+    }
+
+
+    public MutableLiveData<UserBean> getUser() {
+        Timber.i(MyDebugTree.START_LOG);
+        if (user == null) {
+            user = new MutableLiveData<>();
+        }
+        return user;
+    }
+
+
     public FirebaseUser getCurrentUser() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         return userModel.getCurrentUser();
     }
 
+
     public void createAccount(String email, String password) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
+        }
         userModel.createAccount(email, password, authResult);
     }
 
+
     public void signIn(String email, String password) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
+        }
         userModel.signIn(email, password, authResult);
     }
 
-    public void insertUser(UserBean userBean) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        userModel.insertUser(userBean);
-    }
 
     public void signOut() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         userModel.signOut();
     }
 
-    public void updateUser(UserBean userBean, byte[] data) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        userModel.updateUser(userBean, data, updateResult);
-    }
 
     //ここから
     public void fetchUserInfo(String UserId) {
@@ -61,14 +90,31 @@ public class UserViewModel extends ViewModel {
             authResult = new MutableLiveData<>();
         }
         return authResult;
+
+    public void insertUser(UserBean userBean) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
+        userModel.insertUser(userBean);
     }
 
-    public MutableLiveData<String> getUpdateResult() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+
+    public void updateUser(UserBean userBean, byte[] data) {
+        Timber.i(MyDebugTree.START_LOG);
+        //TODO 引数のログ出力
         if (updateResult == null) {
             updateResult = new MutableLiveData<>();
         }
-        return updateResult;
+        userModel.updateUser(userBean, data, updateResult);
+    }
+
+
+    public void fetchUserInfo(String uid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
+        if (user == null) {
+            user = new MutableLiveData<>();
+        }
+        userModel.fetchUserInfo(uid, user);
     }
 
     public MutableLiveData<UserBean> getUser() {
