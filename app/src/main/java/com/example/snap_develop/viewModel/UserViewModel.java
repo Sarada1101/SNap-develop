@@ -52,6 +52,9 @@ public class UserViewModel extends ViewModel {
     public void createAccount(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
+        }
         userModel.createAccount(email, password, authResult);
     }
 
@@ -59,6 +62,9 @@ public class UserViewModel extends ViewModel {
     public void signIn(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
+        }
         userModel.signIn(email, password, authResult);
     }
 
@@ -79,6 +85,9 @@ public class UserViewModel extends ViewModel {
     public void updateUser(UserBean userBean, byte[] data) {
         Timber.i(MyDebugTree.START_LOG);
         //TODO 引数のログ出力
+        if (updateResult == null) {
+            updateResult = new MutableLiveData<>();
+        }
         userModel.updateUser(userBean, data, updateResult);
     }
 

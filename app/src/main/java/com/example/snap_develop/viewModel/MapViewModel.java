@@ -29,6 +29,9 @@ public class MapViewModel extends ViewModel {
     public void fetchDeviceLocation(FusedLocationProviderClient fusedLocationClient) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "fusedLocationClient", fusedLocationClient));
+        if (mDeviceLatLng == null) {
+            mDeviceLatLng = new MutableLiveData<>();
+        }
         mMapModel.fetchDeviceLocation(fusedLocationClient, mDeviceLatLng);
     }
 
