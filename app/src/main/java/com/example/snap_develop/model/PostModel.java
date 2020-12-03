@@ -1,11 +1,15 @@
 package com.example.snap_develop.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.PostBean;
+import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
@@ -15,6 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
@@ -25,6 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 public class PostModel extends Firebase {
 
@@ -172,27 +179,36 @@ public class PostModel extends Firebase {
     }
 
 
-    public void fetchTimeLine(List<String> uidList,
+    public void fetchTimeLine(List<UserBean> userList,
             final MutableLiveData<List<PostBean>> postList) {
         this.firestoreConnect();
+        this.storageConnect();
 
         final List<PostBean> setList = new ArrayList<>();
 
         //フォローしている人のそれぞれの投稿を取得
-        for (String uid : uidList) {
+        for (UserBean bean : userList) {
             firestore.collection("posts")
-                    .whereEqualTo("uid", uid)
+                    .whereEqualTo("uid", bean.getUid())
+                    .whereEqualTo("type", "post")
+                    .orderBy("datetime", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                for (final QueryDocumentSnapshot document : task.getResult()) {
                                     System.out.println(
                                             "------------------success--------------------");
                                     System.out.println(document.getData());
+                                    final PostBean addPost = new PostBean();
 
-                                    PostBean addPost = new PostBean();
+                                    if (!document.getString("picture").isEmpty()) {
+                                        addPost.setPhotoName(document.getString("picture"));
+                                    } else {
+                                        System.out.println("no");
+                                    }
+
                                     addPost.setAnonymous(document.getBoolean("anonymous"));
                                     addPost.setDanger(document.getBoolean("danger"));
                                     addPost.setDatetime(document.getDate("datetime"));
@@ -201,10 +217,12 @@ public class PostModel extends Firebase {
                                             document.getGeoPoint("geopoint").getLongitude());
                                     addPost.setLatLng(geopoint);
                                     addPost.setMessage(document.getString("message"));
-                                    addPost.setPhotoName(document.getString("picture"));
                                     addPost.setType(document.getString("type"));
                                     addPost.setUid(document.getString("uid"));
+                                    addPost.setPostId(document.getId());
+                                    addPost.setGoodCount(Integer.valueOf(String.valueOf(document.get("good_count"))));
                                     setList.add(addPost);
+                                    System.out.println("------------------fetchTimeLine:Success!!------------------");
                                 }
                                 postList.setValue(setList);
                             } else {
@@ -277,5 +295,37 @@ public class PostModel extends Firebase {
                         Log.w(LogUtil.getClassName(), e);
                     }
                 });
+    }
+
+    public void fetchPostPictures(Map<String, String> pathList, final MutableLiveData<Map<String, Bitmap>> timeLinePictureList) {
+        this.storageConnect();
+        final Map<String, Bitmap> addData = new HashMap<>();
+
+        for (final Map.Entry<String, String> entry : pathList.entrySet()) {
+            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+            storage.getReference()
+                    .child("postPhoto")
+                    .child(entry.getKey())
+                    .child(entry.getValue())
+                    .getBytes(FIVE_MEGABYTE)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] aByte) {
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
+                            addData.put(entry.getKey(), bitmap);
+                            timeLinePictureList.setValue(addData);
+                            System.out.println("---------------postPicture:Success-----------------");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Timber.i(MyDebugTree.FAILURE_LOG);
+                            Timber.e(e.toString());
+                            System.out.println("--------------postPicture:false-----------------");
+                        }
+                    });
+        }
     }
 }
