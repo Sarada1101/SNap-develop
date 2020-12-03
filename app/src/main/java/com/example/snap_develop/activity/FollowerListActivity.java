@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FollowerListActivity extends AppCompatActivity {
-    ListView lv;
-    FollowListAdapter fAdapter;
+
     ArrayList<HashMap<String, Object>> listData;
     FollowViewModel followViewModel;
     UserViewModel userViewModel;
@@ -34,6 +33,12 @@ public class FollowerListActivity extends AppCompatActivity {
     List<UserBean> dispFollowList;
     FirebaseUser currentUser;
     String currentUid;
+    ListView lv;
+    FollowListAdapter fAdapter;
+    ArrayList<HashMap<String, HashMap<String, Object>>> dataList;
+    Map<String, HashMap<String, Integer>> viewData;
+    HashMap<String, List<String>> keyData;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +90,55 @@ public class FollowerListActivity extends AppCompatActivity {
                 System.out.println("--------------------onChanged----------------------");
                 count2++;
                 if (count2 >= dispFollowList.size()) {
-                    System.out.println("---------------" + count + "+" + dispFollowList.size() + "----------------------");
+                    /////////////////////////////////////////////////////////////////////////////////////
+                    //アダプターに渡すデータ作成
+                    dataList = new ArrayList<>();
                     for (UserBean bean : dispFollowList) {
-                        HashMap<String, Object> addData = new HashMap<String, Object>();
-                        addData.put("username", bean.getName());
-                        addData.put("userid", bean.getUid());
-                        addData.put("usericon", iconList.get(bean.getUid()));
-                        System.out.println(iconList);
-                        listData.add(addData);
+                        HashMap<String, Object> textData = new HashMap<>();
+                        textData.put("userName", bean.getName());
+                        textData.put("userId", bean.getUid());
+
+                        HashMap<String, Object> imageData = new HashMap<>();
+                        imageData.put("userIcon", iconList.get(bean.getUid()));
+
+                        HashMap<String, HashMap<String, Object>> addData = new HashMap<>();
+                        addData.put(FollowListAdapter.TEXT, textData);
+                        addData.put(FollowListAdapter.IMAGE, imageData);
+
+                        dataList.add(addData);
                     }
-                    fAdapter = new FollowListAdapter(FollowerListActivity.this, listData, R.layout.activity_follower_list_row,
-                            new int[]{R.id.followerNameView, R.id.followerIdView, R.id.followerIconView});
+                    /////////////////////////////////////////////////////////////////////////////////////
+
+                    /////////////////////////////////////////////////////////////////////////////////////
+                    //アダプターに渡すviewのデータの作成
+                    HashMap<String, Integer> textViewData = new HashMap<>();
+                    textViewData.put("userName", R.id.followerNameView);
+                    textViewData.put("userId", R.id.followerIdView);
+
+                    HashMap<String, Integer> imageViewData = new HashMap<>();
+                    imageViewData.put("userIcon", R.id.followerIconView);
+
+                    viewData = new HashMap<>();
+                    viewData.put(FollowListAdapter.TEXT, textViewData);
+                    viewData.put(FollowListAdapter.IMAGE, imageViewData);
+                    /////////////////////////////////////////////////////////////////////////////////////
+
+                    /////////////////////////////////////////////////////////////////////////////////////
+                    //アダプターに渡すキーデータの作成
+                    List<String> textKeyList = new ArrayList<>();
+                    textKeyList.add("userName");
+                    textKeyList.add("userId");
+
+                    List<String> imageKeyList = new ArrayList<>();
+                    imageKeyList.add("userIcon");
+
+                    keyData = new HashMap<>();
+                    keyData.put(FollowListAdapter.TEXT, textKeyList);
+                    keyData.put(FollowListAdapter.IMAGE, imageKeyList);
+                    /////////////////////////////////////////////////////////////////////////////////////
+
+                    fAdapter = new FollowListAdapter(FollowerListActivity.this, dataList, R.layout.activity_follower_list_row
+                            , viewData, keyData);
                     lv = (ListView) findViewById(R.id.followerList);
                     lv.setAdapter(fAdapter);
                 }
