@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 import timber.log.Timber;
 
-public class UserAdapter extends BaseAdapter {
+public class DisplayCommentAdapter extends BaseAdapter {
 
+    private ArrayList<UserBean> mUserList;
     private ArrayList<PostBean> mPostList;
     private Context mContext;
-    private UserBean mUserBean;
     private LayoutInflater mInflater;
     private int mLayoutID;
 
@@ -29,19 +29,17 @@ public class UserAdapter extends BaseAdapter {
         ImageView icon;
         TextView username;
         TextView uid;
-        TextView post;
-        ImageView photo;
-        TextView goodCount;
-        TextView latLng;
+        TextView comment;
         TextView datetime;
     }
 
 
-    public UserAdapter(Context context, ArrayList<PostBean> postList, UserBean userBean, int rowLayout) {
+    public DisplayCommentAdapter(Context context, ArrayList<UserBean> userList, ArrayList<PostBean> postList,
+            int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
         this.mContext = context;
+        this.mUserList = userList;
         this.mPostList = postList;
-        this.mUserBean = userBean;
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;
     }
@@ -76,26 +74,17 @@ public class UserAdapter extends BaseAdapter {
             holder.icon = convertView.findViewById(R.id.listIconImageView);
             holder.username = convertView.findViewById(R.id.listUserNameTextView);
             holder.uid = convertView.findViewById(R.id.listUserIdTextView);
-            holder.post = convertView.findViewById(R.id.listCommentTextView);
-            holder.photo = convertView.findViewById(R.id.photoImageView);
-            holder.goodCount = convertView.findViewById(R.id.goodCountTextView);
-            holder.latLng = convertView.findViewById(R.id.latLngTextView);
+            holder.comment = convertView.findViewById(R.id.listCommentTextView);
             holder.datetime = convertView.findViewById(R.id.dateTextView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.icon.setImageBitmap(mUserBean.getIcon());
-        holder.username.setText(mUserBean.getName());
-        holder.uid.setText(mUserBean.getUid());
-        holder.post.setText(mPostList.get(position).getMessage());
-        if (mPostList.get(position).getPhoto() != null && !mPostList.get(position).getPhoto().equals("")) {
-            holder.photo.setImageBitmap(mPostList.get(position).getPhoto());
-        }
-        holder.goodCount.setText(mPostList.get(position).getGoodCount().toString());
-        holder.latLng.setText(String.format("%d, %d", (int) mPostList.get(position).getLatLng().latitude,
-                (int) mPostList.get(position).getLatLng().longitude));
+        holder.icon.setImageBitmap(mUserList.get(position).getIcon());
+        holder.username.setText(mUserList.get(position).getName());
+        holder.uid.setText(mUserList.get(position).getUid());
+        holder.comment.setText(mPostList.get(position).getMessage());
         holder.datetime.setText(mPostList.get(position).getDatetime().toString());
 
         return convertView;

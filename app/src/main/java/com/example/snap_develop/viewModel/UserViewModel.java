@@ -8,12 +8,15 @@ import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.UserModel;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 public class UserViewModel extends ViewModel {
     private MutableLiveData<String> authResult;
     private MutableLiveData<String> updateResult;
     private MutableLiveData<UserBean> user;
+    private MutableLiveData<List<UserBean>> userList;
     UserModel userModel = new UserModel();
 
     public MutableLiveData<String> getAuthResult() {
@@ -40,6 +43,15 @@ public class UserViewModel extends ViewModel {
             user = new MutableLiveData<>();
         }
         return user;
+    }
+
+
+    public MutableLiveData<List<UserBean>> getUserList() {
+        Timber.i(MyDebugTree.START_LOG);
+        if (userList == null) {
+            userList = new MutableLiveData<>();
+        }
+        return userList;
     }
 
 
@@ -100,5 +112,14 @@ public class UserViewModel extends ViewModel {
         }
         userModel.fetchUserInfo(uid, user);
     }
-}
 
+
+    public void fetchUserInfoList(List<String> uidList) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uidList", uidList));
+        if (userList == null) {
+            userList = new MutableLiveData<>();
+        }
+        userModel.fetchUserInfoList(uidList, userList);
+    }
+}

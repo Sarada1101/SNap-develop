@@ -31,7 +31,7 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-
+        
         postViewModel = new ViewModelProvider(this).get(PostViewModel.class);
 
         //フォローリスト
@@ -42,7 +42,6 @@ public class TimelineActivity extends AppCompatActivity {
         //フォロー数の取得
         followCount = userList.size();
 
-        postViewModel.fetchTimeLine(userList);
 
         postViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
             @Override
