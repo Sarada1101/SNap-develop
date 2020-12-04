@@ -63,4 +63,5 @@
     <string name="followerButtonText"> フォロワー</string>
     <string name="nameUpdate">名前</string>
     <string name="profireUpdate">プロフィール</string>
+    <string name="address">住所</string>
 </resources>

@@ -7,9 +7,6 @@
        「MyLocation」機能を利用する際には、
         粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
     -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -18,15 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ApprovalPendingFollowListActivity" />
-        <activity android:name=".activity.ApplicatedFollowListActivity" />
-        <activity android:name=".activity.AuthActivity">
+        <activity android:name=".activity.AddressAcquisitionTestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.ApprovalPendingFollowListActivity" />
+        <activity android:name=".activity.ApplicatedFollowListActivity" />
+        <activity android:name=".activity.AuthActivity" />
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".activity.DisplayCommentActivity" />
         <activity android:name=".activity.FollowerListActivity" />
@@ -37,7 +35,7 @@
         <activity android:name=".activity.PostActivity" />
         <activity android:name=".activity.PostSearchActivity" />
         <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".activity.TimelineActivity" />
+        <activity android:name=".activity.TimelineActivity"></activity>
         <activity android:name=".activity.UserActivity" />
         <activity android:name=".activity.UserUpdateActivity" />
         <!--
@@ -51,5 +49,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
     </application>
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

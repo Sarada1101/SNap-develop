@@ -38,4 +38,5 @@ public class MapViewModel extends ViewModel {
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "googleMap", googleMap));
         return mMapModel.fetchVisibleRegion(googleMap);
     }
+
 }
