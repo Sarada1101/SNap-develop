@@ -8,12 +8,15 @@ import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.UserModel;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 public class UserViewModel extends ViewModel {
     private MutableLiveData<String> authResult;
     private MutableLiveData<String> updateResult;
     private MutableLiveData<UserBean> user;
+    private MutableLiveData<List<UserBean>> userList;
     UserModel userModel = new UserModel();
 
     public MutableLiveData<String> getAuthResult() {
@@ -40,6 +43,15 @@ public class UserViewModel extends ViewModel {
             user = new MutableLiveData<>();
         }
         return user;
+    }
+
+
+    public MutableLiveData<List<UserBean>> getUserList() {
+        Timber.i(MyDebugTree.START_LOG);
+        if (userList == null) {
+            userList = new MutableLiveData<>();
+        }
+        return userList;
     }
 
 
@@ -75,22 +87,6 @@ public class UserViewModel extends ViewModel {
     }
 
 
-    //ここから
-    public void fetchUserInfo(String UserId) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        user = new MutableLiveData<>();
-        userModel.fetchUserInfo(UserId, user);
-
-    }
-
-
-    public MutableLiveData<String> getAuthResult() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        if (authResult == null) {
-            authResult = new MutableLiveData<>();
-        }
-        return authResult;
-
     public void insertUser(UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
@@ -117,11 +113,13 @@ public class UserViewModel extends ViewModel {
         userModel.fetchUserInfo(uid, user);
     }
 
-    public MutableLiveData<UserBean> getUser() {
-        if (user == null) {
-            user = new MutableLiveData<>();
+
+    public void fetchUserInfoList(List<String> uidList) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uidList", uidList));
+        if (userList == null) {
+            userList = new MutableLiveData<>();
         }
-        return user;
+        userModel.fetchUserInfoList(uidList, userList);
     }
 }
-

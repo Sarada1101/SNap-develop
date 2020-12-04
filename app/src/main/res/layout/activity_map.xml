@@ -3,10 +3,15 @@
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".activity.MapActivity">
 
         <fragment
             android:id="@+id/map"
@@ -18,8 +23,7 @@
             map:layout_constraintBottom_toBottomOf="parent"
             map:layout_constraintEnd_toEndOf="parent"
             map:layout_constraintStart_toStartOf="parent"
-            map:layout_constraintTop_toTopOf="parent"
-            tools:context=".activity.MapActivity" />
+            map:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
@@ -57,9 +61,4 @@
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <data>
-
-    </data>
 </layout>

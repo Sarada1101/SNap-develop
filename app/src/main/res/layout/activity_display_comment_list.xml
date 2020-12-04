@@ -1,67 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/userIconView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:id="@+id/listIconImageView"
+        android:layout_width="59dp"
+        android:layout_height="59dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.001"
+        app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
-    <TextView
-        android:id="@+id/userNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:text="@string/username"
-        app:layout_constraintBottom_toBottomOf="@+id/userIconView"
-        app:layout_constraintStart_toEndOf="@+id/userIconView"
-        app:layout_constraintTop_toTopOf="@+id/userIconView" />
-
-    <TextView
-        android:id="@+id/userIdText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:text="@string/userID"
-        app:layout_constraintBottom_toBottomOf="@+id/userNameText"
-        app:layout_constraintStart_toEndOf="@+id/userNameText"
-        app:layout_constraintTop_toTopOf="@+id/userNameText" />
-
-    <TextView
-        android:id="@+id/postText"
+    <ImageView
+        android:id="@+id/photoImageView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/Comment"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userIconView" />
+        app:layout_constraintTop_toBottomOf="@+id/listCommentTextView"
+        android:adjustViewBounds="true" />
+
 
     <TextView
-        android:id="@+id/timeText"
+        android:id="@+id/listUserIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:text="@string/DateTime"
+        android:text="@string/userID"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@+id/listUserNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/listUserNameTextView" />
+
+    <TextView
+        android:id="@+id/listUserNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:text="@string/username"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/listIconImageView"
+        app:layout_constraintStart_toEndOf="@+id/listIconImageView"
+        app:layout_constraintTop_toTopOf="@+id/listIconImageView"
+        app:layout_constraintVertical_bias="0.26" />
+
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dateTextEdit"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/latLngTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/userIdText"
-        app:layout_constraintTop_toTopOf="@+id/userIdText" />
+        app:layout_constraintTop_toTopOf="@+id/latLngTextView" />
+
+    <TextView
+        android:id="@+id/listCommentTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/post"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/listIconImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

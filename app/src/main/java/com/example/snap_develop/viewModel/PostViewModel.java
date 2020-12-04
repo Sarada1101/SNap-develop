@@ -1,15 +1,11 @@
 package com.example.snap_develop.viewModel;
 
-
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.model.PostModel;
-import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.maps.model.VisibleRegion;
 
 import java.util.List;
@@ -56,6 +52,7 @@ public class PostViewModel extends ViewModel {
 
 
     public MutableLiveData<PostBean> getPost() {
+        Timber.i(MyDebugTree.START_LOG);
         if (post == null) {
             post = new MutableLiveData<>();
         }
@@ -73,16 +70,21 @@ public class PostViewModel extends ViewModel {
     }
 
     public void fetchPost(String postPath) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        post = new MutableLiveData<>();
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postPath", postPath));
+        if (post == null) {
+            post = new MutableLiveData<>();
+        }
         postModel.fetchPost(postPath, post);
 
     }
 
-    public void fetchPostCommentList(List<String> commentList) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        postList = new MutableLiveData<>();
-        postModel.fetchPostCommentList(commentList, postList);
+    public void fetchPostCommentList(String postPath) {
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postPath", postPath));
+        if (postList == null) {
+            postList = new MutableLiveData<>();
+        }
+        postModel.fetchPostCommentList(postPath, postList);
     }
 
 
@@ -97,7 +99,7 @@ public class PostViewModel extends ViewModel {
 
 
     public void addGood(String userPath, String postPath) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         postModel.addGood(userPath, postPath);
     }
 }
