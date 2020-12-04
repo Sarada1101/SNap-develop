@@ -63,4 +63,6 @@
     <string name="followerButtonText"> フォロワー</string>
     <string name="nameUpdate">名前</string>
     <string name="profireUpdate">プロフィール</string>
+    <string name="backButtonText">←戻る</string>
+    <string name="saveText">保存</string>
 </resources>

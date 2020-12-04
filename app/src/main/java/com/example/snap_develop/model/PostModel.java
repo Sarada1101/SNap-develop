@@ -7,12 +7,14 @@ import static com.example.snap_develop.MyDebugTree.SUCCESS_LOG;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.PostBean;
+import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.android.gms.tasks.OnCompleteListener;
