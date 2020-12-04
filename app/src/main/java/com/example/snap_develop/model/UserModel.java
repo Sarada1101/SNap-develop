@@ -18,9 +18,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -135,21 +135,18 @@ public class UserModel extends Firebase {
     }
 
 
-    public void updateUser(UserBean userBean, byte[] data,
-            final MutableLiveData<String> updateResult) {
+    public void updateUser(UserBean userBean, final MutableLiveData<String> updateResult) {
         Timber.i(MyDebugTree.START_LOG);
 
-        //画像をstorageに保存
-        imgUpload(data, userBean.getIconName());
-
         this.firestoreConnect();
+        this.storageConnect();
 
         firestore.collection("users")
                 .document(userBean.getUid())
                 .update(
                         "name", userBean.getName(),
                         "message", userBean.getMessage(),
-                        "icon", userBean.getIcon()
+                        "icon", userBean.getIconName()
                 )
                 .addOnCompleteListener(
                         new OnCompleteListener<Void>() {
@@ -164,6 +161,32 @@ public class UserModel extends Firebase {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(LogUtil.getClassName(), "updateUser:failure", e);
                         updateResult.setValue(String.valueOf(e));
+                    }
+                });
+
+        //画像をstorageに保存
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        userBean.getIcon().compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        storage.getReference()
+                .child("icon")
+                .child(userBean.getUid())
+                .child(userBean.getIconName())
+                .putBytes(data)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        System.out.println("--------No upload------");
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type,
+                        // etc.
+                        // ...
+                        System.out.println("--------Yes upload-------");
                     }
                 });
     }
@@ -236,32 +259,5 @@ public class UserModel extends Firebase {
                         Timber.e(e.toString());
                     }
                 });
-    }
-
-    //storageに画像をアップロードするメソッド
-    public void imgUpload(byte[] data, String path) {
-        Timber.i(MyDebugTree.START_LOG);
-        // Create a storage reference from our app
-        StorageReference storageRef = storage.getReference();
-
-        // Create a reference
-        StorageReference userImagesRef = storageRef.child(path);
-
-        UploadTask uploadTask = userImagesRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                System.out.println("--------No upload------");
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type,
-                // etc.
-                // ...
-                System.out.println("--------Yes upload-------");
-            }
-        });
     }
 }
