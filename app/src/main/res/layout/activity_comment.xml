@@ -23,25 +23,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
             app:layout_constraintVertical_bias="0.189" />
-
-        <Button
-            android:id="@+id/replybutton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="返信"
-            tools:layout_editor_absoluteX="286dp"
-            tools:layout_editor_absoluteY="50dp"
-            tools:text="@string/replybutten" />
 
         <Switch
             android:id="@+id/anonymousswitch1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/anonymousSwitch"
-            tools:layout_editor_absoluteX="34dp"
-            tools:layout_editor_absoluteY="306dp" />
+            app:layout_constraintStart_toStartOf="@+id/posteditText"
+            app:layout_constraintTop_toBottomOf="@+id/posteditText" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
@@ -76,5 +68,40 @@
                 android:src="@drawable/ic_baseline_account_circle_24"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/replybutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="返信"
+                android:background="?attr/colorAccent"
+                android:onClick="onClick"
+                android:textColor="@color/design_default_color_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/replybutten" />
+
+            <Button
+                android:id="@+id/toDisplayCommentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/design_default_color_surface"
+                android:onClick="onClick"
+                android:text="@string/backButtonText"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

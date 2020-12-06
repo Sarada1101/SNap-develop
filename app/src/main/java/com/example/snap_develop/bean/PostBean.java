@@ -19,6 +19,7 @@ public class PostBean implements Serializable {
     private Long goodCount;
     private LatLng latLng;
     private Date datetime;
+    private String strDatetime;
     private boolean danger;
     private boolean anonymous;
     private String postPath;

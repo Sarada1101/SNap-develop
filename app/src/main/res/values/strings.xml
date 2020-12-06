@@ -65,4 +65,5 @@
     <string name="profireUpdate">プロフィール</string>
     <string name="comma">, </string>
     <string name="latLng">%d, %d</string>
+    <string name="backButtonText">←戻る</string>
 </resources>
