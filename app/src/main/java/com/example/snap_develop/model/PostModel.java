@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.PostBean;
+import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.UploadTask;
@@ -323,13 +325,16 @@ public class PostModel extends Firebase {
         Timber.i(String.format("%s %s=%s, %s=%s", INPUT_LOG, "uidList", uidList, "postList", postList));
 
         this.firestoreConnect();
+        this.storageConnect();
 
         final List<PostBean> setList = new ArrayList<>();
 
         //フォローしている人のそれぞれの投稿を取得
-        for (String uid : uidList) {
+        for (UserBean bean : userList) {
             firestore.collection("posts")
-                    .whereEqualTo("uid", uid)
+                    .whereEqualTo("uid", bean.getUid())
+                    .whereEqualTo("type", "post")
+                    .orderBy("datetime", Query.Direction.DESCENDING)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -337,24 +342,32 @@ public class PostModel extends Firebase {
                             Timber.i(MyDebugTree.START_LOG);
                             Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                             if (task.isSuccessful()) {
-                                Timber.i(MyDebugTree.SUCCESS_LOG);
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Timber.i(String.format("get post document ID: %s", document.getId()));
+                                for (final QueryDocumentSnapshot document : task.getResult()) {
+                                    System.out.println(
+                                            "------------------success--------------------");
+                                    System.out.println(document.getData());
+                                    final PostBean addPost = new PostBean();
 
-                                    PostBean postBean = new PostBean();
-                                    postBean.setAnonymous(document.getBoolean("anonymous"));
-                                    postBean.setDanger(document.getBoolean("danger"));
-                                    postBean.setDatetime(document.getDate("datetime"));
+                                    if (!document.getString("picture").isEmpty()) {
+                                        addPost.setPhotoName(document.getString("picture"));
+                                    } else {
+                                        System.out.println("no");
+                                    }
+
+                                    addPost.setAnonymous(document.getBoolean("anonymous"));
+                                    addPost.setDanger(document.getBoolean("danger"));
+                                    addPost.setDatetime(document.getDate("datetime"));
                                     LatLng geopoint = new LatLng(
                                             document.getGeoPoint("geopoint").getLatitude(),
                                             document.getGeoPoint("geopoint").getLongitude());
-                                    postBean.setLatLng(geopoint);
-                                    postBean.setMessage(document.getString("message"));
-                                    postBean.setPhotoName(document.getString("picture"));
-                                    postBean.setType(document.getString("type"));
-                                    postBean.setUid(document.getString("uid"));
-
-                                    setList.add(postBean);
+                                    addPost.setLatLng(geopoint);
+                                    addPost.setMessage(document.getString("message"));
+                                    addPost.setType(document.getString("type"));
+                                    addPost.setUid(document.getString("uid"));
+                                    addPost.setPostId(document.getId());
+                                    addPost.setGoodCount(Integer.valueOf(String.valueOf(document.get("good_count"))));
+                                    setList.add(addPost);
+                                    System.out.println("------------------fetchTimeLine:Success!!------------------");
                                 }
                                 postList.setValue(setList);
                             } else {
@@ -790,5 +803,37 @@ public class PostModel extends Firebase {
                         Log.w(LogUtil.getClassName(), "insertGoodPath:failure:" + e);
                     }
                 });
+    }
+
+    public void fetchPostPictures(Map<String, String> pathList, final MutableLiveData<Map<String, Bitmap>> timeLinePictureList) {
+        this.storageConnect();
+        final Map<String, Bitmap> addData = new HashMap<>();
+
+        for (final Map.Entry<String, String> entry : pathList.entrySet()) {
+            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+            storage.getReference()
+                    .child("postPhoto")
+                    .child(entry.getKey())
+                    .child(entry.getValue())
+                    .getBytes(FIVE_MEGABYTE)
+                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] aByte) {
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
+                            addData.put(entry.getKey(), bitmap);
+                            timeLinePictureList.setValue(addData);
+                            System.out.println("---------------postPicture:Success-----------------");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Timber.i(MyDebugTree.FAILURE_LOG);
+                            Timber.e(e.toString());
+                            System.out.println("--------------postPicture:false-----------------");
+                        }
+                    });
+        }
     }
 }
