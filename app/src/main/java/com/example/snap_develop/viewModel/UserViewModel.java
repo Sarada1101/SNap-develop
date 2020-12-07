@@ -61,13 +61,13 @@ public class UserViewModel extends ViewModel {
     }
 
 
-    public void createAccount(String email, String password) {
+    public void createAccount(String email, String password, UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
         if (authResult == null) {
             authResult = new MutableLiveData<>();
         }
-        userModel.createAccount(email, password, authResult);
+        userModel.createAccount(email, password, userBean, authResult);
     }
 
 
@@ -84,13 +84,6 @@ public class UserViewModel extends ViewModel {
     public void signOut() {
         Timber.i(MyDebugTree.START_LOG);
         userModel.signOut();
-    }
-
-
-    public void insertUser(UserBean userBean) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
-        userModel.insertUser(userBean);
     }
 
 
