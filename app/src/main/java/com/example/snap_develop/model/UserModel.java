@@ -283,9 +283,6 @@ public class UserModel extends Firebase {
                                             userBeanList.add(userBean);
 
                                             // もし画像を全て取得したら
-                                            System.out.println(finalI);
-                                            System.out.println(userBeanList.size());
-                                            System.out.println(uidList.size());
                                             if (userBeanList.size() >= uidList.size()) {
                                                 userList.setValue(userBeanList);
                                             }

@@ -454,7 +454,7 @@ public class PostModel extends Firebase {
 
         firestore.collection("posts")
                 .document(postPath)
-                .collection("comment")
+                .collection("comments")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -462,7 +462,7 @@ public class PostModel extends Firebase {
                         Timber.i(START_LOG);
                         // コメントへのパスを取得する
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            commentPathList.add(document.getDocumentReference("parent_post"));
+                            commentPathList.add(document.getDocumentReference("path"));
                         }
 
                         // コメントの詳細を取得する
@@ -473,20 +473,11 @@ public class PostModel extends Firebase {
                                     final DocumentSnapshot document = task.getResult();
                                     final PostBean postBean = new PostBean();
                                     documentIdList.add(document.getId());
-                                    System.out.println(document.getId());
-                                    System.out.println(document.getBoolean("anonymous"));
                                     postBean.setAnonymous(document.getBoolean("anonymous"));
-                                    //postBean.setDanger(document.getBoolean("danger"));
-                                    //postBean.setGoodCount(document.getLong("good_count"));
                                     postBean.setDatetime(document.getDate("datetime"));
                                     String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime"));
                                     postBean.setStrDatetime(str);
-                                    //LatLng geopoint = new LatLng(
-                                    //document.getGeoPoint("geopoint").getLatitude(),
-                                    //document.getGeoPoint("geopoint").getLongitude());
-                                    //postBean.setLatLng(geopoint);
                                     postBean.setMessage(document.getString("message"));
-                                    //postBean.setPhotoName(document.getString("picture"));
                                     postBean.setType(document.getString("type"));
                                     postBean.setUid(document.getString("uid"));
                                     postBeanList.add(postBean);

@@ -1,10 +1,12 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -20,6 +22,9 @@ import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -50,6 +55,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         // 投稿情報のパスを取得
         postPath = getIntent().getStringExtra("postPath");
         Timber.i(String.format("%s=%s", "postPath", postPath));
+        postPath = "5tz1lsaRGKHt59ntjiRj";
 
         // 投稿情報を取得したら投稿のユーザー情報を取得する
         finalPostPath = postPath;
@@ -72,10 +78,23 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
 
         // コメントリストを取得したらコメントごとのユーザー情報を取得する
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onChanged(List<PostBean> postList) {
                 List<String> uidList = new ArrayList<>();
                 postDataList = postList;
+
+                //投稿を日時順にソート
+                class PostSortCompare implements Comparator<PostBean> {
+                    @Override
+                    public int compare(PostBean o1, PostBean o2) {
+                        Date sortKey1 = o1.getDatetime();
+                        Date sortKey2 = o2.getDatetime();
+                        return sortKey1.compareTo(sortKey2);
+                    }
+                }
+                Collections.sort(postList, new PostSortCompare().reversed());
+                
                 for (final PostBean postBean : postList) {
                     uidList.add(postBean.getUid());
                 }
