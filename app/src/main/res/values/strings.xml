@@ -64,4 +64,6 @@
     <string name="nameUpdate">名前</string>
     <string name="profireUpdate">プロフィール</string>
     <string name="anoymous">匿名投稿</string>
+    <string name="comma">, </string>
+    <string name="latLng">%d, %d</string>
 </resources>

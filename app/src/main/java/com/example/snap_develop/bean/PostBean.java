@@ -1,6 +1,6 @@
 package com.example.snap_develop.bean;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -16,7 +16,8 @@ public class PostBean implements Serializable {
     private String postId;
     private String message;
     private String photoName;
-    private Uri photo;
+    private Bitmap photo;
+    private Long goodCount;
     private LatLng latLng;
     private Date datetime;
     private boolean danger;

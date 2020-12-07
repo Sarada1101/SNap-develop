@@ -50,7 +50,7 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-
+        
         postViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         followViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
 
@@ -92,6 +92,7 @@ public class TimelineActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         postViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
             @Override

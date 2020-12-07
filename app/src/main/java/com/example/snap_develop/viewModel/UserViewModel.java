@@ -8,12 +8,15 @@ import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.UserModel;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import timber.log.Timber;
 
 public class UserViewModel extends ViewModel {
     private MutableLiveData<String> authResult;
     private MutableLiveData<String> updateResult;
     private MutableLiveData<UserBean> user;
+    private MutableLiveData<List<UserBean>> userList;
     UserModel userModel = new UserModel();
 
     public MutableLiveData<String> getAuthResult() {
@@ -43,6 +46,15 @@ public class UserViewModel extends ViewModel {
     }
 
 
+    public MutableLiveData<List<UserBean>> getUserList() {
+        Timber.i(MyDebugTree.START_LOG);
+        if (userList == null) {
+            userList = new MutableLiveData<>();
+        }
+        return userList;
+    }
+
+
     public FirebaseUser getCurrentUser() {
         Timber.i(MyDebugTree.START_LOG);
         return userModel.getCurrentUser();
@@ -52,6 +64,9 @@ public class UserViewModel extends ViewModel {
     public void createAccount(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
+        }
         userModel.createAccount(email, password, authResult);
     }
 
@@ -59,6 +74,9 @@ public class UserViewModel extends ViewModel {
     public void signIn(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        if (authResult == null) {
+            authResult = new MutableLiveData<>();
+        }
         userModel.signIn(email, password, authResult);
     }
 
@@ -79,6 +97,9 @@ public class UserViewModel extends ViewModel {
     public void updateUser(UserBean userBean, byte[] data) {
         Timber.i(MyDebugTree.START_LOG);
         //TODO 引数のログ出力
+        if (updateResult == null) {
+            updateResult = new MutableLiveData<>();
+        }
         userModel.updateUser(userBean, data, updateResult);
     }
 
@@ -91,5 +112,14 @@ public class UserViewModel extends ViewModel {
         }
         userModel.fetchUserInfo(uid, user);
     }
-}
 
+
+    public void fetchUserInfoList(List<String> uidList) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uidList", uidList));
+        if (userList == null) {
+            userList = new MutableLiveData<>();
+        }
+        userModel.fetchUserInfoList(uidList, userList);
+    }
+}

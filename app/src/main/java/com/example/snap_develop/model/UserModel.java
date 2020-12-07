@@ -18,10 +18,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import timber.log.Timber;
@@ -107,7 +107,7 @@ public class UserModel extends Firebase {
         user.put("uid", userBean.getUid());
         user.put("name", userBean.getName());
         user.put("message", userBean.getMessage());
-        user.put("icon", userBean.getIcon());
+        user.put("icon", userBean.getIconName());
         user.put("followNotice", userBean.isFollowNotice());
         user.put("goodNotice", userBean.isGoodNotice());
         user.put("commentNotice", userBean.isCommentNotice());
@@ -140,7 +140,7 @@ public class UserModel extends Firebase {
         Timber.i(MyDebugTree.START_LOG);
 
         //画像をstorageに保存
-        imgUpload(data, userBean.getIconName());
+//        imgUpload(data, userBean.getIconName());
 
         this.firestoreConnect();
 
@@ -171,7 +171,7 @@ public class UserModel extends Firebase {
 
     public void fetchUserInfo(final String uid, final MutableLiveData<UserBean> user) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "udi", uid, "user", user));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "user", user));
 
         this.firestoreConnect();
         this.storageConnect();
@@ -186,7 +186,7 @@ public class UserModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                        Timber.i(MyDebugTree.START_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
 
                         if (task.isSuccessful()) {
@@ -200,17 +200,19 @@ public class UserModel extends Firebase {
                             userBean.setFollowerCount(document.getLong("follower_count"));
                         }
 
-                        final long ONE_MEGABYTE = 1024 * 1024;
+                        final long ONE_MEGABYTE = 1024 * 1024 * 5;
                         // icon/{uid}/{iconName}
                         storage.getReference()
                                 .child("icon")
-                                .child(uid)
+                                .child(userBean.getUid())
                                 .child(userBean.getIconName())
                                 .getBytes(ONE_MEGABYTE)
                                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                     @Override
                                     public void onSuccess(byte[] aByte) {
                                         Timber.i(MyDebugTree.SUCCESS_LOG);
+                                        Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                userBean.getIconName()));
                                         Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
                                         userBean.setIcon(bitmap);
                                         user.setValue(userBean);
@@ -220,6 +222,8 @@ public class UserModel extends Firebase {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                userBean.getIconName()));
                                         Timber.e(e.toString());
                                     }
                                 });
@@ -234,30 +238,102 @@ public class UserModel extends Firebase {
                 });
     }
 
-    //storageに画像をアップロードするメソッド
-    public void imgUpload(byte[] data, String path) {
+
+    public void fetchUserInfoList(final List<String> uidList, final MutableLiveData<List<UserBean>> userList) {
         Timber.i(MyDebugTree.START_LOG);
-        // Create a storage reference from our app
-        StorageReference storageRef = storage.getReference();
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uidList", uidList, "userList", userList));
 
-        // Create a reference
-        StorageReference userImagesRef = storageRef.child(path);
+        this.firestoreConnect();
 
-        UploadTask uploadTask = userImagesRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                System.out.println("--------No upload------");
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type,
-                // etc.
-                // ...
-                System.out.println("--------Yes upload-------");
-            }
-        });
+        final List<UserBean> userBeanList = new ArrayList<>();
+
+        for (int i = 0; i < uidList.size(); i++) {
+            String uid = uidList.get(i);
+            final int finalI = i;
+            firestore.collection("users")
+                    .document(uid)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                            Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
+                            DocumentSnapshot document = task.getResult();
+                            final UserBean userBean = new UserBean();
+                            userBean.setName(document.getString("name"));
+                            userBean.setUid(document.getId());
+                            userBean.setIconName(document.getString("icon"));
+
+                            final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                            // icon/{uid}/{iconName}
+                            storage.getReference()
+                                    .child("icon")
+                                    .child(userBean.getUid())
+                                    .child(userBean.getIconName())
+                                    .getBytes(ONE_MEGABYTE)
+                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] aByte) {
+                                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                                            Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                    userBean.getIconName()));
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
+                                            userBean.setIcon(bitmap);
+                                            userBeanList.add(userBean);
+
+                                            // もし画像を全て取得したら
+                                            if (finalI == userBeanList.size() - 1) {
+                                                userList.setValue(userBeanList);
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Timber.i(MyDebugTree.FAILURE_LOG);
+                                            Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                    userBean.getIconName()));
+                                            Timber.e(e.toString());
+                                        }
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Timber.i(MyDebugTree.FAILURE_LOG);
+                            Timber.e(e.toString());
+                        }
+                    });
+        }
     }
+
+//
+//    //storageに画像をアップロードするメソッド
+//    public void imgUpload(byte[] data, String path) {
+//        Timber.i(MyDebugTree.START_LOG);
+//        // Create a storage reference from our app
+//        StorageReference storageRef = storage.getReference();
+//
+//        // Create a reference
+//        StorageReference userImagesRef = storageRef.child(path);
+//
+//        UploadTask uploadTask = userImagesRef.putBytes(data);
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle unsuccessful uploads
+//                System.out.println("--------No upload------");
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type,
+//                // etc.
+//                // ...
+//                System.out.println("--------Yes upload-------");
+//            }
+//        });
+//    }
 }
