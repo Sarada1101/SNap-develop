@@ -173,6 +173,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             startActivity(new Intent(MapActivity.this, MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(MapActivity.this, UserActivity.class));
+        } else if (i == R.id.postMapFloatingActionButton) {
+            startActivity(new Intent(MapActivity.this, PostActivity.class));
         }
     }
 }
