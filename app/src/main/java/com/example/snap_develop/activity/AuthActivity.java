@@ -3,7 +3,6 @@ package com.example.snap_develop.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,34 +12,40 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.databinding.ActivityAuthBinding;
-import com.example.snap_develop.util.LogUtil;
 import com.example.snap_develop.viewModel.UserViewModel;
+
+import timber.log.Timber;
 
 public class AuthActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private UserViewModel userViewModel;
+    private UserViewModel mUserViewModel;
     private ActivityAuthBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_auth);
 
         mBinding.createAccountButton.setOnClickListener(this);
         mBinding.loginButton.setOnClickListener(this);
 
-        userViewModel.signOut();
+        //TODO 開発が終わったら削除する
+        mUserViewModel.signOut();
 
         //userViewModelのgetAuthResultメソッドで取得できる値を監視する
-        userViewModel.getAuthResult().observe(this, new Observer<String>() {
+        mUserViewModel.getAuthResult().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable final String authResult) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "authResult", authResult));
+
                 //上記の値が変更されたときにonChangedメソッドが発生し、中に記述されている処理が実行される
                 if (TextUtils.equals(authResult, "success")) {
                     Toast.makeText(AuthActivity.this, "成功しました", Toast.LENGTH_SHORT).show();
@@ -71,53 +76,56 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void createAccount() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         String email = mBinding.emailTextInputEditText.getText().toString();
         String password = mBinding.passwordTextInputEditText.getText().toString();
 
         if (!validateForm(email, password)) {
             return;
         }
-
-        userViewModel.createAccount(email, password);
+        mUserViewModel.createAccount(email, password);
     }
 
 
     private void signIn() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         String email = mBinding.emailTextInputEditText.getText().toString();
         String password = mBinding.passwordTextInputEditText.getText().toString();
 
         if (!validateForm(email, password)) {
             return;
         }
-        userViewModel.signIn(email, password);
+        mUserViewModel.signIn(email, password);
     }
 
 
     private boolean validateForm(String email, String password) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        boolean valid = true;
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        boolean isValidSuccess = false;
 
         if (TextUtils.isEmpty(email)) {
             mBinding.emailTextInputLayout.setError("メールアドレスを入力してください");
-            valid = false;
         } else {
             mBinding.emailTextInputLayout.setError(null);
+            isValidSuccess = true;
         }
 
         if (TextUtils.isEmpty(password)) {
             mBinding.passwordTextInputLayout.setError("パスワードを入力してください");
-            valid = false;
         } else {
             mBinding.passwordTextInputLayout.setError(null);
+            isValidSuccess = true;
         }
-        return valid;
+
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
+        return isValidSuccess;
     }
 
 
     @Override
     public void onClick(View view) {
+        Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         if (i == R.id.createAccountButton) {
             createAccount();

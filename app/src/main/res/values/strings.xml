@@ -59,8 +59,10 @@
     <string name="approvalbutten">フォロー承認/申請</string>
     <string name="changeButten">変更</string>
     <string name="profileeditText">プロフィール表示欄</string>
-    <string name="followButten">フォロー</string>
-    <string name="followerButten">フォロワー</string>
+    <string name="followButtonText"> フォロー</string>
+    <string name="followerButtonText"> フォロワー</string>
     <string name="nameUpdate">名前</string>
     <string name="profireUpdate">プロフィール</string>
+    <string name="comma">, </string>
+    <string name="latLng">%d, %d</string>
 </resources>

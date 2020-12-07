@@ -1,8 +1,11 @@
 package com.example.snap_develop.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 
@@ -23,18 +26,22 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
 import java.util.Date;
 
 import javax.annotation.Nullable;
 
+import timber.log.Timber;
+
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FusedLocationProviderClient fusedLocationClient;
-    private PostViewModel postViewModel;
+    FusedLocationProviderClient mFusedLocationClient;
+    private PostViewModel mPostViewModel;
     private MapViewModel mapViewModel;
     private ActivityPostBinding mBinding;
     private static final int REQUEST_GALLERY = 0;
-    Uri uri;
+    private String mPhotoName = "";
+    Bitmap mBitMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
-        postViewModel = new ViewModelProvider(this).get(PostViewModel.class);
+        mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post);
 
@@ -57,8 +64,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                         UserViewModel.class).getCurrentUser();
                 PostBean postBean = new PostBean();
                 postBean.setMessage(String.valueOf(mBinding.postTextMultiLine.getText()));
-                postBean.setPhotoName(uri.getLastPathSegment());
-                postBean.setPhoto(uri);
+                postBean.setPhotoName(mPhotoName);
+                postBean.setPhoto(mBitMap);
                 postBean.setLatLng(latLng);
                 postBean.setDatetime(new Date());
                 postBean.setAnonymous(mBinding.anonymousSwitch.isChecked());
@@ -66,15 +73,15 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 postBean.setUid(firebaseUser.getUid());
                 postBean.setType("post");
 
-                postViewModel.insertPost(postBean);
+                mPostViewModel.insertPost(postBean);
             }
         });
     }
 
     private void insertPost() {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mapViewModel.fetchDeviceLocation(fusedLocationClient);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mapViewModel.fetchDeviceLocation(mFusedLocationClient);
     }
 
     private void pickPhoto() {
@@ -92,8 +99,19 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         if (resultCode != RESULT_OK || requestCode != REQUEST_GALLERY) {
             return;
         }
-        uri = data.getData();
-        mBinding.photoImageButton.setImageURI(uri);
+        if (resultCode == Activity.RESULT_OK) {
+            Timber.i("画像取得");
+            if (data != null) {
+                Uri uri = data.getData();
+                mPhotoName = uri.getLastPathSegment();
+                try {
+                    mBitMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                    mBinding.photoImageButton.setImageBitmap(mBitMap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
