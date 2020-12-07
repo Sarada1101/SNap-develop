@@ -36,6 +36,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -147,14 +148,17 @@ public class PostModel extends Firebase {
     public void insertComment(final PostBean postBean) {
         Timber.i(START_LOG);
         Timber.i(String.format("%s %s=%s", INPUT_LOG, "postBean", postBean));
+
+        this.firestoreConnect();
+
         final Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
         post.put("datetime", postBean.getDatetime());
         post.put("anonymous", postBean.isAnonymous());
         post.put("uid", postBean.getUid());
         post.put("type", postBean.getType());
-
-        this.firestoreConnect();
+        DocumentReference perent_post = firestore.collection("posts").document(postBean.getPostPath());
+        post.put("perent_post", perent_post);
 
         //コメントを追加
         firestore.collection("posts")
@@ -196,7 +200,7 @@ public class PostModel extends Firebase {
                         path.put("path", documentReference);
                         // posts/{uid}/comments
                         firestore.collection("posts")
-                                .document(postBean.getUid())
+                                .document(postBean.getPostPath())
                                 .collection("comments")
                                 .add(path)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -354,6 +358,13 @@ public class PostModel extends Firebase {
                                         System.out.println("no");
                                     }
 
+                                    PostBean postBean = new PostBean();
+                                    postBean.setAnonymous(document.getBoolean("anonymous"));
+                                    postBean.setDanger(document.getBoolean("danger"));
+                                    postBean.setDatetime(document.getDate("datetime"));
+                                    String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime"));
+                                    postBean.setStrDatetime(str);
+                                  
                                     addPost.setAnonymous(document.getBoolean("anonymous"));
                                     addPost.setDanger(document.getBoolean("danger"));
                                     addPost.setDatetime(document.getDate("datetime"));
@@ -393,7 +404,8 @@ public class PostModel extends Firebase {
         this.firestoreConnect();
         this.storageConnect();
 
-        firestore.document(postPath)
+        firestore.collection("posts")
+                .document(postPath)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -407,6 +419,8 @@ public class PostModel extends Firebase {
                         postBean.setDanger(document.getBoolean("danger"));
                         postBean.setGoodCount(document.getLong("good_count"));
                         postBean.setDatetime(document.getDate("datetime"));
+                        String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime"));
+                        postBean.setStrDatetime(str);
                         LatLng geopoint = new LatLng(
                                 document.getGeoPoint("geopoint").getLatitude(),
                                 document.getGeoPoint("geopoint").getLongitude());
@@ -458,11 +472,12 @@ public class PostModel extends Firebase {
     public void fetchPostCommentList(String postPath, final MutableLiveData<List<PostBean>> postList) {
         this.firestoreConnect();
 
-        final List<String> commentPathList = new ArrayList<>();
+        final List<DocumentReference> commentPathList = new ArrayList<>();
         final List<PostBean> postBeanList = new ArrayList<>();
         final List<String> documentIdList = new ArrayList<>();
 
-        firestore.document(postPath)
+        firestore.collection("posts")
+                .document(postPath)
                 .collection("comments")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -471,76 +486,33 @@ public class PostModel extends Firebase {
                         Timber.i(START_LOG);
                         // コメントへのパスを取得する
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            String path = document.getDocumentReference("path").toString();
-                            commentPathList.add(path);
+                            commentPathList.add(document.getDocumentReference("path"));
                         }
 
                         // コメントの詳細を取得する
-                        for (String path : commentPathList) {
-                            firestore.document(path)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            final DocumentSnapshot document = task.getResult();
-                                            final PostBean postBean = new PostBean();
-                                            documentIdList.add(document.getId());
-                                            postBean.setAnonymous(document.getBoolean("anonymous"));
-                                            postBean.setDanger(document.getBoolean("danger"));
-                                            postBean.setGoodCount(document.getLong("good_count"));
-                                            postBean.setDatetime(document.getDate("datetime"));
-                                            LatLng geopoint = new LatLng(
-                                                    document.getGeoPoint("geopoint").getLatitude(),
-                                                    document.getGeoPoint("geopoint").getLongitude());
-                                            postBean.setLatLng(geopoint);
-                                            postBean.setMessage(document.getString("message"));
-                                            postBean.setPhotoName(document.getString("picture"));
-                                            postBean.setType(document.getString("type"));
-                                            postBean.setUid(document.getString("uid"));
-                                            postBeanList.add(postBean);
-
-                                        }
-                                    });
-                        }
-
-                        // 画像を取得する
-                        for (int i = 0; i < documentIdList.size(); i++) {
-                            final long ONE_MEGABYTE = 1024 * 1024 * 5;
-                            final int finalI = i;
-                            // posts/{uid}/{photoName}
-                            storage.getReference()
-                                    .child("postPhoto")
-                                    .child(documentIdList.get(i))
-                                    .child(postBeanList.get(i).getPhotoName())
-                                    .getBytes(ONE_MEGABYTE)
-                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                        @Override
-                                        public void onSuccess(byte[] aByte) {
-                                            Timber.i(SUCCESS_LOG);
-                                            Timber.i(String.format("path=/%s/%s/%s", "postPhoto",
-                                                    documentIdList.get(finalI),
-                                                    postBeanList.get(finalI).getPhotoName()));
-                                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
-                                            postBeanList.get(finalI).setPhoto(bitmap);
-
-                                            // もし画像を全て取得したら
-                                            if (finalI == postBeanList.size() - 1) {
-                                                postList.setValue(postBeanList);
-                                            }
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Timber.i(FAILURE_LOG);
-                                            Timber.i(String.format("path=/%s/%s/%s", "postPhoto",
-                                                    documentIdList.get(finalI),
-                                                    postBeanList.get(finalI).getPhotoName()));
-                                            Timber.e(e.toString());
-                                        }
-                                    });
+                        for (DocumentReference ref : commentPathList) {
+                            ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    final DocumentSnapshot document = task.getResult();
+                                    final PostBean postBean = new PostBean();
+                                    documentIdList.add(document.getId());
+                                    postBean.setAnonymous(document.getBoolean("anonymous"));
+                                    postBean.setDatetime(document.getDate("datetime"));
+                                    String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime"));
+                                    postBean.setStrDatetime(str);
+                                    postBean.setMessage(document.getString("message"));
+                                    postBean.setType(document.getString("type"));
+                                    postBean.setUid(document.getString("uid"));
+                                    postBeanList.add(postBean);
+                                    if (postBeanList.size() >= commentPathList.size()) {
+                                        postList.setValue(postBeanList);
+                                    }
+                                }
+                            });
                         }
                     }
+
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override

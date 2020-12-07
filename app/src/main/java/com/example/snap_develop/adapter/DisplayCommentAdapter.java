@@ -85,7 +85,7 @@ public class DisplayCommentAdapter extends BaseAdapter {
         holder.username.setText(mUserList.get(position).getName());
         holder.uid.setText(mUserList.get(position).getUid());
         holder.comment.setText(mPostList.get(position).getMessage());
-        holder.datetime.setText(mPostList.get(position).getDatetime().toString());
+        holder.datetime.setText(mPostList.get(position).getStrDatetime());
 
         return convertView;
     }
