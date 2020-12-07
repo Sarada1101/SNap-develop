@@ -1,6 +1,11 @@
 package com.example.snap_develop.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,12 +13,15 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityAuthBinding;
 import com.example.snap_develop.viewModel.UserViewModel;
 
@@ -80,10 +88,38 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         String email = mBinding.emailTextInputEditText.getText().toString();
         String password = mBinding.passwordTextInputEditText.getText().toString();
 
+        UserBean userBean = new UserBean();
+        userBean.setMessage("よろしくお願いします。");
+        userBean.setIconName("no_img");
+        userBean.setIcon(getBitmapFromVectorDrawable(this, R.drawable.ic_baseline_account_circle_24));
+        userBean.setFollowingCount((long) 0);
+        userBean.setFollowerCount((long) 0);
+        userBean.setFollowNotice(true);
+        userBean.setGoodNotice(true);
+        userBean.setCommentNotice(true);
+        userBean.setPublicationArea("public");
+
         if (!validateForm(email, password)) {
             return;
         }
-        mUserViewModel.createAccount(email, password);
+        mUserViewModel.createAccount(email, password, userBean);
+    }
+
+
+    // VectorDrawableをBitmapに変換
+    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
 
