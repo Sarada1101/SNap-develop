@@ -25,11 +25,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.DataSource;
 
 public class PostModel extends Firebase {
 
@@ -284,18 +287,37 @@ public class PostModel extends Firebase {
                 });
     }
 
-    static class MySqlConnect {
-        static Connection getConnection() throws Exception {
-            Class.forName("com.mysql.jdbc.Driver");
-            //各設定
-            String url = "jdbc:mysql://localhost:3306/sNap";
-            String user = "root";
-            String pass = "root";
-            //データベースに接続
-            Connection con = DriverManager.getConnection(url, user, pass);
-            return con;
+    public Connection getConnection() throws Exception {
+
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int rsno = 0;
+        DataSource ds = null;
+        try {
+            ///////////////////////////////////
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            String databaseName = "posts";
+            String instanceConnectionName = "intense-pointer-297407:us-central1:test-snap";
+            String jdbcUrl = String.format(
+                    "jdbc:mysql://google/%s?cloudSqlInstance=%s&"
+                            + "socketFactory=com.google.cloud.sql.mysql.SocketFactory&serverTimezone=JST&useSSL=false",
+                    databaseName,
+                    instanceConnectionName);
+
+            con = DriverManager.getConnection(jdbcUrl,
+                    "root", "root");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return con;
+
     }
+
 
     public void fetchSearchPost(String searchWord,
                                 final MutableLiveData<List<PostBean>> postBeanList) {
@@ -305,7 +327,7 @@ public class PostModel extends Firebase {
 
         try {
             //データベースに接続
-            Connection con = MySqlConnect.getConnection();
+            Connection con = getConnection();
             //ステートメントオブジェクトを作成
             PreparedStatement stmt = null;
 
