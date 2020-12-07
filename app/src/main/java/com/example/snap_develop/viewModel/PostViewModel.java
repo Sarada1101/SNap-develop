@@ -97,6 +97,12 @@ public class PostViewModel extends ViewModel {
         postModel.fetchMapPostList(visibleRegion, postList);
     }
 
+    public void fetchSearchPost(String searchWord) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        postList = new MutableLiveData<>();
+        postModel.fetchSearchPost(searchWord, postList);
+    }
+
 
     public void addGood(String userPath, String postPath) {
         Timber.i(MyDebugTree.START_LOG);

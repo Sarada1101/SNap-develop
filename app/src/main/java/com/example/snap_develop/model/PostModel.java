@@ -28,6 +28,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.UploadTask;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
 import timber.log.Timber;
 
 public class PostModel extends Firebase {
@@ -593,6 +599,113 @@ public class PostModel extends Firebase {
                 });
     }
 
+
+    public Connection getConnection() throws Exception {
+
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        int rsno = 0;
+        DataSource ds = null;
+        try {
+            ///////////////////////////////////
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            String databaseName = "posts";
+            String instanceConnectionName = "intense-pointer-297407:us-central1:test-snap";
+            String jdbcUrl = String.format(
+                    "jdbc:mysql://google/%s?cloudSqlInstance=%s&"
+                            + "socketFactory=com.google.cloud.sql.mysql.SocketFactory&serverTimezone=JST&useSSL=false",
+                    databaseName,
+                    instanceConnectionName);
+
+            con = DriverManager.getConnection(jdbcUrl,
+                    "root", "root");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return con;
+
+    }
+
+
+    public void fetchSearchPost(String searchWord,
+                                final MutableLiveData<List<PostBean>> postBeanList) {
+
+        final List<String> idList = new ArrayList<>();
+        final List<PostBean> setList = new ArrayList<>();
+
+        try {
+            //データベースに接続
+            Connection con = getConnection();
+            //ステートメントオブジェクトを作成
+            PreparedStatement stmt = null;
+
+            //SQL
+            stmt = con.prepareStatement("select * from posts where message like ?;");
+            stmt.setString(1, "%" + searchWord + "%");
+            ResultSet rs = stmt.executeQuery();
+
+            this.firestoreConnect();
+
+            while (rs.next()) {
+                idList.add(rs.getString("documentID"));
+            }
+
+            //オブジェクトを解放
+            rs.close();
+            stmt.close();
+            con.close();
+
+        } catch (Exception e) {
+        }
+        for (String docId : idList) {
+            firestore.collection("posts")
+                    .document(docId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                System.out.println(
+                                        "------------------success--------------------");
+                                System.out.println(document.getData());
+
+                                PostBean addPost = new PostBean();
+                                addPost.setAnonymous(document.getBoolean("anonymous"));
+                                addPost.setDanger(document.getBoolean("danger"));
+                                addPost.setDatetime(document.getDate("datetime"));
+                                LatLng geopoint = new LatLng(
+                                        document.getGeoPoint("geopoint").getLatitude(),
+                                        document.getGeoPoint("geopoint").getLongitude());
+                                addPost.setLatLng(geopoint);
+                                addPost.setMessage(document.getString("message"));
+                                addPost.setPhotoName(document.getString("picture"));
+                                addPost.setType(document.getString("type"));
+                                addPost.setUid(document.getString("uid"));
+                                setList.add(addPost);
+
+                                postBeanList.setValue(setList);
+                            } else {
+                                System.out.println("------------------else" + task.getException()
+                                        + "--------------------");
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            System.out.println("--------err:" + e + "----------");
+                        }
+                    });
+        }
+
+    }
+
     public void addGood(final String userPath, final String postPath) {
         this.firestoreConnect();
 
@@ -678,5 +791,4 @@ public class PostModel extends Firebase {
                     }
                 });
     }
-
 }
