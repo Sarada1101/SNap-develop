@@ -275,8 +275,10 @@ public class FollowModel extends Firebase {
         });
     }
 
-    public void fetchApprovalPendingList(String userPath, final MutableLiveData<List<UserBean>> followList) {
+    public void fetchApprovalPendingList(String userPath,
+            final MutableLiveData<List<UserBean>> followList) {
         this.firestoreConnect();
+        this.storageConnect();
 
         final List<DocumentReference> refList = new ArrayList<>();
         final List<UserBean> followingUserList = new ArrayList<>();
@@ -301,19 +303,40 @@ public class FollowModel extends Firebase {
                                                     public void onComplete(
                                                             @NonNull Task<DocumentSnapshot> task) {
                                                         if (task.isSuccessful()) {
-                                                            DocumentSnapshot doc = task.getResult();
-                                                            UserBean addBean =
-                                                                    new UserBean();
-                                                            addBean.setIcon(doc.getString("icon"));
-                                                            addBean.setMessage(doc.getString("message"));
-                                                            addBean.setName(doc.getString("name"));
-                                                            addBean.setUid(doc.getId());
-                                                            addBean.setCommentNotice(doc.getBoolean("comment_notice"));
-                                                            addBean.setFollowNotice(doc.getBoolean("follow_notice"));
-                                                            addBean.setGoodNotice(doc.getBoolean("good_notice"));
-                                                            addBean.setPublicationArea(doc.getString("publication_area"));
-                                                            followingUserList.add(addBean);
-                                                            followList.setValue(followingUserList);
+                                                            final DocumentSnapshot doc = task.getResult();
+                                                            final UserBean addBean = new UserBean();
+                                                            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+                                                            StorageReference imageRef = storage.getReference().child("icon").child(doc.getId()).child(doc.getString("icon"));
+
+                                                            System.out.println(imageRef);
+
+                                                            imageRef.getBytes(FIVE_MEGABYTE)
+                                                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                                        @Override
+                                                                        public void onSuccess(byte[] aByte) {
+                                                                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                                                                            System.out.println("icon/" + doc.getId() + "/" + doc.getString("icon"));
+                                                                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
+                                                                            addBean.setIcon(bitmap);
+                                                                            addBean.setIconName(doc.getString("icon"));
+                                                                            addBean.setMessage(doc.getString("message"));
+                                                                            addBean.setName(doc.getString("name"));
+                                                                            addBean.setUid(doc.getId());
+                                                                            addBean.setCommentNotice(doc.getBoolean("comment_notice"));
+                                                                            addBean.setFollowNotice(doc.getBoolean("follow_notice"));
+                                                                            addBean.setGoodNotice(doc.getBoolean("good_notice"));
+                                                                            addBean.setPublicationArea(doc.getString("publication_area"));
+                                                                            followingUserList.add(addBean);
+                                                                            followList.setValue(followingUserList);
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Timber.i(MyDebugTree.FAILURE_LOG);
+                                                                            Timber.e(e.toString());
+                                                                        }
+                                                                    });
                                                             Log.d(LogUtil.getClassName(),
                                                                     "fetchApprovalPendingList:success");
                                                         } else {

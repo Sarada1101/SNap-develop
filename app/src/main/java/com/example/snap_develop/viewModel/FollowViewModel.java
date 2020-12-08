@@ -1,7 +1,5 @@
 package com.example.snap_develop.viewModel;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,8 +10,6 @@ import com.example.snap_develop.model.FollowModel;
 import java.util.List;
 
 import timber.log.Timber;
-
-import java.util.List;
 
 public class FollowViewModel extends ViewModel {
 
@@ -77,10 +73,11 @@ public class FollowViewModel extends ViewModel {
     }
 
     public void fetchApprovalPendingList(String userPath) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath));
         followModel.fetchApprovalPendingList(userPath, followList);
     }
-  
+
     public void fetchCount(String userPath, String countPath) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath, "countPath", countPath));
