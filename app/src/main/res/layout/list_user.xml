@@ -17,12 +17,12 @@
         app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
     <ImageView
-        android:id="@+id/listPhotoImageView"
+        android:id="@+id/photoImageView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listPostTextView"
+        app:layout_constraintTop_toBottomOf="@+id/listCommentTextView"
         android:adjustViewBounds="true" />
 
     <ImageView
@@ -30,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listPhotoImageView"
+        app:layout_constraintTop_toBottomOf="@+id/photoImageView"
         app:srcCompat="@drawable/ic_baseline_favorite_24" />
 
     <ImageView
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@+id/goodCountTextView"
-        app:layout_constraintTop_toBottomOf="@+id/listPhotoImageView"
+        app:layout_constraintTop_toBottomOf="@+id/photoImageView"
         app:srcCompat="@drawable/ic_baseline_location_on_24" />
 
     <TextView
@@ -64,7 +64,7 @@
         app:layout_constraintVertical_bias="0.26" />
 
     <TextView
-        android:id="@+id/listDateTextView"
+        android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dateTextEdit"
@@ -74,7 +74,7 @@
         app:layout_constraintTop_toTopOf="@+id/latLngTextView" />
 
     <TextView
-        android:id="@+id/listPostTextView"
+        android:id="@+id/listCommentTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/post"
@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:text="@string/favoritebutten"
         app:layout_constraintStart_toEndOf="@+id/favorite"
-        app:layout_constraintTop_toBottomOf="@+id/listPhotoImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
 
     <TextView
         android:id="@+id/latLngTextView"
@@ -96,5 +96,5 @@
         android:layout_height="wrap_content"
         android:text="@string/locationeditText"
         app:layout_constraintStart_toEndOf="@+id/location"
-        app:layout_constraintTop_toBottomOf="@+id/listPhotoImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

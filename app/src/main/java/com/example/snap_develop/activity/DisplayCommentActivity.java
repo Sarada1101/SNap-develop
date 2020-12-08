@@ -1,73 +1,129 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
-import com.example.snap_develop.util.LogUtil;
+import com.example.snap_develop.adapter.DisplayCommentAdapter;
+import com.example.snap_develop.bean.PostBean;
+import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.databinding.ActivityDisplayCommentBinding;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
-public class DisplayCommentActivity extends AppCompatActivity {
+import timber.log.Timber;
+
+public class DisplayCommentActivity extends AppCompatActivity implements View.OnClickListener {
+
+    PostViewModel mPostViewModel;
+    UserViewModel mUserViewModel;
+    ActivityDisplayCommentBinding mBinding;
     ListView lv;
-    SimpleAdapter sAdapter;
-    ArrayList<HashMap<String, String>> listData;
-    String postPath;
-    UserViewModel userViewModel;
-    PostViewModel postViewModel;
+    DisplayCommentAdapter mDisplayCommentAdapter;
+    List<PostBean> postDataList;
+    String finalPostPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_comment);
 
-        listData = new ArrayList<HashMap<String, String>>();
+        mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_display_comment);
 
-        HashMap<String, String> date1 = new HashMap<String, String>();
-        date1.put("usrName", "西山大成");
-        date1.put("usrId", "12345");
-        date1.put("dateTime", "2011/4/3 12:12");
-        date1.put("post", "いいですね");
-        listData.add(date1);
+        mBinding.commentButton.setOnClickListener(this);
 
-        HashMap<String, String> date2 = new HashMap<String, String>();
-        date2.put("usrName", "井上大靖");
-        date2.put("usrId", "12344");
-        date2.put("dateTime", "2011/4/3 12:15");
-        date2.put("post", "aaaaa");
-        listData.add(date2);
+        String postPath;
+        // 投稿情報のパスを取得
+        postPath = getIntent().getStringExtra("postPath");
+        Timber.i(String.format("%s=%s", "postPath", postPath));
+        postPath = "5tz1lsaRGKHt59ntjiRj";
 
-        sAdapter = new SimpleAdapter(this, listData, R.layout.activity_display_comment_list,
-                new String[]{"usrIcon", "usrName", "usrId", "dateTime", "post"},
-                new int[]{R.id.userIconView, R.id.userNameText, R.id.userIdText, R.id.timeText,
-                        R.id.postText});
+        // 投稿情報を取得したら投稿のユーザー情報を取得する
+        finalPostPath = postPath;
+        mPostViewModel.getPost().observe(this, new Observer<PostBean>() {
+            @Override
+            public void onChanged(PostBean postBean) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s=%s", "postBean", postBean));
+                mUserViewModel.fetchUserInfo(postBean.getUid());
+            }
+        });
+        mPostViewModel.fetchPost(postPath);
 
-        lv = (ListView) findViewById(R.id.commentListView);
-        lv.setAdapter(sAdapter);
+        mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
+            @Override
+            public void onChanged(UserBean userBean) {
+                mPostViewModel.fetchPostCommentList(finalPostPath);
+            }
+        });
 
-        //地図画面からタップされたマーカーの投稿のパスを取得
-        Intent intent = getIntent();
-        postPath = intent.getStringExtra("postPath");
-        Log.d(LogUtil.getClassName(), String.format("postPath: %s", postPath));
+        // コメントリストを取得したらコメントごとのユーザー情報を取得する
+        mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onChanged(List<PostBean> postList) {
+                List<String> uidList = new ArrayList<>();
+                postDataList = postList;
 
-        //テストデータ
-        String testPost = "5tz1lsaRGKHt59ntjiRj";
-        String testUser = "UtJFmruiiBS28WH333AE6YHEjf72";
+                //投稿を日時順にソート
+                class PostSortCompare implements Comparator<PostBean> {
+                    @Override
+                    public int compare(PostBean o1, PostBean o2) {
+                        Date sortKey1 = o1.getDatetime();
+                        Date sortKey2 = o2.getDatetime();
+                        return sortKey1.compareTo(sortKey2);
+                    }
+                }
+                Collections.sort(postList, new PostSortCompare().reversed());
+                
+                for (final PostBean postBean : postList) {
+                    uidList.add(postBean.getUid());
+                }
+                mUserViewModel.fetchUserInfoList(uidList);
+            }
+        });
 
-        postViewModel = new ViewModelProvider(this).get(PostViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        mUserViewModel.getUserList().observe(this, new Observer<List<UserBean>>() {
+            @Override
+            public void onChanged(List<UserBean> userList) {
+                mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this, (ArrayList<UserBean>) userList
+                        , (ArrayList<PostBean>) postDataList, R.layout.activity_display_comment_list);
+                lv = findViewById(R.id.postList);
+                lv.setAdapter(mDisplayCommentAdapter);
+            }
+        });
 
-        //いいねが押されたときに動くメソッド
-        postViewModel.addGood(testUser, testPost);
+        mBinding.setPostViewModel(mPostViewModel);
+        mBinding.setUserViewModel(mUserViewModel);
+        mBinding.setLifecycleOwner(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        Timber.i(MyDebugTree.START_LOG);
+        int i = view.getId();
+        if (i == R.id.commentButton) {
+            startActivity(new Intent(getApplication(), CommentActivity.class)
+                    .putExtra("parentPost", finalPostPath));
+        }
     }
 }

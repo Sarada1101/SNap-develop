@@ -3,10 +3,15 @@
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".activity.MapActivity">
 
         <fragment
             android:id="@+id/map"
@@ -17,9 +22,10 @@
             map:cameraZoom="16"
             map:layout_constraintBottom_toBottomOf="parent"
             map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintHorizontal_bias="1.0"
             map:layout_constraintStart_toStartOf="parent"
             map:layout_constraintTop_toTopOf="parent"
-            tools:context=".activity.MapActivity" />
+            map:layout_constraintVertical_bias="1.0" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
@@ -59,10 +65,20 @@
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/postMapFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:clickable="true"
+            map:layout_constraintBottom_toBottomOf="@+id/map"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintHorizontal_bias="1.0"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent"
+            map:layout_constraintVertical_bias="1.0"
+            map:srcCompat="@android:drawable/ic_menu_send" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <data>
-
-    </data>
 </layout>

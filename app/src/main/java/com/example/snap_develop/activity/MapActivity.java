@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -17,8 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
-import com.example.snap_develop.databinding.ActivityMapBinding;
-import com.example.snap_develop.util.LogUtil;
 import com.example.snap_develop.viewModel.MapViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -46,8 +43,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
-    ActivityMapBinding mBinding;
-    int REQUEST_PERMISSION = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +53,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
 
-        //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_map);
+        // SupportMapFragmentを取得し、マップが使用可能になったら通知を受けることができる
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        findViewById(R.id.timelineImageButton).setOnClickListener(this);
+        findViewById(R.id.mapImageButton).setOnClickListener(this);
+        findViewById(R.id.userImageButton).setOnClickListener(this);
+        findViewById(R.id.postMapFloatingActionButton).setOnClickListener(this);
 
         //デバイスの現在地を取得したら実行
         mMapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
@@ -69,7 +71,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 //カメラ移動、縮尺調整
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
                 mGoogleMap.setOnCameraIdleListener(MapActivity.this);
-                mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
             }
         });
 
@@ -79,7 +80,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             public void onChanged(List<PostBean> postList) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postList", postList));
-                Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
                 for (PostBean postBean : postList) {
                     Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                             .title(postBean.getMessage())
@@ -88,11 +88,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 }
             }
         });
-
-        // SupportMapFragmentを取得し、マップが使用可能になったら通知を受けることができる
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
     }
 
 
@@ -208,6 +203,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             startActivity(new Intent(MapActivity.this, MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(MapActivity.this, UserActivity.class));
+        } else if (i == R.id.postMapFloatingActionButton) {
+            startActivity(new Intent(MapActivity.this, PostActivity.class));
         }
     }
 }

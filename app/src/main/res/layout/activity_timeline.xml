@@ -15,9 +15,12 @@
         <ListView
             android:id="@+id/timeLineListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="206dp" />
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
