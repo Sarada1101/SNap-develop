@@ -30,12 +30,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+
 import timber.log.Timber;
 
 public class PostModel extends Firebase {
@@ -320,9 +321,9 @@ public class PostModel extends Firebase {
     }
 
 
-    public void fetchTimeLine(List<String> uidList, final MutableLiveData<List<PostBean>> postList) {
+    public void fetchTimeLine(List<UserBean> userList, final MutableLiveData<List<PostBean>> postList) {
         Timber.i(START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", INPUT_LOG, "uidList", uidList, "postList", postList));
+        Timber.i(String.format("%s %s=%s, %s=%s", INPUT_LOG, "userList", userList, "postList", postList));
 
         this.firestoreConnect();
         this.storageConnect();
@@ -343,31 +344,25 @@ public class PostModel extends Firebase {
                             Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                             if (task.isSuccessful()) {
                                 for (final QueryDocumentSnapshot document : task.getResult()) {
-                                    System.out.println(
-                                            "------------------success--------------------");
+                                    Timber.i(SUCCESS_LOG);
                                     System.out.println(document.getData());
                                     final PostBean addPost = new PostBean();
 
                                     if (!document.getString("picture").isEmpty()) {
                                         addPost.setPhotoName(document.getString("picture"));
-                                    } else {
-                                        System.out.println("no");
                                     }
 
                                     addPost.setAnonymous(document.getBoolean("anonymous"));
                                     addPost.setDanger(document.getBoolean("danger"));
                                     addPost.setDatetime(document.getDate("datetime"));
-                                    LatLng geopoint = new LatLng(
-                                            document.getGeoPoint("geopoint").getLatitude(),
-                                            document.getGeoPoint("geopoint").getLongitude());
+                                    LatLng geopoint = new LatLng(document.getGeoPoint("geopoint").getLatitude(), document.getGeoPoint("geopoint").getLongitude());
                                     addPost.setLatLng(geopoint);
                                     addPost.setMessage(document.getString("message"));
                                     addPost.setType(document.getString("type"));
                                     addPost.setUid(document.getString("uid"));
                                     addPost.setPostId(document.getId());
-                                    addPost.setGoodCount(Integer.valueOf(String.valueOf(document.get("good_count"))));
+                                    addPost.setGoodCount_int(Integer.valueOf(String.valueOf(document.get("good_count"))));
                                     setList.add(addPost);
-                                    System.out.println("------------------fetchTimeLine:Success!!------------------");
                                 }
                                 postList.setValue(setList);
                             } else {
@@ -646,7 +641,7 @@ public class PostModel extends Firebase {
 
 
     public void fetchSearchPost(String searchWord,
-                                final MutableLiveData<List<PostBean>> postBeanList) {
+            final MutableLiveData<List<PostBean>> postBeanList) {
 
         final List<String> idList = new ArrayList<>();
         final List<PostBean> setList = new ArrayList<>();
