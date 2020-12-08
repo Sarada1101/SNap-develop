@@ -1,5 +1,7 @@
 package com.example.snap_develop.bean;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 import lombok.Getter;
@@ -13,7 +15,10 @@ public class UserBean implements Serializable {
     private String password;
     private String name;
     private String message;
-    private String icon;
+    private String iconName;
+    private Bitmap icon;
+    private Long followingCount;
+    private Long followerCount;
     private boolean followNotice;
     private boolean goodNotice;
     private boolean commentNotice;

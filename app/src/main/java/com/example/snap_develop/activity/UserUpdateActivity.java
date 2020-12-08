@@ -57,7 +57,7 @@ public class UserUpdateActivity extends AppCompatActivity {
         updateBean.setUid("UtJFmruiiBS28WH333AE6YHEjf72");
         updateBean.setName("update_name_test");
         updateBean.setMessage("update_message_test");
-        updateBean.setIcon(updateBean.getUid() + "/" + iconName);
+        updateBean.setIconName(updateBean.getUid() + "/" + iconName);
 
 
         mUserViewModel.updateUser(updateBean, data);

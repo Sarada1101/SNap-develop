@@ -1,52 +1,81 @@
 package com.example.snap_develop.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
-import com.example.snap_develop.viewModel.FollowViewModel;
+import com.example.snap_develop.adapter.UserAdapter;
+import com.example.snap_develop.bean.PostBean;
+import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.databinding.ActivityUserBinding;
+import com.example.snap_develop.viewModel.PostViewModel;
+import com.example.snap_develop.viewModel.UserViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-public class UserActivity extends AppCompatActivity {
-    ListView lv;
-    SimpleAdapter sAdapter;
-    ArrayList<HashMap<String, String>> listData;
-    FollowViewModel followViewModel = new FollowViewModel();
+import timber.log.Timber;
+
+public class UserActivity extends AppCompatActivity implements View.OnClickListener {
+
+    ListView mListView;
+    private UserViewModel mUserViewModel;
+    private PostViewModel mPostViewModel;
+    private ActivityUserBinding mActivityUserBinding;
+    private UserAdapter mUserAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
 
-        listData = new ArrayList<HashMap<String, String>>();
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
+        mActivityUserBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
 
-        HashMap<String, String> data1 = new HashMap<String, String>();
-        data1.put("", "");
-        data1.put("", "");
-        data1.put("", "");
-        listData.add(data1);
+        mActivityUserBinding.followButton.setOnClickListener(this);
+        mActivityUserBinding.followerButton.setOnClickListener(this);
 
-        HashMap<String, String> data2 = new HashMap<String, String>();
-        data2.put("", "");
-        data2.put("", "");
-        data2.put("", "");
-        listData.add(data2);
+        String uid;
+        // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
+        uid = getIntent().getStringExtra("uid");
+        if (uid == null) {
+            // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
+            uid = mUserViewModel.getCurrentUser().getUid();
+        }
+        Timber.i(String.format("%s=%s", "uid", uid));
 
-        sAdapter = new SimpleAdapter(this, listData,
-                R.layout.list_user,
-                new String[]{"", "", ""},
-                new int[]{R.id.userpicture, R.id.username, R.id.userid, R.id.date,
-                        R.id.postcontents, R.id.postpicture,
-                        R.id.comment, R.id.favorite, R.id.favoritequantity, R.id.location,
-                        R.id.locationinfomation});
+        // ユーザー情報を取得したら投稿リストを取得する
+        final String finalUid = uid;
+        mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
+            @Override
+            public void onChanged(UserBean userBean) {
+                mPostViewModel.fetchPostList(finalUid);
+            }
+        });
+        mUserViewModel.fetchUserInfo(uid);
 
-        lv = (ListView) findViewById(R.id.postList);
-        lv.setAdapter(sAdapter);
+        // 投稿リストを取得したらリストを表示する
+        mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
+            @Override
+            public void onChanged(List<PostBean> postList) {
+                ArrayList<PostBean> dataList = (ArrayList<PostBean>) postList;
+                mUserAdapter = new UserAdapter(UserActivity.this, dataList, mUserViewModel.getUser().getValue(),
+                        R.layout.list_user);
+                mListView = mActivityUserBinding.postList;
+                mListView.setAdapter(mUserAdapter);
+            }
+        });
+        mActivityUserBinding.setUserViewModel(mUserViewModel);
+        mActivityUserBinding.setLifecycleOwner(this);
     }
 
     //フォロー申請ボタンが押されたときに動くonClickメソッド
@@ -56,7 +85,10 @@ public class UserActivity extends AppCompatActivity {
         String myUid = "UtJFmruiiBS28WH333AE6YHEjf72";
         String applicatedUid = "nGBoEuFPNBf9LmpLuFA6aGKshBr1";
 
-        followViewModel.insertApplicatedFollow(applicatedUid, myUid);
-        followViewModel.insertApprovalPendingFollow(applicatedUid, myUid);
+    }
+
+    @Override
+    public void onClick(View v) {
+
     }
 }

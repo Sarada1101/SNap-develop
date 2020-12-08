@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.snap_develop.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,12 +76,13 @@ public class FollowListAdapter extends BaseAdapter {
             if (key == "anoymous") {
                 if (!(Boolean) nextTextData.get("anoymous")) {
                     setTextView.setVisibility(View.INVISIBLE);
-                    //ConstraintLayout userInfo = convertView.findViewById(R.id.userInfo);
-                    //userInfo.setVisibility(View.VISIBLE);
+                    userInfo.setVisibility(View.INVISIBLE);
+                    ConstraintLayout userInfo = convertView.findViewById(R.id.userInfo);
+                    userInfo.setVisibility(View.VISIBLE);
                 } else {
                     setTextView.setVisibility(View.VISIBLE);
-                    //ConstraintLayout userInfo = convertView.findViewById(R.id.userInfo);
-                    //userInfo.setVisibility(View.INVISIBLE);
+                    ConstraintLayout userInfo = convertView.findViewById(R.id.userInfo);
+                    userInfo.setVisibility(View.INVISIBLE);
                 }
             } else if (key == "danger") {
                 if ((Boolean) nextTextData.get("danger")) {
