@@ -56,6 +56,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.postFloatingActionButton.setOnClickListener(this);
         mBinding.photoImageButton.setOnClickListener(this);
 
+        // 端末の位置を取得したら投稿処理をし地図画面に遷移する
         mapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
             @Override
             public void onChanged(@Nullable final LatLng latLng) {
@@ -74,6 +75,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 postBean.setType("post");
 
                 mPostViewModel.insertPost(postBean);
+
+                startActivity(new Intent(PostActivity.this, MapActivity.class));
             }
         });
     }

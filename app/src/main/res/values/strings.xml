@@ -66,4 +66,5 @@
     <string name="anoymous">匿名投稿</string>
     <string name="comma">, </string>
     <string name="latLng">%d, %d</string>
+    <string name="backButtonText">←戻る</string>
 </resources>

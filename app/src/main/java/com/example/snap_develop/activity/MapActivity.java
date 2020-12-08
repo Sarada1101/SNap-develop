@@ -58,6 +58,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         findViewById(R.id.timelineImageButton).setOnClickListener(this);
         findViewById(R.id.mapImageButton).setOnClickListener(this);
         findViewById(R.id.userImageButton).setOnClickListener(this);
+        findViewById(R.id.postMapFloatingActionButton).setOnClickListener(this);
 
         //デバイスの現在地を取得したら実行
         mMapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
@@ -68,7 +69,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 //カメラ移動、縮尺調整
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16.0f));
                 mGoogleMap.setOnCameraIdleListener(MapActivity.this);
-                mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
             }
         });
 
@@ -173,6 +173,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             startActivity(new Intent(MapActivity.this, MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(MapActivity.this, UserActivity.class));
+        } else if (i == R.id.postMapFloatingActionButton) {
+            startActivity(new Intent(MapActivity.this, PostActivity.class));
         }
     }
 }
