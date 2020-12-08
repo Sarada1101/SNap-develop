@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="@+id/userNameTextView" />
 
     <Button
-        android:id="@+id/approvalButton"
+        android:id="@+id/followRequestButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -57,8 +57,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/reject"
         android:textColor="#FF0000"
-        app:layout_constraintBottom_toBottomOf="@+id/approvalButton"
-        app:layout_constraintStart_toEndOf="@+id/approvalButton"
-        app:layout_constraintTop_toTopOf="@+id/approvalButton"
+        app:layout_constraintBottom_toBottomOf="@+id/followRequestButton"
+        app:layout_constraintStart_toEndOf="@+id/followRequestButton"
+        app:layout_constraintTop_toTopOf="@+id/followRequestButton"
         app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
