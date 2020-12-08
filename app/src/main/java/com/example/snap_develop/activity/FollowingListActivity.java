@@ -1,7 +1,6 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +21,6 @@ import com.example.snap_develop.viewModel.UserViewModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
@@ -32,8 +30,6 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
     UserViewModel userViewModel;
     Integer followCount;
     int count = 0;
-    int count2 = 0;
-    List<UserBean> dispFollowList;
     String currentUid;
     ListView lv;
     FollowListAdapter fAdapter;
@@ -47,7 +43,7 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
 
 
         followViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        //userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         //現在ログイン中のユーザーのUidを取得する処理
         //currentUid = userViewModel.getCurrentUser()currentUser.getUid();
@@ -73,39 +69,25 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
                 System.out.println("--------------------onChanged:count----------------------");
                 count++;
                 if (count >= followCount) {
-                    dispFollowList = new ArrayList<>();
-                    dispFollowList = followList;
-                    userViewModel.fetchIconBmp(dispFollowList);
-                }
-
-            }
-        });
-
-        userViewModel.getIconList().observe(this, new Observer<Map<String, Bitmap>>() {
-            @Override
-            public void onChanged(Map<String, Bitmap> iconList) {
-                System.out.println("--------------------onChanged----------------------");
-                count2++;
-                if (count2 >= dispFollowList.size()) {
-
-                    /////////////////////////////////////////////////////////////////////////////////////
                     //アダプターに渡すデータ作成
                     dataList = new ArrayList<>();
-                    for (UserBean bean : dispFollowList) {
+                    for (UserBean bean : followList) {
 
                         HashMap<String, Object> addData = new HashMap<>();
                         addData.put("userName", bean.getName());
                         addData.put("userId", bean.getUid());
-                        addData.put("userIcon", iconList.get(bean.getUid()));
+                        addData.put("userIcon", bean.getIcon());
 
                         dataList.add(addData);
                     }
                     /////////////////////////////////////////////////////////////////////////////////////
 
-                    fAdapter = new FollowListAdapter(FollowingListActivity.this, dataList, R.layout.activity_following_list_row);
+                    fAdapter = new FollowListAdapter(FollowingListActivity.this, dataList, R.layout.activity_following_list_row
+                            , new int[]{R.id.nameTextView, R.id.idTextView, R.id.iconImageView});
                     lv = (ListView) findViewById(R.id.followView);
                     lv.setAdapter(fAdapter);
                 }
+
             }
         });
     }

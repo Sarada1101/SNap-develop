@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.snap_develop.MyDebugTree;
-import com.example.snap_develop.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,18 +20,20 @@ public class FollowListAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private int mLayoutID;
-    ArrayList<HashMap<String, Object>> dataList;
+    private int[] idList;
+    private ArrayList<HashMap<String, Object>> dataList;
 
     static class ViewHolder {
         ImageView userIcon;
         TextView userName;
-        TextView uid;
+        TextView userId;
     }
 
-    public FollowListAdapter(Context context, ArrayList<HashMap<String, Object>> dataList, int rowLayout) {
+    public FollowListAdapter(Context context, ArrayList<HashMap<String, Object>> dataList, int rowLayout, int[] idList) {
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;
         this.dataList = dataList;
+        this.idList = idList;
     }
 
     @Override
@@ -60,9 +61,9 @@ public class FollowListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(mLayoutID, null);
             holder = new ViewHolder();
-            holder.userIcon = convertView.findViewById(R.id.listIconImageView);
-            holder.userName = convertView.findViewById(R.id.listUserNameTextView);
-            holder.uid = convertView.findViewById(R.id.listUserIdTextView);
+            holder.userName = convertView.findViewById(idList[0]);
+            holder.userId = convertView.findViewById(idList[1]);
+            holder.userIcon = convertView.findViewById(idList[2]);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -70,7 +71,7 @@ public class FollowListAdapter extends BaseAdapter {
 
         holder.userIcon.setImageBitmap((Bitmap) nextData.get("userIcon"));
         holder.userName.setText((String) nextData.get("userName"));
-        holder.uid.setText((String) nextData.get("uid"));
+        holder.userId.setText((String) nextData.get("userId"));
 
         return convertView;
     }

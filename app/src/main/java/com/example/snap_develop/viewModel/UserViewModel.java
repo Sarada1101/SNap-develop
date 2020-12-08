@@ -1,7 +1,6 @@
 package com.example.snap_develop.viewModel;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -101,12 +100,6 @@ public class UserViewModel extends ViewModel {
         userModel.updateUser(userBean, data, updateResult);
     }
 
-    public void fetchIconBmp(List<UserBean> userList) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        userModel.fetchIconBmp(userList, iconList);
-    }
-
-
     public void fetchUserInfo(String uid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
@@ -124,13 +117,5 @@ public class UserViewModel extends ViewModel {
             userList = new MutableLiveData<>();
         }
         userModel.fetchUserInfoList(uidList, userList);
-    }
-
-    public MutableLiveData<Map<String, Bitmap>> getIconList() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        if (iconList == null) {
-            iconList = new MutableLiveData<>();
-        }
-        return iconList;
     }
 }
