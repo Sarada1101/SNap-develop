@@ -87,13 +87,20 @@ public class UserViewModel extends ViewModel {
     }
 
 
-    public void updateUser(UserBean userBean, byte[] data) {
+    public void insertUser(UserBean userBean) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
+        userModel.insertUser(userBean);
+    }
+
+
+    public void updateUser(UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
         //TODO 引数のログ出力
         if (updateResult == null) {
             updateResult = new MutableLiveData<>();
         }
-        userModel.updateUser(userBean, data, updateResult);
+        userModel.updateUser(userBean, updateResult);
     }
 
 

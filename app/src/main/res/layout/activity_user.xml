@@ -22,6 +22,7 @@
             android:id="@+id/profileUpdateButton"
             android:layout_width="94dp"
             android:layout_height="40dp"
+            android:onClick="onClick"
             android:text="@string/changeButten"
             android:textSize="8sp"
             app:layout_constraintEnd_toEndOf="parent"
