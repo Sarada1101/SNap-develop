@@ -8,12 +8,11 @@ import androidx.lifecycle.ViewModel;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.FollowModel;
+import com.example.snap_develop.util.LogUtil;
 
 import java.util.List;
 
 import timber.log.Timber;
-
-import java.util.List;
 
 public class FollowViewModel extends ViewModel {
 
