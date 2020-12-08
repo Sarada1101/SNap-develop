@@ -365,35 +365,7 @@ public class UserModel extends Firebase {
                     });
         }
     }
-
-    public void fetchIconBmp(List<UserBean> userList, final MutableLiveData<Map<String, Bitmap>> iconList) {
-        this.storageConnect();
-
-        final Map<String, Bitmap> addMap = new HashMap<>();
-
-        for (final UserBean bean : userList) {
-            StorageReference iconRef = storage.getReference().child("icon").child(bean.getUid()).child(bean.getIcon());
-
-            System.out.println(iconRef);
-
-            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
-            iconRef.getBytes(FIVE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Log.d(LogUtil.getClassName(), "getIconBmp:success");
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    addMap.put(bean.getUid(), bitmap);
-                    iconList.setValue(addMap);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.w(LogUtil.getClassName(), "getIconBmp:failure", exception);
-                }
-            });
-
-        }
-    }
+    //fetchIconBmpは使わないので削除しました
 //
 //    //storageに画像をアップロードするメソッド
 //    public void imgUpload(byte[] data, String path) {
