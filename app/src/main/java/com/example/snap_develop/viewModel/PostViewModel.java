@@ -10,6 +10,7 @@ import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.PostModel;
+import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.maps.model.VisibleRegion;
 
 import java.util.List;
@@ -63,13 +64,6 @@ public class PostViewModel extends ViewModel {
         return timeLinePictureList;
     }
 
-    public void fetchTimeLine(List<UserBean> userList) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        if (postList == null) {
-            postList = new MutableLiveData<>();
-        }
-        postModel.fetchTimeLine(userList, postList);
-
     public MutableLiveData<PostBean> getPost() {
         Timber.i(MyDebugTree.START_LOG);
         if (post == null) {
@@ -78,14 +72,13 @@ public class PostViewModel extends ViewModel {
         return post;
     }
 
-
-    public void fetchTimeLine(List<String> uidList) {
+    public void fetchTimeLine(List<UserBean> userList) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uidList", uidList));
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userList", userList));
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        postModel.fetchTimeLine(uidList, postList);
+        postModel.fetchTimeLine(userList, postList);
     }
 
     public void fetchPost(String postPath) {

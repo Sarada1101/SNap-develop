@@ -2,9 +2,11 @@ package com.example.snap_develop.activity;
 
 import static android.text.TextUtils.isEmpty;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
@@ -12,13 +14,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.adapter.TimelineAdapter;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
-import com.example.snap_develop.model.FollowListAdapter;
 import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.snap_develop.viewModel.UserViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,53 +32,57 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TimelineActivity extends AppCompatActivity {
+import timber.log.Timber;
 
-    PostViewModel postViewModel;
-    FollowViewModel followViewModel;
+public class TimelineActivity extends AppCompatActivity implements View.OnClickListener {
+
+    PostViewModel mPostViewModel;
+    FollowViewModel mFollowViewModel;
+    UserViewModel mUserViewModel;
     Integer followCount = 0;
     int count[] = {0, 0, 0};
     ListView lv;
-    FirebaseUser currentUser;
     String currentUid;
     List<PostBean> resultPostList;
     HashMap<String, Map<String, Object>> resultUserData;
     Map<String, String> pathList;
-    ArrayList<HashMap<String, HashMap<String, Object>>> dataList;
-    HashMap<String, List<String>> keyData;
-    Map<String, HashMap<String, Integer>> viewData;
-    FollowListAdapter followListAdapter;
+    ArrayList<HashMap<String, Object>> dataList;
+    TimelineAdapter mTimelineAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
-        
-        postViewModel = new ViewModelProvider(this).get(PostViewModel.class);
-        followViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
+
+        mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
+        mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+
+        findViewById(R.id.timelineImageButton).setOnClickListener(this);
+        findViewById(R.id.mapImageButton).setOnClickListener(this);
+        findViewById(R.id.userImageButton).setOnClickListener(this);
 
         //現在ログイン中のユーザーのUidを取得する処理
-        //currentUser = userViewModel.getCurrentUser();
-        //currentUid = currentUser.getUid();
-
-        //テストデータ
-        currentUid = "UtJFmruiiBS28WH333AE6YHEjf72";
+        currentUid = mUserViewModel.getCurrentUser().getUid();
 
         //フォローしている人数を取得する処理
-        followViewModel.fetchCount(currentUid, "following_count");
+        mFollowViewModel.fetchCount(currentUid, "following_count");
 
-        followViewModel.getUserCount().observe(this, new Observer<Integer>() {
+        mFollowViewModel.getUserCount().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer userCount) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userCount", userCount));
                 followCount = userCount;
-                followViewModel.fetchFollowingList(currentUid);
+                mFollowViewModel.fetchFollowingList(currentUid);
             }
         });
 
-        followViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
+        mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
             @Override
             public void onChanged(List<UserBean> followList) {
-                System.out.println("--------------------onChanged:count----------------------");
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "followList", followList));
                 count[0]++;
                 if (count[0] >= followCount) {
 
@@ -88,16 +95,16 @@ public class TimelineActivity extends AppCompatActivity {
                         resultUserData.put(bean.getUid(), addUserData);
                     }
 
-                    postViewModel.fetchTimeLine(followList);
+                    mPostViewModel.fetchTimeLine(followList);
                 }
             }
         });
 
-
-        postViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
+        mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
             @Override
             public void onChanged(List<PostBean> timeLine) {
-                System.out.println("---------------OnChanged:timeLine-----------------");
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "timeLine", timeLine));
                 count[1]++;
                 if (count[1] >= followCount) {
                     pathList = new HashMap<>();
@@ -105,26 +112,22 @@ public class TimelineActivity extends AppCompatActivity {
                     for (PostBean bean : resultPostList) {
                         if (!isEmpty(bean.getPhotoName())) {
                             pathList.put(bean.getPostId(), bean.getPhotoName());
-                        } else {
-                            System.out.println("no");
                         }
                     }
                     System.out.println(pathList);
-                    postViewModel.fetchPostPictures(pathList);
+                    mPostViewModel.fetchPostPictures(pathList);
                 }
             }
         });
 
-        postViewModel.getTimeLinePictureList().observe(this, new Observer<Map<String, Bitmap>>() {
+        mPostViewModel.getTimeLinePictureList().observe(this, new Observer<Map<String, Bitmap>>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onChanged(Map<String, Bitmap> timeLinePictureList) {
-                System.out.println("---------------OnChanged:getPicture-----------------");
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "timeLinePictureList", timeLinePictureList));
                 count[2]++;
                 if (count[2] >= pathList.size()) {
-                    System.out.println(timeLinePictureList.size());
-
-
                     /////////////////////////////////////////////////////////////////////////////////////
                     //投稿を日時順にソート
                     class PostSortCompare implements Comparator<PostBean> {
@@ -138,84 +141,52 @@ public class TimelineActivity extends AppCompatActivity {
                     Collections.sort(resultPostList, new PostSortCompare().reversed());
                     /////////////////////////////////////////////////////////////////////////////////////
 
-                    /////////////////////////////////////////////////////////////////////////////////////
                     //アダプターに渡すデータ作成///////////////////////////////////////////////////////////
                     dataList = new ArrayList<>();
                     for (PostBean postBean : resultPostList) {
-                        HashMap<String, Object> textData = new HashMap<>();
-                        textData.put("userId", postBean.getUid());
-                        textData.put("userName", resultUserData.get(postBean.getUid()).get("userName"));
+                        HashMap<String, Object> addData = new HashMap<>();
+                        addData.put("userId", postBean.getUid());
+                        addData.put("userName", resultUserData.get(postBean.getUid()).get("userName"));
                         String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(postBean.getDatetime());
-                        textData.put("date", str);
-                        textData.put("message", postBean.getMessage());
-                        textData.put("good", String.valueOf(postBean.getGoodCount()));
-                        textData.put("location", "住所");
-                        textData.put("anoymous", postBean.isAnonymous());
-                        textData.put("danger", postBean.isDanger());
-
-
-                        HashMap<String, Object> imageData = new HashMap<>();
-                        imageData.put("userIcon", resultUserData.get(postBean.getUid()).get("userIcon"));
-                        imageData.put("postPicture", timeLinePictureList.get(postBean.getPostId()));
-
-
-                        HashMap<String, HashMap<String, Object>> addData = new HashMap<>();
-                        addData.put(FollowListAdapter.TEXT, textData);
-                        addData.put(FollowListAdapter.IMAGE, imageData);
+                        addData.put("date", str);
+                        addData.put("message", postBean.getMessage());
+                        addData.put("goodCount", String.valueOf(postBean.getGoodCount_int()));
+                        addData.put("location", "住所");
+                        addData.put("anonymous", postBean.isAnonymous());
+                        addData.put("danger", postBean.isDanger());
+                        addData.put("userIcon", resultUserData.get(postBean.getUid()).get("userIcon"));
+                        addData.put("postPicture", timeLinePictureList.get(postBean.getPostId()));
 
                         dataList.add(addData);
-                        /////////////////////////////////////////////////////////////////////////////////////
                     }
-
-                    /////////////////////////////////////////////////////////////////////////////////////
-                    //アダプターに渡すキーデータの作成
-                    List<String> textKeyList = new ArrayList<>();
-                    textKeyList.add("userId");
-                    textKeyList.add("userName");
-                    textKeyList.add("date");
-                    textKeyList.add("message");
-                    textKeyList.add("good");
-                    textKeyList.add("location");
-                    textKeyList.add("anoymous");
-                    textKeyList.add("danger");
-
-                    List<String> imageKeyList = new ArrayList<>();
-                    imageKeyList.add("userIcon");
-                    imageKeyList.add("postPicture");
-
-                    keyData = new HashMap<>();
-                    keyData.put(FollowListAdapter.TEXT, textKeyList);
-                    keyData.put(FollowListAdapter.IMAGE, imageKeyList);
                     /////////////////////////////////////////////////////////////////////////////////////
 
-                    /////////////////////////////////////////////////////////////////////////////////////
-                    //アダプターに渡すviewのデータの作成
-                    HashMap<String, Integer> textViewData = new HashMap<>();
-                    textViewData.put("userId", R.id.textView2);
-                    textViewData.put("userName", R.id.textView);
-                    textViewData.put("date", R.id.textView3);
-                    textViewData.put("message", R.id.timeLineMessage);
-                    textViewData.put("good", R.id.textView4);
-                    textViewData.put("location", R.id.textView5);
-                    textViewData.put("anoymous", R.id.anonymous);
-                    textViewData.put("danger", R.id.timeLinePost);
-
-                    HashMap<String, Integer> imageViewData = new HashMap<>();
-                    imageViewData.put("userIcon", R.id.imageView);
-                    imageViewData.put("postPicture", R.id.imageView2);
-
-                    viewData = new HashMap<>();
-                    viewData.put(FollowListAdapter.TEXT, textViewData);
-                    viewData.put(FollowListAdapter.IMAGE, imageViewData);
-                    /////////////////////////////////////////////////////////////////////////////////////
-
-                    //アダプターを作成してリストビューにセット
-                    followListAdapter = new FollowListAdapter(TimelineActivity.this, dataList,
-                            R.layout.activity_timeline_list, viewData, keyData);
-                    lv = (ListView) findViewById(R.id.timeLineListView);
-                    lv.setAdapter(followListAdapter);
+                    //タイムライン表示
+                    displayTimeline();
                 }
             }
         });
+    }
+
+    protected void displayTimeline() {
+        Timber.i(MyDebugTree.START_LOG);
+        //アダプターを作成してリストビューにセット
+        mTimelineAdapter = new TimelineAdapter(this, dataList, R.layout.activity_timeline_list);
+        lv = (ListView) findViewById(R.id.timeLineListView);
+        lv.setAdapter(mTimelineAdapter);
+    }
+
+    @Override
+    public void onClick(View view) {
+        Timber.i(MyDebugTree.START_LOG);
+        int i = view.getId();
+        if (i == R.id.timelineImageButton) {
+            startActivity(new Intent(getApplication(), TimelineActivity.class));
+        } else if (i == R.id.mapImageButton) {
+            startActivity(new Intent(getApplication(), MapActivity.class));
+        } else if (i == R.id.userImageButton) {
+            startActivity(new Intent(getApplication(), UserActivity.class));
+        }
+
     }
 }
