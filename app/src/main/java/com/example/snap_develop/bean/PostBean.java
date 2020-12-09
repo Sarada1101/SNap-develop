@@ -17,7 +17,7 @@ public class PostBean implements Serializable {
     private String message;
     private String photoName;
     private Bitmap photo;
-    private Long goodCount;
+    private int goodCount;
     private LatLng latLng;
     private Date datetime;
     private String strDatetime;
