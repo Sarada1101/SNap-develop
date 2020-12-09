@@ -76,7 +76,7 @@ public class UserModel extends Firebase {
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                        Timber.i(MyDebugTree.START_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                         authResult.setValue(SUCCESS);
                     }
