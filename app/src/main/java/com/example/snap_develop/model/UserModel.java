@@ -78,15 +78,15 @@ public class UserModel extends Firebase {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Timber.i(MyDebugTree.START_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
-                        authResult.setValue(SUCCESS);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Timber.i(MyDebugTree.FAILURE_LOG);
-                        Timber.e(e.toString());
-                        authResult.setValue(e.toString());
+
+                        if (task.isSuccessful()) {
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                            authResult.setValue(SUCCESS);
+                        } else {
+                            Timber.i(MyDebugTree.FAILURE_LOG);
+                            Timber.e(task.getException().toString());
+                            authResult.setValue(String.valueOf(task.getException()));
+                        }
                     }
                 });
     }
