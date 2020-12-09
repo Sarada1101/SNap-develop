@@ -1,11 +1,6 @@
 package com.example.snap_develop.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,12 +8,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
@@ -91,9 +85,9 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         UserBean userBean = new UserBean();
         userBean.setMessage("よろしくお願いします。");
         userBean.setIconName("no_img");
-        userBean.setFollowingCount((long) 0);
-        userBean.setFollowerCount((long) 0);
         userBean.setIcon(MainApplication.getBitmapFromVectorDrawable(this, R.drawable.ic_baseline_account_circle_24));
+        userBean.setFollowingCount(0);
+        userBean.setFollowerCount(0);
         userBean.setFollowNotice(true);
         userBean.setGoodNotice(true);
         userBean.setCommentNotice(true);
@@ -104,7 +98,6 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         }
         mUserViewModel.createAccount(email, password, userBean);
     }
-
 
 
     private void signIn() {

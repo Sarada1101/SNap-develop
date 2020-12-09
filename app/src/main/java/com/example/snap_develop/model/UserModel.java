@@ -253,8 +253,9 @@ public class UserModel extends Firebase {
                             userBean.setUid(document.getId());
                             userBean.setMessage(document.getString("message"));
                             userBean.setIconName(document.getString("icon"));
-                            userBean.setFollowingCount(document.getLong("following_count"));
-                            userBean.setFollowerCount(document.getLong("follower_count"));
+                            userBean.setFollowingCount(
+                                    Integer.parseInt(document.getLong("following_count").toString()));
+                            userBean.setFollowerCount(Integer.parseInt(document.getLong("follower_count").toString()));
                         }
 
                         final long ONE_MEGABYTE = 1024 * 1024 * 5;
