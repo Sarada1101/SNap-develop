@@ -91,9 +91,9 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         UserBean userBean = new UserBean();
         userBean.setMessage("よろしくお願いします。");
         userBean.setIconName("no_img");
-        userBean.setIcon(getBitmapFromVectorDrawable(this, R.drawable.ic_baseline_account_circle_24));
         userBean.setFollowingCount((long) 0);
         userBean.setFollowerCount((long) 0);
+        userBean.setIcon(MainApplication.getBitmapFromVectorDrawable(this, R.drawable.ic_baseline_account_circle_24));
         userBean.setFollowNotice(true);
         userBean.setGoodNotice(true);
         userBean.setCommentNotice(true);
@@ -105,22 +105,6 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         mUserViewModel.createAccount(email, password, userBean);
     }
 
-
-    // VectorDrawableをBitmapに変換
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
 
 
     private void signIn() {
