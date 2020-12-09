@@ -92,9 +92,9 @@ public class UserAdapter extends BaseAdapter {
         holder.username.setText(mUserBean.getName());
         holder.uid.setText(mUserBean.getUid());
         holder.post.setText(mPostList.get(position).getMessage());
-        if (mPostList.get(position).getPhoto() != null && !mPostList.get(position).getPhoto().equals("")) {
-            holder.photo.setImageBitmap(mPostList.get(position).getPhoto());
-        }
+        holder.photo.setImageBitmap(mPostList.get(position).getPhoto());
+        // 写真がないなら高さを０にする
+        if (mPostList.get(position).getPhoto() == null) holder.photo.setMaxHeight(0);
         holder.goodCount.setText(Integer.toString(mPostList.get(position).getGoodCount()));
         holder.latLng.setText(String.format("%d, %d", (int) mPostList.get(position).getLatLng().latitude,
                 (int) mPostList.get(position).getLatLng().longitude));
