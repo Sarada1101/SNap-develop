@@ -93,10 +93,10 @@ public class UserAdapter extends BaseAdapter {
         if (mPostList.get(position).getPhoto() != null && !mPostList.get(position).getPhoto().equals("")) {
             holder.photo.setImageBitmap(mPostList.get(position).getPhoto());
         }
-        holder.goodCount.setText(mPostList.get(position).getGoodCount().toString());
+        holder.goodCount.setText(Integer.toString(mPostList.get(position).getGoodCount()));
         holder.latLng.setText(String.format("%d, %d", (int) mPostList.get(position).getLatLng().latitude,
                 (int) mPostList.get(position).getLatLng().longitude));
-        holder.datetime.setText(mPostList.get(position).getDatetime().toString());
+        holder.datetime.setText(mPostList.get(position).getStrDatetime());
 
         return convertView;
     }
