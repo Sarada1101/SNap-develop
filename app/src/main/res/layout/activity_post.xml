@@ -70,6 +70,7 @@
             android:src="@android:drawable/ic_menu_send"
             android:tint="#00FFFFFF"
             app:fabSize="auto"
+            android:onClick="onClick"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.924"
             app:layout_constraintStart_toEndOf="@+id/anonymousSwitch"

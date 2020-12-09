@@ -61,8 +61,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'  // Google Maps
     implementation 'com.google.android.gms:play-services-basement:17.5.0'
     compile 'com.jakewharton.timber:timber:3.1.0'  // Timber
-    
-    compile 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.2.0'  // MySQL
+
+    //compile 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.2.0'  // MySQL
 }
 
 apply plugin: 'com.google.gms.google-services'
