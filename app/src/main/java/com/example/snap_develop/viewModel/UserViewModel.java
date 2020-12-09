@@ -122,4 +122,11 @@ public class UserViewModel extends ViewModel {
         }
         userModel.fetchUserInfoList(uidList, userList);
     }
+
+    public void fcmTokenInsert(String uid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
+
+        userModel.fcmTokenInsert(uid);
+    }
 }

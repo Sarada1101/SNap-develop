@@ -22,6 +22,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
@@ -364,6 +365,47 @@ public class UserModel extends Firebase {
                         }
                     });
         }
+    }
+
+    //fcmトークンをfirestoreに登録するメソッド
+    public void fcmTokenInsert(final String uid) {
+        this.firestoreConnect();
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+                        final String token = task.getResult();
+
+                        firestore.collection("users")
+                                .document(uid)
+                                .update("fcm_token", token)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                                        Timber.i(String.format("uid = %s, token = %s", uid, token));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.e(e.toString());
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Timber.i(MyDebugTree.FAILURE_LOG);
+                Timber.e(e.toString());
+            }
+        });
     }
 
 //
