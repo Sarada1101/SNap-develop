@@ -36,7 +36,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -253,17 +252,22 @@ public class PostModel extends Firebase {
                                 documentIdList.add(document.getId());
                                 PostBean postBean = new PostBean();
                                 postBean.setAnonymous(document.getBoolean("anonymous"));
-                                postBean.setDanger(document.getBoolean("danger"));
-                                postBean.setGoodCount(document.getLong("good_count"));
                                 postBean.setDatetime(document.getDate("datetime"));
-                                LatLng geopoint = new LatLng(
-                                        document.getGeoPoint("geopoint").getLatitude(),
-                                        document.getGeoPoint("geopoint").getLongitude());
-                                postBean.setLatLng(geopoint);
+                                postBean.setStrDatetime(
+                                        new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime")));
                                 postBean.setMessage(document.getString("message"));
-                                postBean.setPhotoName(document.getString("picture"));
                                 postBean.setType(document.getString("type"));
                                 postBean.setUid(document.getString("uid"));
+
+                                if (postBean.getType().equals("post")) {
+                                    postBean.setPhotoName(document.getString("picture"));
+                                    postBean.setDanger(document.getBoolean("danger"));
+                                    postBean.setGoodCount(Integer.parseInt(document.getLong("good_count").toString()));
+                                    LatLng geopoint = new LatLng(
+                                            document.getGeoPoint("geopoint").getLatitude(),
+                                            document.getGeoPoint("geopoint").getLongitude());
+                                    postBean.setLatLng(geopoint);
+                                }
                                 postBeanList.add(postBean);
                             }
 
@@ -359,21 +363,24 @@ public class PostModel extends Firebase {
 
                                     PostBean postBean = new PostBean();
                                     postBean.setAnonymous(document.getBoolean("anonymous"));
-                                    postBean.setDanger(document.getBoolean("danger"));
                                     postBean.setDatetime(document.getDate("datetime"));
-                                    String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime"));
-                                    postBean.setStrDatetime(str);
-                                  
-                                    addPost.setAnonymous(document.getBoolean("anonymous"));
-                                    addPost.setDanger(document.getBoolean("danger"));
-                                    addPost.setDatetime(document.getDate("datetime"));
-                                    LatLng geopoint = new LatLng(document.getGeoPoint("geopoint").getLatitude(), document.getGeoPoint("geopoint").getLongitude());
-                                    addPost.setLatLng(geopoint);
-                                    addPost.setMessage(document.getString("message"));
-                                    addPost.setType(document.getString("type"));
-                                    addPost.setUid(document.getString("uid"));
-                                    addPost.setPostId(document.getId());
-                                    addPost.setGoodCount_int(Integer.valueOf(String.valueOf(document.get("good_count"))));
+                                    postBean.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(
+                                            document.getDate("datetime")));
+                                    postBean.setMessage(document.getString("message"));
+                                    postBean.setType(document.getString("type"));
+                                    postBean.setUid(document.getString("uid"));
+                                    addPost.setDocumentId(document.getId());
+
+                                    if (postBean.getType().equals("post")) {
+                                        postBean.setPhotoName(document.getString("picture"));
+                                        postBean.setDanger(document.getBoolean("danger"));
+                                        postBean.setGoodCount(
+                                                Integer.parseInt(document.getLong("good_count").toString()));
+                                        LatLng geopoint = new LatLng(
+                                                document.getGeoPoint("geopoint").getLatitude(),
+                                                document.getGeoPoint("geopoint").getLongitude());
+                                        postBean.setLatLng(geopoint);
+                                    }
                                     setList.add(addPost);
                                 }
                                 postList.setValue(setList);
@@ -413,10 +420,10 @@ public class PostModel extends Firebase {
                         final PostBean postBean = new PostBean();
                         postBean.setAnonymous(document.getBoolean("anonymous"));
                         postBean.setDanger(document.getBoolean("danger"));
-                        postBean.setGoodCount(document.getLong("good_count"));
+                        postBean.setGoodCount(Integer.parseInt(document.getLong("good_count").toString()));
                         postBean.setDatetime(document.getDate("datetime"));
-                        String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime"));
-                        postBean.setStrDatetime(str);
+                        postBean.setStrDatetime(
+                                new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime")));
                         LatLng geopoint = new LatLng(
                                 document.getGeoPoint("geopoint").getLatitude(),
                                 document.getGeoPoint("geopoint").getLongitude());
@@ -495,8 +502,8 @@ public class PostModel extends Firebase {
                                     documentIdList.add(document.getId());
                                     postBean.setAnonymous(document.getBoolean("anonymous"));
                                     postBean.setDatetime(document.getDate("datetime"));
-                                    String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime"));
-                                    postBean.setStrDatetime(str);
+                                    postBean.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(
+                                            document.getDate("datetime")));
                                     postBean.setMessage(document.getString("message"));
                                     postBean.setType(document.getString("type"));
                                     postBean.setUid(document.getString("uid"));
@@ -773,7 +780,8 @@ public class PostModel extends Firebase {
                 });
     }
 
-    public void fetchPostPictures(Map<String, String> pathList, final MutableLiveData<Map<String, Bitmap>> timeLinePictureList) {
+    public void fetchPostPictures(Map<String, String> pathList,
+            final MutableLiveData<Map<String, Bitmap>> timeLinePictureList) {
         this.storageConnect();
         final Map<String, Bitmap> addData = new HashMap<>();
 
