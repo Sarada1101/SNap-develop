@@ -27,5 +27,4 @@ public class PostBean implements Serializable {
     private String uid;
     private String type;
     private String parentPost;
-    private int goodCount_int;
 }
