@@ -242,81 +242,82 @@ public class PostModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        Timber.i(START_LOG);
+                        Timber.i(SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
-                        if (task.isSuccessful()) {
-                            Timber.i(SUCCESS_LOG);
-                            final List<String> documentIdList = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Timber.i(String.format("get post document ID: %s", document.getId()));
-                                documentIdList.add(document.getId());
-                                PostBean postBean = new PostBean();
-                                postBean.setAnonymous(document.getBoolean("anonymous"));
-                                postBean.setDatetime(document.getDate("datetime"));
-                                postBean.setStrDatetime(
-                                        new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime")));
-                                postBean.setMessage(document.getString("message"));
-                                postBean.setType(document.getString("type"));
-                                postBean.setUid(document.getString("uid"));
+                        final List<String> documentIdList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Timber.i(String.format("get post document ID: %s", document.getId()));
+                            documentIdList.add(document.getId());
+                            PostBean postBean = new PostBean();
+                            postBean.setDocumentId(document.getId());
+                            postBean.setAnonymous(document.getBoolean("anonymous"));
+                            postBean.setDatetime(document.getDate("datetime"));
+                            postBean.setStrDatetime(
+                                    new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime")));
+                            postBean.setMessage(document.getString("message"));
+                            postBean.setType(document.getString("type"));
+                            postBean.setUid(document.getString("uid"));
 
-                                if (postBean.getType().equals("post")) {
-                                    postBean.setPhotoName(document.getString("picture"));
-                                    postBean.setDanger(document.getBoolean("danger"));
-                                    postBean.setGoodCount(Integer.parseInt(document.getLong("good_count").toString()));
-                                    LatLng geopoint = new LatLng(
-                                            document.getGeoPoint("geopoint").getLatitude(),
-                                            document.getGeoPoint("geopoint").getLongitude());
-                                    postBean.setLatLng(geopoint);
-                                }
-                                postBeanList.add(postBean);
+                            if (postBean.getType().equals("post")) {
+                                postBean.setPhotoName(document.getString("picture"));
+                                postBean.setDanger(document.getBoolean("danger"));
+                                postBean.setGoodCount(Integer.parseInt(document.getLong("good_count").toString()));
+                                LatLng geopoint = new LatLng(
+                                        document.getGeoPoint("geopoint").getLatitude(),
+                                        document.getGeoPoint("geopoint").getLongitude());
+                                postBean.setLatLng(geopoint);
+                            }
+                            postBeanList.add(postBean);
+                        }
+
+                        final int[] count = {0};
+                        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                        for (int i = 0; i < postBeanList.size(); i++) {
+                            final PostBean postBean = postBeanList.get(i);
+
+                            if (postBean.getPhotoName() == null || postBean.getPhotoName().equals("")) {
+                                postBean.setPhotoName(" ");
                             }
 
-                            final long ONE_MEGABYTE = 1024 * 1024 * 5;
-                            for (int i = 0; i < postBeanList.size(); i++) {
-                                final PostBean postBean = postBeanList.get(i);
-                                final int finalI = i;
-                                // 投稿に画像が含まれていなかったら
-                                if (postBean.getPhotoName() == null || postBean.getPhotoName().equals("")) {
-                                    // もし画像を全て取得したら
-                                    if (finalI == postBeanList.size() - 1) {
-                                        postList.setValue(postBeanList);
-                                    }
-                                    continue;
-                                }
-                                // posts/{uid}/{photoName}
-                                storage.getReference()
-                                        .child("postPhoto")
-                                        .child(documentIdList.get(i))
-                                        .child(postBean.getPhotoName())
-                                        .getBytes(ONE_MEGABYTE)
-                                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                            @Override
-                                            public void onSuccess(byte[] aByte) {
-                                                Timber.i(SUCCESS_LOG);
-                                                Timber.i(String.format("path=/%s/%s/%s", "postPhoto",
-                                                        documentIdList.get(finalI), postBean.getPhotoName()));
-                                                Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
-                                                postBeanList.get(finalI).setPhoto(bitmap);
+                            // posts/{uid}/{photoName}
+                            final int finalI = i;
+                            storage.getReference()
+                                    .child("postPhoto")
+                                    .child(documentIdList.get(i))
+                                    .child(postBean.getPhotoName())
+                                    .getBytes(ONE_MEGABYTE)
+                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] aByte) {
+                                            Timber.i(SUCCESS_LOG);
+                                            Timber.i(String.format("path=/%s/%s/%s", "postPhoto",
+                                                    documentIdList.get(finalI),
+                                                    postBeanList.get(finalI).getPhotoName()));
+                                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
+                                            postBeanList.get(finalI).setPhoto(bitmap);
+                                            count[0]++;
 
-                                                // もし画像を全て取得したら
-                                                if (finalI == postBeanList.size() - 1) {
-                                                    postList.setValue(postBeanList);
-                                                }
+                                            // もし画像を全て取得したら
+                                            if (count[0] == postBeanList.size()) {
+                                                postList.setValue(postBeanList);
                                             }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Timber.i(FAILURE_LOG);
-                                                Timber.i(String.format("path=/%s/%s/%s", "postPhoto",
-                                                        documentIdList.get(finalI), postBean.getPhotoName()));
-                                                Timber.e(e.toString());
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Timber.i(FAILURE_LOG);
+                                            Timber.i(String.format("path=/%s/%s/%s", "postPhoto",
+                                                    documentIdList.get(finalI), postBean.getPhotoName()));
+                                            Timber.e(e.toString());
+                                            count[0]++;
+
+                                            // もし画像を全て取得したら
+                                            if (count[0] == postBeanList.size()) {
+                                                postList.setValue(postBeanList);
                                             }
-                                        });
-                            }
-                        } else {
-                            Timber.i(FAILURE_LOG);
-                            Timber.e(task.getException().toString());
+                                        }
+                                    });
                         }
                     }
                 })
