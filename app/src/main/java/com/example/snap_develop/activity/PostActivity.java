@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -15,17 +14,16 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.databinding.ActivityPostBinding;
-import com.example.snap_develop.util.LogUtil;
 import com.example.snap_develop.viewModel.MapViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.Date;
@@ -38,7 +36,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     FusedLocationProviderClient mFusedLocationClient;
     private PostViewModel mPostViewModel;
-    private MapViewModel mapViewModel;
+    private MapViewModel mMapViewModel;
+    private UserViewModel mUserViewModel;
     private ActivityPostBinding mBinding;
     private static final int REQUEST_GALLERY = 0;
     private String mPhotoName = "";
@@ -46,24 +45,25 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
-        mapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post);
 
         mBinding.postFloatingActionButton.setOnClickListener(this);
         mBinding.photoImageButton.setOnClickListener(this);
 
         // 端末の位置を取得したら投稿処理をし地図画面に遷移する
-        mapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
+        mMapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
             @Override
             public void onChanged(@Nullable final LatLng latLng) {
-                Log.d(LogUtil.getClassName(), LogUtil.getLogMessage());
-                FirebaseUser firebaseUser = new ViewModelProvider(PostActivity.this).get(
-                        UserViewModel.class).getCurrentUser();
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "latLng", latLng));
+
                 PostBean postBean = new PostBean();
                 postBean.setMessage(String.valueOf(mBinding.postTextMultiLine.getText()));
                 postBean.setPhotoName(mPhotoName);
@@ -72,24 +72,24 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 postBean.setDatetime(new Date());
                 postBean.setAnonymous(mBinding.anonymousSwitch.isChecked());
                 postBean.setDanger(mBinding.dangerSwitch.isChecked());
-                postBean.setUid(firebaseUser.getUid());
+                postBean.setUid(mUserViewModel.getCurrentUser().getUid());
                 postBean.setType("post");
 
                 mPostViewModel.insertPost(postBean);
 
-                startActivity(new Intent(PostActivity.this, MapActivity.class));
+                startActivity(new Intent(getApplication(), MapActivity.class));
             }
         });
     }
 
     private void insertPost() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mapViewModel.fetchDeviceLocation(mFusedLocationClient);
+        mMapViewModel.fetchDeviceLocation(mFusedLocationClient);
     }
 
     private void pickPhoto() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
@@ -98,7 +98,11 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(
+                String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "requestCode", requestCode, "resultCode",
+                        resultCode, "Intent", data));
+
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK || requestCode != REQUEST_GALLERY) {
             return;
@@ -120,7 +124,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
+
         if (i == R.id.postFloatingActionButton) {
             //投稿内容のバリデーション
             if (mBinding.postTextMultiLine.getText().toString().isEmpty()) {
@@ -132,6 +139,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         } else if (i == R.id.photoImageButton) {
             pickPhoto();
+        } else if (i == R.id.timelineImageButton) {
+            startActivity(new Intent(getApplication(), TimelineActivity.class));
+        } else if (i == R.id.mapImageButton) {
+            startActivity(new Intent(getApplication(), MapActivity.class));
+        } else if (i == R.id.userImageButton) {
+            startActivity(new Intent(getApplication(), UserActivity.class));
         }
     }
 }
