@@ -1,14 +1,16 @@
 package com.example.snap_develop.viewModel;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.FollowModel;
+import com.example.snap_develop.util.LogUtil;
 
 import java.util.List;
-
 import timber.log.Timber;
 
 public class FollowViewModel extends ViewModel {
@@ -72,11 +74,24 @@ public class FollowViewModel extends ViewModel {
         followModel.insertApprovalPendingFollow(userPath, myUid);
     }
 
+
     public void fetchFollowerList(String userPath) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath));
-
         followModel.fetchFollowerList(userPath, followList);
+    }
+
+
+    public void fetchApprovalPendingList(String userPath) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath));
+        followModel.fetchApprovalPendingList(userPath, followList);
+    }
+
+  
+    public void fetchApplicatedList(String userPath) {
+        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        followModel.fetchApplicatedList(userPath, followList);
     }
 
     public void fetchCount(String userPath, String countPath) {
