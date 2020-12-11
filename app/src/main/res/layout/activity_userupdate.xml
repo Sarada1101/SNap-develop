@@ -5,6 +5,11 @@
 
     <data>
 
+        <variable
+            name="userViewModel"
+            type="com.example.snap_develop.viewModel.UserViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,9 +30,11 @@
             android:id="@+id/updateIconImageButton"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginBottom="40dp"
-            app:layout_constraintBottom_toTopOf="@+id/updateNameTextInputLayout"
-            app:layout_constraintStart_toStartOf="@+id/updateNameTextInputLayout"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:imageBitmap="@{userViewModel.user.icon}"
             app:srcCompat="@drawable/ic_baseline_account_circle_24" />
 
         <LinearLayout
@@ -67,56 +74,25 @@
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout4"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <Button
-                android:id="@+id/toUserBackButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/design_default_color_surface"
-                android:onClick="onClick"
-                android:text="@string/backButtonText"
-                android:textColor="@color/colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/updateSaveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorAccent"
-                android:onClick="onClick"
-                android:text="@string/saveText"
-                android:textColor="@color/design_default_color_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/updateNameTextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.26">
+            app:layout_constraintTop_toBottomOf="@+id/updateIconImageButton"
+            app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/updateNameTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@{userViewModel.user.name}"
                 android:hint="@string/username" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,6 +111,7 @@
                 android:id="@+id/updateProfileTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@{userViewModel.user.message}"
                 android:hint="@string/profireUpdate" />
         </com.google.android.material.textfield.TextInputLayout>
 
