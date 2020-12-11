@@ -238,6 +238,7 @@ public class PostModel extends Firebase {
         // posts/{documentId}
         firestore.collection("posts")
                 .whereEqualTo("uid", uid)
+                .orderBy("datetime", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
