@@ -158,8 +158,7 @@ public class PostModel extends Firebase {
         post.put("anonymous", postBean.isAnonymous());
         post.put("uid", postBean.getUid());
         post.put("type", postBean.getType());
-        DocumentReference perent_post = firestore.collection("posts").document(postBean.getPostPath());
-        post.put("perent_post", perent_post);
+        post.put("parent_post", firestore.document(postBean.getPostPath()));
 
         //コメントを追加
         firestore.collection("posts")
@@ -199,9 +198,8 @@ public class PostModel extends Firebase {
 
                         //パスをpostsコレクションに追加
                         path.put("path", documentReference);
-                        // posts/{uid}/comments
-                        firestore.collection("posts")
-                                .document(postBean.getPostPath())
+                        // posts/{parentPostPath}/comments
+                        firestore.document(postBean.getPostPath())
                                 .collection("comments")
                                 .add(path)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -405,12 +403,12 @@ public class PostModel extends Firebase {
     //ここから
     public void fetchPost(String postPath, final MutableLiveData<PostBean> post) {
         Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", INPUT_LOG, "postPath", postPath, "post", post));
 
         this.firestoreConnect();
         this.storageConnect();
 
-        firestore.collection("posts")
-                .document(postPath)
+        firestore.document(postPath)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -432,6 +430,7 @@ public class PostModel extends Firebase {
                         postBean.setLatLng(geopoint);
                         postBean.setMessage(document.getString("message"));
                         postBean.setPhotoName(document.getString("picture"));
+                        if (postBean.getPhotoName().equals("")) postBean.setPhotoName(" ");
                         postBean.setType(document.getString("type"));
                         postBean.setUid(document.getString("uid"));
 
@@ -460,6 +459,7 @@ public class PostModel extends Firebase {
                                         Timber.i(String.format("path=/%s/%s/%s", "postPhoto", document.getId(),
                                                 postBean.getPhotoName()));
                                         Timber.e(e.toString());
+                                        post.setValue(postBean);
                                     }
                                 });
                     }
@@ -475,33 +475,42 @@ public class PostModel extends Firebase {
 
 
     public void fetchPostCommentList(String postPath, final MutableLiveData<List<PostBean>> postList) {
+        Timber.i(START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", INPUT_LOG, "postPath", postPath, "postList", postList));
+
         this.firestoreConnect();
 
         final List<DocumentReference> commentPathList = new ArrayList<>();
         final List<PostBean> postBeanList = new ArrayList<>();
         final List<String> documentIdList = new ArrayList<>();
 
-        firestore.collection("posts")
-                .document(postPath)
+        // コメントへのパスを取得する
+        firestore.document(postPath)
                 .collection("comments")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         Timber.i(START_LOG);
-                        // コメントへのパスを取得する
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             commentPathList.add(document.getDocumentReference("path"));
+                            Timber.i(String.format("%s=%s", "commentPath", document.getDocumentReference("path")));
                         }
 
                         // コメントの詳細を取得する
-                        for (DocumentReference ref : commentPathList) {
+                        for (int i = 0; i < commentPathList.size(); i++) {
+                            final int finalI = i;
+                            DocumentReference ref = commentPathList.get(i);
                             ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    final DocumentSnapshot document = task.getResult();
-                                    final PostBean postBean = new PostBean();
-                                    documentIdList.add(document.getId());
+                                    Timber.i(START_LOG);
+                                    Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
+
+                                    DocumentSnapshot document = task.getResult();
+                                    PostBean postBean = new PostBean();
+                                    postBean.setDocumentId(document.getId());
                                     postBean.setAnonymous(document.getBoolean("anonymous"));
                                     postBean.setDatetime(document.getDate("datetime"));
                                     postBean.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(
@@ -510,14 +519,13 @@ public class PostModel extends Firebase {
                                     postBean.setType(document.getString("type"));
                                     postBean.setUid(document.getString("uid"));
                                     postBeanList.add(postBean);
-                                    if (postBeanList.size() >= commentPathList.size()) {
+                                    if (finalI == commentPathList.size() - 1) {
                                         postList.setValue(postBeanList);
                                     }
                                 }
                             });
                         }
                     }
-
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
