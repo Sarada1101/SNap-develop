@@ -114,9 +114,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(UserActivity.this, UserActivity.class));
         } else if (i == R.id.followerButton) {
-            startActivity(new Intent(UserActivity.this, FollowingListActivity.class));
-        } else if (i == R.id.followingButton) {
             startActivity(new Intent(UserActivity.this, FollowerListActivity.class));
+        } else if (i == R.id.followingButton) {
+            startActivity(new Intent(UserActivity.this, FollowingListActivity.class));
         } else if (i == R.id.profileUpdateButton) {
             startActivity(new Intent(UserActivity.this, UserUpdateActivity.class));
         } else if (i == R.id.followRequestButton) {
