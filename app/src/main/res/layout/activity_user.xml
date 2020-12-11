@@ -61,7 +61,7 @@
 
         <LinearLayout
             android:id="@+id/followButtonLinerLayout"
-            android:layout_width="410dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,13 +69,13 @@
             app:layout_constraintTop_toBottomOf="@+id/postTextView">
 
             <Button
-                android:id="@+id/followerButton"
+                android:id="@+id/followingButton"
                 android:layout_width="205dp"
                 android:layout_height="wrap_content"
                 android:text="@{userViewModel.user.followingCount + @string/followButtonText}" />
 
             <Button
-                android:id="@+id/followButton"
+                android:id="@+id/followerButton"
                 android:layout_width="205dp"
                 android:layout_height="wrap_content"
                 android:text="@{userViewModel.user.followerCount + @string/followerButtonText}" />

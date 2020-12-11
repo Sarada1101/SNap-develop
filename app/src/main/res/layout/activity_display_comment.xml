@@ -22,119 +22,105 @@
         android:layout_width="match_parent"
         tools:context=".activity.DisplayCommentActivity">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iconImageView"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            app:imageBitmap="@{userViewModel.user.icon}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/commentButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical"
+            android:onClick="onClick"
+            android:text="@string/Comment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/postTextView" />
+
+        <ImageView
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/photoImageView"
+            app:srcCompat="@drawable/ic_baseline_favorite_24" />
+
+        <ImageView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/goodCountTextView"
+            app:layout_constraintTop_toBottomOf="@+id/photoImageView"
+            app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+        <ImageView
+            android:id="@+id/photoImageView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="100dp"
+            android:maxWidth="100dp"
+            app:imageBitmap="@{postViewModel.post.photo}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/postTextView" />
 
-            <Button
-                android:id="@+id/commentButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="onClick"
-                android:text="@string/Comment"
-                app:layout_constraintEnd_toEndOf="@+id/postTextView"
-                app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
+        <TextView
+            android:id="@+id/idTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{userViewModel.user.uid}"
+            android:textSize="8sp"
+            app:layout_constraintEnd_toEndOf="@+id/nameTextView"
+            app:layout_constraintStart_toStartOf="@+id/nameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
-            <ImageView
-                android:id="@+id/iconImageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:imageBitmap="@{userViewModel.user.icon}"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{userViewModel.user.name}"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iconImageView"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/favorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/photoImageView"
-                app:srcCompat="@drawable/ic_baseline_favorite_24" />
+        <TextView
+            android:id="@+id/postTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{postViewModel.post.message}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iconImageView" />
 
-            <ImageView
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                app:layout_constraintStart_toEndOf="@+id/goodCountTextView"
-                app:layout_constraintTop_toBottomOf="@+id/photoImageView"
-                app:srcCompat="@drawable/ic_baseline_location_on_24" />
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{postViewModel.post.strDatetime}"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/commentButton"
+            app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
 
-            <ImageView
-                android:id="@+id/photoImageView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:maxHeight="100dp"
-                android:maxWidth="100dp"
-                app:imageBitmap="@{postViewModel.post.photo}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/postTextView" />
+        <TextView
+            android:id="@+id/goodCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{postViewModel.post.goodCount}"
+            app:layout_constraintStart_toEndOf="@+id/favorite"
+            app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
 
-            <TextView
-                android:id="@+id/idTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{userViewModel.user.uid}"
-                android:textSize="8sp"
-                app:layout_constraintEnd_toEndOf="@+id/nameTextView"
-                app:layout_constraintStart_toEndOf="@+id/iconImageView"
-                app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
-            <TextView
-                android:id="@+id/nameTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{userViewModel.user.name}"
-                android:textSize="20sp"
-                app:layout_constraintStart_toEndOf="@+id/iconImageView"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/postTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{postViewModel.post.message}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iconImageView" />
-
-            <TextView
-                android:id="@+id/dateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{postViewModel.post.strDatetime}"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/goodCountTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@{postViewModel.post.goodCount}"
-                app:layout_constraintStart_toEndOf="@+id/favorite"
-                app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
-
-            <TextView
-                android:id="@+id/latLngTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@{String.format(@string/latLng, (int) postViewModel.post.latLng.latitude,(int) postViewModel.post.latLng.longitude)}"
-                app:layout_constraintStart_toEndOf="@+id/location"
-                app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <TextView
+            android:id="@+id/latLngTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.format(@string/latLng, (int) postViewModel.post.latLng.latitude,(int) postViewModel.post.latLng.longitude)}"
+            app:layout_constraintStart_toEndOf="@+id/location"
+            app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
 
         <ListView
             android:id="@+id/postList"
@@ -143,8 +129,7 @@
             app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-            app:layout_constraintVertical_bias="0.0">
+            app:layout_constraintTop_toBottomOf="@+id/commentButton">
 
         </ListView>
 
