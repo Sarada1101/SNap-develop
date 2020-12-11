@@ -156,7 +156,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         Timber.i(MyDebugTree.START_LOG);
 
         if (requestCode == REQUEST_PERMISSION) {
