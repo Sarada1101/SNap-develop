@@ -460,6 +460,7 @@ public class PostModel extends Firebase {
                                         Timber.i(String.format("path=/%s/%s/%s", "postPhoto", document.getId(),
                                                 postBean.getPhotoName()));
                                         Timber.e(e.toString());
+                                        post.setValue(postBean);
                                     }
                                 });
                     }
@@ -489,19 +490,20 @@ public class PostModel extends Firebase {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         Timber.i(START_LOG);
-                        // コメントへのパスを取得する
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             commentPathList.add(document.getDocumentReference("path"));
                         }
 
                         // コメントの詳細を取得する
-                        for (DocumentReference ref : commentPathList) {
+                        for (int i = 0; i < commentPathList.size(); i++) {
+                            final int finalI = i;
+                            DocumentReference ref = commentPathList.get(i);
                             ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    final DocumentSnapshot document = task.getResult();
-                                    final PostBean postBean = new PostBean();
-                                    documentIdList.add(document.getId());
+                                    DocumentSnapshot document = task.getResult();
+                                    PostBean postBean = new PostBean();
+                                    postBean.setDocumentId(document.getId());
                                     postBean.setAnonymous(document.getBoolean("anonymous"));
                                     postBean.setDatetime(document.getDate("datetime"));
                                     postBean.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(
@@ -510,7 +512,7 @@ public class PostModel extends Firebase {
                                     postBean.setType(document.getString("type"));
                                     postBean.setUid(document.getString("uid"));
                                     postBeanList.add(postBean);
-                                    if (postBeanList.size() >= commentPathList.size()) {
+                                    if (finalI == commentPathList.size() - 1) {
                                         postList.setValue(postBeanList);
                                     }
                                 }
