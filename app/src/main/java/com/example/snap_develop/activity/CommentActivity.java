@@ -2,6 +2,7 @@ package com.example.snap_develop.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,10 +47,15 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     private void insertComment() {
         Timber.i(MyDebugTree.START_LOG);
+        String comment = mBinding.commentTextInputEeditText.getText().toString();
+
+        if (!validateForm(comment)) {
+            return;
+        }
 
         PostBean commentBean = new PostBean();
         commentBean.setAnonymous(mBinding.commentAnonymousSwitch.isChecked());
-        commentBean.setMessage(mBinding.commentTextInputEeditText.getText().toString());
+        commentBean.setMessage(comment);
         commentBean.setDatetime(new Date());
         commentBean.setUid(mUserViewModel.getCurrentUser().getUid());
         commentBean.setType("comment");
@@ -58,6 +64,25 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         mPostViewModel.insertComment(commentBean);
         startActivity(new Intent(CommentActivity.this, DisplayCommentActivity.class).putExtra("postPath",
                 mParentPostPath));
+    }
+
+    private boolean validateForm(String comment) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "comment", comment));
+        boolean isValidSuccess = false;
+
+        int MAX_LENGTH = 200;
+        if (TextUtils.isEmpty(comment)) {
+            mBinding.commentTextInputLayout.setError("コメントを入力してください");
+        } else if (comment.length() > MAX_LENGTH) {
+            mBinding.commentTextInputLayout.setError("コメントは200文字以内にしてください");
+        } else {
+            mBinding.commentTextInputLayout.setError(null);
+            isValidSuccess = true;
+        }
+
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
+        return isValidSuccess;
     }
 
     @Override
