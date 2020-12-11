@@ -32,6 +32,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+        setTitle("コメント投稿");
 
         mParentPostPath = getIntent().getStringExtra("postPath");
 
@@ -90,10 +91,8 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.replybutton) {
+        if (i == R.id.postCommentButton) {
             insertComment();
-        } else if (i == R.id.toDisplayCommentButton) {
-            startActivity(new Intent(getApplication(), DisplayCommentActivity.class));
         } else if (i == R.id.timelineImageButton) {
             startActivity(new Intent(getApplication(), TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {

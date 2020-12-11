@@ -40,6 +40,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_applicated_follow_list);
+        setTitle("フォロー申請");
 
         followViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);

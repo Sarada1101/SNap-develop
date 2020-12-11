@@ -2,6 +2,8 @@ package com.example.snap_develop.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -19,7 +21,6 @@ import com.example.snap_develop.databinding.ActivityUserBinding;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +33,14 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private PostViewModel mPostViewModel;
     private ActivityUserBinding mBinding;
     private UserAdapter mUserAdapter;
-    private String currentId;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        setTitle("ユーザー情報");
 
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
@@ -50,27 +52,24 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
         mBinding.followRequestButton.setOnClickListener(this);
-        mBinding.profileUpdateButton.setOnClickListener(this);
 
-        String uid;
         // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
-        uid = getIntent().getStringExtra("uid");
-        if (uid == null) {
+        mUid = getIntent().getStringExtra("uid");
+        if (mUid == null) {
             // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
-            uid = mUserViewModel.getCurrentUser().getUid();
-            currentId = uid;
+            mUid = mUserViewModel.getCurrentUser().getUid();
         }
-        Timber.i(String.format("%s=%s", "uid", uid));
+        Timber.i(String.format("%s=%s", "mUid", mUid));
 
         // ユーザー情報を取得したら投稿リストを取得する
-        final String finalUid = uid;
+        final String finalUid = mUid;
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
                 mPostViewModel.fetchPostList(finalUid);
             }
         });
-        mUserViewModel.fetchUserInfo(uid);
+        mUserViewModel.fetchUserInfo(mUid);
 
         // 投稿リストを取得したらリストを表示する
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
@@ -87,38 +86,46 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.setLifecycleOwner(this);
     }
 
-    //フォロー申請ボタンが押されたときに動くonClickメソッド
-    public void followApplicated() {
 
-        //テストデータ
-        String myUid = "UtJFmruiiBS28WH333AE6YHEjf72";
-        String applicatedUid = "nGBoEuFPNBf9LmpLuFA6aGKshBr1";
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "menu", menu));
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        return true;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "item", item));
+        int id = item.getItemId();
+        String currentId = mUserViewModel.getCurrentUser().getUid();
+        if (id == R.id.update_user) {
+            startActivity(new Intent(this, UserUpdateActivity.class).putExtra("currentId", currentId));
+        } else if (id == R.id.setting) {
+            startActivity(new Intent(this, SettingActivity.class).putExtra("currentId", currentId));
+        }
+        return true;
+    }
+
 
     @Override
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.profileUpdateButton) {
-            if (currentId != null) {
-                startActivity(new Intent(getApplicationContext(), UserUpdateActivity.class)
-                        .putExtra("currentId", (Serializable) currentId)
-                );
-            }
-        } else if (i == R.id.timelineImageButton) {
+        if (i == R.id.timelineImageButton) {
             startActivity(new Intent(UserActivity.this, TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {
             startActivity(new Intent(UserActivity.this, MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(UserActivity.this, UserActivity.class));
         } else if (i == R.id.followerButton) {
-            startActivity(new Intent(UserActivity.this, FollowerListActivity.class));
+            startActivity(new Intent(UserActivity.this, FollowerListActivity.class).putExtra("uid", mUid));
         } else if (i == R.id.followingButton) {
-            startActivity(new Intent(UserActivity.this, FollowingListActivity.class));
-        } else if (i == R.id.profileUpdateButton) {
-            startActivity(new Intent(UserActivity.this, UserUpdateActivity.class));
+            startActivity(new Intent(UserActivity.this, FollowingListActivity.class).putExtra("uid", mUid));
         } else if (i == R.id.followRequestButton) {
             startActivity(new Intent(UserActivity.this, ApprovalPendingFollowListActivity.class));
         }

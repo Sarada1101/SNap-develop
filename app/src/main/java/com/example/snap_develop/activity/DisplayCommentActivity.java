@@ -44,6 +44,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_comment);
+        setTitle("詳細");
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -64,6 +65,9 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             public void onChanged(PostBean postBean) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s=%s", "postBean", postBean));
+                if (postBean.getPhoto() == null) {
+                    mBinding.photoImageView.setMaxHeight(0);
+                }
                 mUserViewModel.fetchUserInfo(postBean.getUid());
             }
         });

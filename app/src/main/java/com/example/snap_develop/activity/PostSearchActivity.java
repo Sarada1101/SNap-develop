@@ -20,6 +20,7 @@ public class PostSearchActivity extends AppCompatActivity implements View.OnClic
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_search);
+        setTitle("検索");
     }
 
     @Override

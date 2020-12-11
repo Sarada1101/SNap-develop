@@ -44,7 +44,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
-    private final int REQUEST_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +156,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         Timber.i(MyDebugTree.START_LOG);
 
         if (requestCode == REQUEST_PERMISSION) {

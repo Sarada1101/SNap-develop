@@ -40,6 +40,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_approval_pending_follow_list);
+        setTitle("フォロー承認待ち");
 
         followViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
