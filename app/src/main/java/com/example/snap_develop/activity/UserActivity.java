@@ -1,5 +1,6 @@
 package com.example.snap_develop.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -18,6 +19,7 @@ import com.example.snap_develop.databinding.ActivityUserBinding;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private PostViewModel mPostViewModel;
     private ActivityUserBinding mActivityUserBinding;
     private UserAdapter mUserAdapter;
+    private String currentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         if (uid == null) {
             // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
             uid = mUserViewModel.getCurrentUser().getUid();
+            currentId = uid;
         }
         Timber.i(String.format("%s=%s", "uid", uid));
 
@@ -88,7 +92,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v) {
-
+    public void onClick(View view) {
+        Timber.i(MyDebugTree.START_LOG);
+        int i = view.getId();
+        if (i == R.id.profileUpdateButton) {
+            if (currentId != null) {
+                startActivity(new Intent(getApplicationContext(), UserUpdateActivity.class)
+                        .putExtra("currentId", (Serializable) currentId)
+                );
+            }
+        }
     }
 }

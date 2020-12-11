@@ -2,18 +2,17 @@ package com.example.snap_develop.model;
 
 import static com.example.snap_develop.MyDebugTree.FAILURE_LOG;
 import static com.example.snap_develop.MyDebugTree.INPUT_LOG;
+import static com.example.snap_develop.MyDebugTree.START_LOG;
 import static com.example.snap_develop.MyDebugTree.SUCCESS_LOG;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.UserBean;
-import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
@@ -128,32 +128,7 @@ public class UserModel extends Firebase {
                         Timber.i(MyDebugTree.SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
 
-                        // アイコン画像を保存
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        userBean.getIcon().compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                        storage.getReference()
-                                .child("icon")
-                                .child(userBean.getUid())
-                                .child(userBean.getIconName())
-                                .putBytes(baos.toByteArray()).addOnSuccessListener(
-                                new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        Timber.i(SUCCESS_LOG);
-                                        Timber.i(
-                                                String.format("%s %s=%s", INPUT_LOG, "taskSnapshot", taskSnapshot));
-                                        Timber.i(String.format("save image path: %s",
-                                                String.format("icon/%s/%s", userBean.getUid(),
-                                                        userBean.getIconName())));
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Timber.i(FAILURE_LOG);
-                                        Timber.e(e.toString());
-                                    }
-                                });
+                        saveIcon(userBean);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -166,35 +141,75 @@ public class UserModel extends Firebase {
     }
 
 
-    public void updateUser(UserBean userBean, byte[] data,
-            final MutableLiveData<String> updateResult) {
+    public void updateUser(UserBean userBean, final MutableLiveData<String> updateResult) {
         Timber.i(MyDebugTree.START_LOG);
-
-        //画像をstorageに保存
-//        imgUpload(data, userBean.getIconName());
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean, "updateResult",
+                updateResult));
 
         this.firestoreConnect();
+        this.storageConnect();
 
         firestore.collection("users")
                 .document(userBean.getUid())
                 .update(
                         "name", userBean.getName(),
                         "message", userBean.getMessage(),
-                        "icon", userBean.getIcon()
+                        "icon", userBean.getIconName()
                 )
                 .addOnCompleteListener(
                         new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Log.d(LogUtil.getClassName(), "updateUser:success");
+                                Timber.i(SUCCESS_LOG);
+                                Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
                                 updateResult.setValue(SUCCESS);
+
                             }
                         })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(LogUtil.getClassName(), "updateUser:failure", e);
-                        updateResult.setValue(String.valueOf(e));
+                        Timber.i(FAILURE_LOG);
+                        Timber.e(e.toString());
+                        updateResult.setValue(e.toString());
+                    }
+                });
+
+        saveIcon(userBean);
+    }
+
+
+    public void saveIcon(final UserBean userBean) {
+        Timber.i(START_LOG);
+        Timber.i(String.format("%s %s=%s", INPUT_LOG, "userBean", userBean));
+
+        storageConnect();
+
+        // アイコン画像を保存
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        userBean.getIcon().compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        storage.getReference()
+                .child("icon")
+                .child(userBean.getUid())
+                .child(userBean.getIconName())
+                .putBytes(baos.toByteArray()).addOnSuccessListener(
+                new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Timber.i(SUCCESS_LOG);
+                        Timber.i(
+                                String.format("%s %s=%s", INPUT_LOG, "taskSnapshot",
+                                        taskSnapshot));
+                        Timber.i(String.format("save image path: %s",
+                                String.format("icon/%s/%s", userBean.getUid(),
+                                        userBean.getIconName())));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
                 });
     }
@@ -227,8 +242,9 @@ public class UserModel extends Firebase {
                             userBean.setUid(document.getId());
                             userBean.setMessage(document.getString("message"));
                             userBean.setIconName(document.getString("icon"));
-                            userBean.setFollowingCount(document.getLong("following_count"));
-                            userBean.setFollowerCount(document.getLong("follower_count"));
+                            userBean.setFollowingCount(
+                                    Integer.parseInt(document.getLong("following_count").toString()));
+                            userBean.setFollowerCount(Integer.parseInt(document.getLong("follower_count").toString()));
                         }
 
                         final long ONE_MEGABYTE = 1024 * 1024 * 5;
@@ -342,31 +358,45 @@ public class UserModel extends Firebase {
     //fetchIconBmpは使わないので削除しました
 
 
-//
-//    //storageに画像をアップロードするメソッド
-//    public void imgUpload(byte[] data, String path) {
-//        Timber.i(MyDebugTree.START_LOG);
-//        // Create a storage reference from our app
-//        StorageReference storageRef = storage.getReference();
-//
-//        // Create a reference
-//        StorageReference userImagesRef = storageRef.child(path);
-//
-//        UploadTask uploadTask = userImagesRef.putBytes(data);
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                // Handle unsuccessful uploads
-//                System.out.println("--------No upload------");
-//            }
-//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                // taskSnapshot.getMetadata() contains file metadata such as size, content-type,
-//                // etc.
-//                // ...
-//                System.out.println("--------Yes upload-------");
-//            }
-//        });
-//    }
+
+    //fcmトークンをfirestoreに登録するメソッド
+    public void fcmTokenInsert(final String uid) {
+        this.firestoreConnect();
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+                        final String token = task.getResult();
+
+                        firestore.collection("users")
+                                .document(uid)
+                                .update("fcm_token", token)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                                        Timber.i(String.format("uid = %s, token = %s", uid, token));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.e(e.toString());
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Timber.i(MyDebugTree.FAILURE_LOG);
+                Timber.e(e.toString());
+            }
+        });
+    }
 }

@@ -68,6 +68,8 @@ public class UserAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "position", position, "convertView",
+                convertView, "parent", parent));
         ViewHolder holder;
 
         if (convertView == null) {
@@ -90,13 +92,13 @@ public class UserAdapter extends BaseAdapter {
         holder.username.setText(mUserBean.getName());
         holder.uid.setText(mUserBean.getUid());
         holder.post.setText(mPostList.get(position).getMessage());
-        if (mPostList.get(position).getPhoto() != null && !mPostList.get(position).getPhoto().equals("")) {
-            holder.photo.setImageBitmap(mPostList.get(position).getPhoto());
-        }
-        holder.goodCount.setText(mPostList.get(position).getGoodCount().toString());
+        holder.photo.setImageBitmap(mPostList.get(position).getPhoto());
+        // 写真がないなら高さを０にする
+        if (mPostList.get(position).getPhoto() == null) holder.photo.setMaxHeight(0);
+        holder.goodCount.setText(Integer.toString(mPostList.get(position).getGoodCount()));
         holder.latLng.setText(String.format("%d, %d", (int) mPostList.get(position).getLatLng().latitude,
                 (int) mPostList.get(position).getLatLng().longitude));
-        holder.datetime.setText(mPostList.get(position).getDatetime().toString());
+        holder.datetime.setText(mPostList.get(position).getStrDatetime());
 
         return convertView;
     }

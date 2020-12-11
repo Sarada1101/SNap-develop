@@ -13,11 +13,11 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PostBean implements Serializable {
-    private String postId;
+    private String documentId;
     private String message;
     private String photoName;
     private Bitmap photo;
-    private Long goodCount;
+    private int goodCount;
     private LatLng latLng;
     private Date datetime;
     private String strDatetime;
@@ -27,5 +27,4 @@ public class PostBean implements Serializable {
     private String uid;
     private String type;
     private String parentPost;
-    private int goodCount_int;
 }

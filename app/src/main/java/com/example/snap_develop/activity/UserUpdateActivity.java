@@ -1,77 +1,98 @@
 package com.example.snap_develop.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.viewModel.UserViewModel;
 
-import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.IOException;
 
-public class UserUpdateActivity extends AppCompatActivity {
+import timber.log.Timber;
+
+public class UserUpdateActivity extends AppCompatActivity implements View.OnClickListener {
 
     UserViewModel mUserViewModel = new UserViewModel();
     private static final int RESULT_PICK_IMAGEFILE = 1000;
+    private String currentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userupdate);
 
+        //現在ログインしているユーザーのIDをインテントから取得
+        currentId = getIntent().getStringExtra("currentId");
+
+        mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
+            @Override
+            public void onChanged(UserBean userBean) {
+                //画面に値をセット
+                TextView userName = findViewById(R.id.updateUserName);
+                TextView userMessage = findViewById(R.id.updateUserMessage);
+                ImageView userIcon = findViewById(R.id.updateUserIcon);
+
+                userName.setText(userBean.getName());
+                userMessage.setText(userBean.getMessage());
+                userIcon.setImageBitmap(userBean.getIcon());
+            }
+        });
+        mUserViewModel.fetchUserInfo(currentId);
+
         mUserViewModel.getUpdateResult().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable final String updateResult) {
                 System.out.println("----------------OnChanged:updateResult----------------");
-
-                //変更内容がデータベースに登録が完了するとユーザー情報画面に遷移
-                //Intent intent = new Intent(UserUpdateActivity.this,UserActivity.class);
-                //startActivity(intent);
+                //ユーザー情報の変化が完了した後の処理
+                Toast.makeText(UserUpdateActivity.this, "保存しました！！", Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    @Override
     public void onClick(View view) {
-        /*
-        TextView name = (TextView)findViewById(R.id.);
-        TextView message = (TextView)findViewById(R.id.);*/
+        Timber.i(MyDebugTree.START_LOG);
+        int i = view.getId();
+        if (i == R.id.toUserBackButton) {
+            //ユーザー情報表示画面に戻る処理
+            startActivity(new Intent(getApplication(), UserActivity.class));
+        } else if (i == R.id.updateSaveButton) {
+            //ユーザー情報を更新する処理
+            TextView updateName = view.findViewById(R.id.updateUserName);
+            TextView updateMessage = view.findViewById(R.id.updateUserMessage);
+            ImageView updateIcon = view.findViewById(R.id.updateUserIcon);
 
-        //ImageViewに表示されている画像をstorageに保存するためにbyte[]に変換する処理
-        ImageView icon = (ImageView) findViewById(R.id.imageView);
-        Bitmap bmp = ((BitmapDrawable) icon.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
+            UserBean updateBean = new UserBean();
+            updateBean.setUid(currentId);
+            updateBean.setName(updateName.getText().toString());
+            updateBean.setMessage(updateMessage.getText().toString());
+            updateBean.setIcon(((BitmapDrawable) updateIcon.getDrawable()).getBitmap());
+            updateBean.setIconName("userIcon.png");
 
-
-        //テストデータ
-        String iconName = "user.png";
-        UserBean updateBean = new UserBean();
-        updateBean.setUid("UtJFmruiiBS28WH333AE6YHEjf72");
-        updateBean.setName("update_name_test");
-        updateBean.setMessage("update_message_test");
-        updateBean.setIconName(updateBean.getUid() + "/" + iconName);
-
-
-        mUserViewModel.updateUser(updateBean, data);
-    }
-
-
-    /*端末内の画像を一つ選択する処理
-    //ボタンが押されたときに動く処理
-    public void getImage(View view) {
-        //端末内の画像を選ぶ画面に遷移するIntent
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("image/*");
-        startActivityForResult(intent, RESULT_PICK_IMAGEFILE);  //intent開始
+            mUserViewModel.updateUser(updateBean);
+        } else if (i == R.id.updateUserIcon) {
+            //画像を選択する画面に遷移する処理
+            startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                            .addCategory(Intent.CATEGORY_OPENABLE)
+                            .setType("image/*")
+                    , RESULT_PICK_IMAGEFILE);
+        }
     }
 
     //画像を選んだあとの処理
@@ -86,7 +107,8 @@ public class UserUpdateActivity extends AppCompatActivity {
                 try {
                     //URIからBitmapに変換してimageViewにセット
                     Bitmap bmp = getBitmapFromUri(uri);
-                    imageView.setImageBitmap(bmp);
+                    ImageView iconView = findViewById(R.id.updateUserIcon);
+                    iconView.setImageBitmap(bmp);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -103,5 +125,4 @@ public class UserUpdateActivity extends AppCompatActivity {
         parcelFileDescriptor.close();
         return image;
     }
-    */
 }

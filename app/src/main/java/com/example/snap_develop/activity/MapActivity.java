@@ -1,11 +1,13 @@
 package com.example.snap_develop.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
@@ -41,6 +43,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
+    private final int REQUEST_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,11 +110,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             //現在地取得
             FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             mMapViewModel.fetchDeviceLocation(fusedLocationClient);
+            //自分の位置をMapに表示する
+            mGoogleMap.setMyLocationEnabled(true);
         } else {
             requestLocationPermission();
         }
-        //自分の位置をMapに表示する
-        mGoogleMap.setMyLocationEnabled(true);
         //マーカーのウィンドウにClickListener
         mGoogleMap.setOnInfoWindowClickListener(this);
     }
@@ -144,9 +147,35 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     // 許可を求める
     private void requestLocationPermission() {
         Timber.i(MyDebugTree.START_LOG);
-        int REQUEST_PERMISSION = 1000;
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
                 REQUEST_PERMISSION);
+    }
+
+
+    // 結果の受け取り
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+        Timber.i(MyDebugTree.START_LOG);
+
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Timber.i("onRequestPermissionsResult:True");
+
+                // 使用が許可された時の対応
+                //現在地取得
+                FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+                mMapViewModel.fetchDeviceLocation(fusedLocationClient);
+                //自分の位置をMapに表示する
+                mGoogleMap.setMyLocationEnabled(true);
+            } else {
+                Timber.i("onRequestPermissionsResult:False");
+
+                // 拒否された時の対応
+                return;
+            }
+        }
     }
 
 

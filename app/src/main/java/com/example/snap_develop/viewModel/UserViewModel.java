@@ -1,6 +1,7 @@
 package com.example.snap_develop.viewModel;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -90,14 +91,20 @@ public class UserViewModel extends ViewModel {
         userModel.signOut();
     }
 
-
-    public void updateUser(UserBean userBean, byte[] data) {
+    public void insertUser(UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
-        //TODO 引数のログ出力
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
+        userModel.insertUser(userBean);
+    }
+
+
+    public void updateUser(UserBean userBean) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
         if (updateResult == null) {
             updateResult = new MutableLiveData<>();
         }
-        userModel.updateUser(userBean, data, updateResult);
+        userModel.updateUser(userBean, updateResult);
     }
 
     public void fetchUserInfo(String uid) {
@@ -117,5 +124,12 @@ public class UserViewModel extends ViewModel {
             userList = new MutableLiveData<>();
         }
         userModel.fetchUserInfoList(uidList, userList);
+    }
+
+    public void fcmTokenInsert(String uid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
+
+        userModel.fcmTokenInsert(uid);
     }
 }
