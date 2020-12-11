@@ -27,6 +27,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     private PostViewModel mPostViewModel;
     private UserViewModel mUserViewModel;
     String parentPost;
+    EditText comment = findViewById(R.id.posteditText);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void insertComment() {
-        EditText comment = findViewById(R.id.posteditText);
+
         Switch anonymousSwitch = findViewById(R.id.anonymousswitch1);
 
         PostBean commentBean = new PostBean();
@@ -62,7 +63,13 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         if (i == R.id.replybutton) {
-            insertComment();
+            //投稿内容のバリデーション
+            if (comment.getText().toString().isEmpty()) {
+                EditText text = (EditText) findViewById(R.id.postTextMultiLine);
+                text.setError("文字を入力してください");
+            } else {
+                insertComment();
+            }
         } else if (i == R.id.toDisplayCommentButton) {
             startActivity(new Intent(getApplication(), DisplayCommentActivity.class));
         }
