@@ -125,6 +125,41 @@ public class FollowModel extends Firebase {
                 Log.w(LogUtil.getClassName(), "insertApprovalPendingFollow:failure:" + e);
             }
         });
+
+        firestore.collection("users")
+                .document(myUid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("approval_pending_count")));
+                        updateCount++;
+
+                        firestore.collection("users")
+                                .document(myUid)
+                                .update("approval_pending_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(approval_pending_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(approval_pending_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(approval_pending_count):failure", e);
+            }
+        });
     }
 
     //userPath : 申請して許可を待っている人のuid
@@ -211,6 +246,41 @@ public class FollowModel extends Firebase {
                 Log.w(LogUtil.getClassName(), "deleteApprovalPendingFollow:failure:" + e);
             }
         });
+
+        firestore.collection("users")
+                .document(userPath)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("approval_pending_count")));
+                        updateCount--;
+
+                        firestore.collection("users")
+                                .document(userPath)
+                                .update("approval_pending_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(approval_pending_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(approval_pending_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(approval_pending_count):failure", e);
+            }
+        });
     }
 
     //userPath : 申請して許可を待っている人のuid
@@ -275,7 +345,89 @@ public class FollowModel extends Firebase {
         });
     }
 
+
+    public void fetchApprovalPendingList(String userPath,
+            final MutableLiveData<List<UserBean>> followList) {
+        this.firestoreConnect();
+        this.storageConnect();
+
+        final List<DocumentReference> refList = new ArrayList<>();
+        final List<UserBean> followingUserList = new ArrayList<>();
+
+        firestore.collection("users")
+                .document(userPath)
+                .collection("approval_pending_follows")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(LogUtil.getClassName(), "getRefList:success");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                refList.add(document.getDocumentReference("path"));
+                            }
+                            for (DocumentReference ref : refList) {
+                                ref.get()
+                                        .addOnCompleteListener(
+                                                new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(
+                                                            @NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            final DocumentSnapshot doc = task.getResult();
+                                                            final UserBean addBean = new UserBean();
+                                                            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+                                                            StorageReference imageRef = storage.getReference().child("icon").child(doc.getId()).child(doc.getString("icon"));
+
+                                                            System.out.println(imageRef);
+
+                                                            imageRef.getBytes(FIVE_MEGABYTE)
+                                                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                                        @Override
+                                                                        public void onSuccess(byte[] aByte) {
+                                                                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                                                                            System.out.println("icon/" + doc.getId() + "/" + doc.getString("icon"));
+                                                                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
+                                                                            addBean.setIcon(bitmap);
+                                                                            addBean.setIconName(doc.getString("icon"));
+                                                                            addBean.setMessage(doc.getString("message"));
+                                                                            addBean.setName(doc.getString("name"));
+                                                                            addBean.setUid(doc.getId());
+                                                                            addBean.setCommentNotice(doc.getBoolean("comment_notice"));
+                                                                            addBean.setFollowNotice(doc.getBoolean("follow_notice"));
+                                                                            addBean.setGoodNotice(doc.getBoolean("good_notice"));
+                                                                            addBean.setPublicationArea(doc.getString("publication_area"));
+                                                                            followingUserList.add(addBean);
+                                                                            followList.setValue(followingUserList);
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Timber.i(MyDebugTree.FAILURE_LOG);
+                                                                            Timber.e(e.toString());
+                                                                        }
+                                                                    });
+                                                            Log.d(LogUtil.getClassName(),
+                                                                    "fetchApprovalPendingList:success");
+                                                        } else {
+                                                            Log.w(LogUtil.getClassName(), "fetchApprovalPendingList:failure",
+                                                                    task.getException());
+                                                        }
+
+                                                    }
+                                                });
+                            }
+                        } else {
+                            Log.w(LogUtil.getClassName(), "getRefList:failure",
+                                    task.getException());
+                        }
+                    }
+                });
+    }
+
     public void fetchApplicatedList(String userPath,
+
             final MutableLiveData<List<UserBean>> followList) {
         this.firestoreConnect();
         this.storageConnect();
@@ -355,6 +507,7 @@ public class FollowModel extends Firebase {
                 });
     }
 
+                                         
     public void fetchCount(String userPath, final String countPath, final MutableLiveData<Integer> userCount) {
         this.firestoreConnect();
 

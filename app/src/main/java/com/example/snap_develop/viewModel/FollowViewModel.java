@@ -75,9 +75,17 @@ public class FollowViewModel extends ViewModel {
         followModel.insertApprovalPendingFollow(userPath, myUid);
     }
 
+
+    public void fetchApprovalPendingList(String userPath) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath));
+        followModel.fetchApprovalPendingList(userPath, followList);
+    }
+
     public void fetchApplicatedList(String userPath) {
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         followModel.fetchApplicatedList(userPath, followList);
+
     }
 
     public void fetchCount(String userPath, String countPath) {
