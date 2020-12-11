@@ -158,8 +158,7 @@ public class PostModel extends Firebase {
         post.put("anonymous", postBean.isAnonymous());
         post.put("uid", postBean.getUid());
         post.put("type", postBean.getType());
-        DocumentReference perent_post = firestore.collection("posts").document(postBean.getPostPath());
-        post.put("perent_post", perent_post);
+        post.put("parent_post", firestore.document(postBean.getPostPath()));
 
         //コメントを追加
         firestore.collection("posts")
@@ -199,9 +198,8 @@ public class PostModel extends Firebase {
 
                         //パスをpostsコレクションに追加
                         path.put("path", documentReference);
-                        // posts/{uid}/comments
-                        firestore.collection("posts")
-                                .document(postBean.getPostPath())
+                        // posts/{parentPostPath}/comments
+                        firestore.document(postBean.getPostPath())
                                 .collection("comments")
                                 .add(path)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
