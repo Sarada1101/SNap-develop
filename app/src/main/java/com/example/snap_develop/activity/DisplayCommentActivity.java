@@ -55,7 +55,6 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         // 投稿情報のパスを取得
         postPath = getIntent().getStringExtra("postPath");
         Timber.i(String.format("%s=%s", "postPath", postPath));
-        postPath = "5tz1lsaRGKHt59ntjiRj";
 
         // 投稿情報を取得したら投稿のユーザー情報を取得する
         finalPostPath = postPath;
@@ -94,7 +93,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     }
                 }
                 Collections.sort(postList, new PostSortCompare().reversed());
-                
+
                 for (final PostBean postBean : postList) {
                     uidList.add(postBean.getUid());
                 }
@@ -105,7 +104,8 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mUserViewModel.getUserList().observe(this, new Observer<List<UserBean>>() {
             @Override
             public void onChanged(List<UserBean> userList) {
-                mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this, (ArrayList<UserBean>) userList
+                mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this,
+                        (ArrayList<UserBean>) userList
                         , (ArrayList<PostBean>) postDataList, R.layout.activity_display_comment_list);
                 lv = findViewById(R.id.postList);
                 lv.setAdapter(mDisplayCommentAdapter);
