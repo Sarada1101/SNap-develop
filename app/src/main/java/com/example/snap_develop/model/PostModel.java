@@ -409,8 +409,7 @@ public class PostModel extends Firebase {
         this.firestoreConnect();
         this.storageConnect();
 
-        firestore.collection("posts")
-                .document(postPath)
+        firestore.document(postPath)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -481,8 +480,8 @@ public class PostModel extends Firebase {
         final List<PostBean> postBeanList = new ArrayList<>();
         final List<String> documentIdList = new ArrayList<>();
 
-        firestore.collection("posts")
-                .document(postPath)
+        // コメントへのパスを取得する
+        firestore.document(postPath)
                 .collection("comments")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
