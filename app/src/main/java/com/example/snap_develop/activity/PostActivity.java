@@ -56,6 +56,9 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         mBinding.postFloatingActionButton.setOnClickListener(this);
         mBinding.photoImageButton.setOnClickListener(this);
+        mBinding.timelineImageButton.setOnClickListener(this);
+        mBinding.mapImageButton.setOnClickListener(this);
+        mBinding.userImageButton.setOnClickListener(this);
 
         // 端末の位置を取得したら投稿処理をし地図画面に遷移する
         mMapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
