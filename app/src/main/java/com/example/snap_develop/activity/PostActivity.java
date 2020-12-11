@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -121,7 +122,14 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.postFloatingActionButton) {
-            insertPost();
+            //投稿内容のバリデーション
+            if (mBinding.postTextMultiLine.getText().toString().isEmpty()) {
+                EditText text = (EditText) findViewById(R.id.postTextMultiLine);
+                text.setError("文字を入力してください");
+            } else {
+                insertPost();
+            }
+
         } else if (i == R.id.photoImageButton) {
             pickPhoto();
         }
