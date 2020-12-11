@@ -32,7 +32,7 @@ public class FollowModel extends Firebase {
     //userPath : 申請された人のuid
     //myUid : 申請した人のuid
     //フォロー申請された人のapplicated_followsに申請された人のuidのパスを追加
-    public void insertApplicatedFollow(String userPath, String myUid) {
+    public void insertApplicatedFollow(final String userPath, String myUid) {
         System.out.println("-----------------insertApplicated----------------");
 
         this.firestoreConnect();
@@ -60,12 +60,47 @@ public class FollowModel extends Firebase {
                 Log.w(LogUtil.getClassName(), "insertApplicatedFoolow:failure:" + e);
             }
         });
+
+        firestore.collection("users")
+                .document(userPath)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("applicated_count")));
+                        updateCount++;
+
+                        firestore.collection("users")
+                                .document(userPath)
+                                .update("applicated_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(applicated_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+            }
+        });
     }
 
     //userPath : 申請された人のuid
     //myUid : 申請した人のuid
     //フォロー申請した人のapproval_pending_followsに申請した人のuidのパスを追加
-    public void insertApprovalPendingFollow(String userPath, String myUid) {
+    public void insertApprovalPendingFollow(String userPath, final String myUid) {
         this.firestoreConnect();
 
         DocumentReference approvalPath = firestore.collection("users").document(userPath);
@@ -95,7 +130,7 @@ public class FollowModel extends Firebase {
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を拒否しようとしている人のuid
     //申請を拒否しようとしている人のapplicated_followsのドキュメントIDが申請して許可を待っている人のuidのとこを削除
-    public void deleteApplicatedFollow(String userPath, String myUid) {
+    public void deleteApplicatedFollow(String userPath, final String myUid) {
         this.firestoreConnect();
 
         firestore.collection("users")
@@ -116,12 +151,47 @@ public class FollowModel extends Firebase {
                 Log.w(LogUtil.getClassName(), "deleteApplicatedFollow:failure:" + e);
             }
         });
+
+        firestore.collection("users")
+                .document(myUid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("applicated_count")));
+                        updateCount--;
+
+                        firestore.collection("users")
+                                .document(myUid)
+                                .update("applicated_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(applicated_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+            }
+        });
     }
 
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を拒否しようとしている人のuid
     //申請して許可を待っている人のapproval_pending_followsのドキュメントIDが申請を拒否しようとしている人のuidのとこを削除
-    public void deleteApprovalPendingFollow(String userPath, String myUid) {
+    public void deleteApprovalPendingFollow(final String userPath, String myUid) {
         this.firestoreConnect();
 
         firestore.collection("users")
@@ -205,7 +275,7 @@ public class FollowModel extends Firebase {
         });
     }
 
-    public void fetchFollowingList(String userPath,
+    public void fetchApplicatedList(String userPath,
             final MutableLiveData<List<UserBean>> followList) {
         this.firestoreConnect();
         this.storageConnect();
@@ -215,7 +285,7 @@ public class FollowModel extends Firebase {
 
         firestore.collection("users")
                 .document(userPath)
-                .collection("following")
+                .collection("applicated_follows")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -268,9 +338,9 @@ public class FollowModel extends Firebase {
                                                                         }
                                                                     });
                                                             Log.d(LogUtil.getClassName(),
-                                                                    "getFollowingList:success");
+                                                                    "fetchApplicatedList:success");
                                                         } else {
-                                                            Log.w(LogUtil.getClassName(), "getFollowingList:failure",
+                                                            Log.w(LogUtil.getClassName(), "fetchApplicatedList:failure",
                                                                     task.getException());
                                                         }
 
