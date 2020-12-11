@@ -154,7 +154,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-
         if (i == R.id.postFloatingActionButton) {
             insertPost();
         } else if (i == R.id.photoImageButton) {
@@ -166,5 +165,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
         }
+
     }
 }

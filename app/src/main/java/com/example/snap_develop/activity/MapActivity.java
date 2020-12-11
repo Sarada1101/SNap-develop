@@ -157,7 +157,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
+                                           @NonNull int[] grantResults) {
         Timber.i(MyDebugTree.START_LOG);
 
         if (requestCode == REQUEST_PERMISSION) {
@@ -196,7 +196,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-
         if (i == R.id.timelineImageButton) {
             startActivity(new Intent(getApplication(), TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {

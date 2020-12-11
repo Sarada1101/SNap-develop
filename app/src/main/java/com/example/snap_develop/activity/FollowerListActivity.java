@@ -94,6 +94,7 @@ public class FollowerListActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.timelineImageButton) {
             startActivity(new Intent(getApplication(), TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {

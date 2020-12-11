@@ -51,6 +51,7 @@
             <RadioButton
                 android:id="@+id/anonymousRadio"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/anonymous"
                 android:textSize="18sp" />
         </RadioGroup>
@@ -138,6 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:src="@android:drawable/ic_menu_recent_history"
                 tools:ignore="ContentDescription" />
 
@@ -146,6 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:src="@drawable/ic_baseline_location_on_24"
                 tools:ignore="ContentDescription" />
 
@@ -154,6 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:src="@drawable/ic_baseline_account_circle_24"
                 tools:ignore="ContentDescription" />
         </LinearLayout>

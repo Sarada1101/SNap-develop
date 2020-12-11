@@ -1,7 +1,5 @@
 package com.example.snap_develop.activity;
 
-import static android.text.TextUtils.isEmpty;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -33,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 
 import timber.log.Timber;
+
+import static android.text.TextUtils.isEmpty;
 
 public class TimelineActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -181,6 +181,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.timelineImageButton) {
             startActivity(new Intent(getApplication(), TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {
