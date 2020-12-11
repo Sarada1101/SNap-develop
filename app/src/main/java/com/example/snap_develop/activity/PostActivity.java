@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -57,7 +57,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.postFloatingActionButton.setOnClickListener(this);
         mBinding.photoImageButton.setOnClickListener(this);
 
-
         // 端末の位置を取得したら投稿処理をし地図画面に遷移する
         mMapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {
             @Override
@@ -66,7 +65,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "latLng", latLng));
 
                 PostBean postBean = new PostBean();
-                postBean.setMessage(String.valueOf(mBinding.postTextMultiLine.getText()));
+                postBean.setMessage(String.valueOf(mBinding.postTextInputEditText.getText()));
                 postBean.setPhotoName(mPhotoName);
                 postBean.setPhoto(mBitMap);
                 postBean.setLatLng(latLng);
@@ -83,11 +82,38 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
     private void insertPost() {
         Timber.i(MyDebugTree.START_LOG);
+        String post = mBinding.postTextInputEditText.getText().toString();
+        if (!validateForm(post)) {
+            return;
+        }
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mMapViewModel.fetchDeviceLocation(mFusedLocationClient);
     }
+
+
+    private boolean validateForm(String post) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "post", post));
+        boolean isValidSuccess = false;
+
+        int MAX_LENGTH = 200;
+        if (TextUtils.isEmpty(post)) {
+            mBinding.postTextInputLayout.setError("コメントを入力してください");
+        } else if (post.length() > MAX_LENGTH) {
+            mBinding.postTextInputLayout.setError("コメントは200文字以内にしてください");
+        } else {
+            mBinding.postTextInputLayout.setError(null);
+            isValidSuccess = true;
+        }
+
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
+        return isValidSuccess;
+    }
+
 
     private void pickPhoto() {
         Timber.i(MyDebugTree.START_LOG);
@@ -130,14 +156,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         Timber.i(getResources().getResourceEntryName(i));
 
         if (i == R.id.postFloatingActionButton) {
-            //投稿内容のバリデーション
-            if (mBinding.postTextMultiLine.getText().toString().isEmpty()) {
-                EditText text = (EditText) findViewById(R.id.postTextMultiLine);
-                text.setError("文字を入力してください");
-            } else {
-                insertPost();
-            }
-
+            insertPost();
         } else if (i == R.id.photoImageButton) {
             pickPhoto();
         } else if (i == R.id.timelineImageButton) {
