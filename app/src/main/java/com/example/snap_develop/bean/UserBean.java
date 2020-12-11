@@ -17,8 +17,8 @@ public class UserBean implements Serializable {
     private String message;
     private String iconName;
     private Bitmap icon;
-    private Long followingCount;
-    private Long followerCount;
+    private int followingCount;
+    private int followerCount;
     private boolean followNotice;
     private boolean goodNotice;
     private boolean commentNotice;

@@ -32,7 +32,7 @@ public class FollowModel extends Firebase {
     //userPath : 申請された人のuid
     //myUid : 申請した人のuid
     //フォロー申請された人のapplicated_followsに申請された人のuidのパスを追加
-    public void insertApplicatedFollow(String userPath, String myUid) {
+    public void insertApplicatedFollow(final String userPath, String myUid) {
         System.out.println("-----------------insertApplicated----------------");
 
         this.firestoreConnect();
@@ -58,6 +58,41 @@ public class FollowModel extends Firebase {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(LogUtil.getClassName(), "insertApplicatedFoolow:failure:" + e);
+            }
+        });
+
+        firestore.collection("users")
+                .document(userPath)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("applicated_count")));
+                        updateCount++;
+
+                        firestore.collection("users")
+                                .document(userPath)
+                                .update("applicated_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(applicated_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
             }
         });
     }
@@ -130,7 +165,7 @@ public class FollowModel extends Firebase {
     //userPath : 申請して許可を待っている人のuid
     //myUid : 申請を拒否しようとしている人のuid
     //申請を拒否しようとしている人のapplicated_followsのドキュメントIDが申請して許可を待っている人のuidのとこを削除
-    public void deleteApplicatedFollow(String userPath, String myUid) {
+    public void deleteApplicatedFollow(String userPath, final String myUid) {
         this.firestoreConnect();
 
         firestore.collection("users")
@@ -149,6 +184,41 @@ public class FollowModel extends Firebase {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w(LogUtil.getClassName(), "deleteApplicatedFollow:failure:" + e);
+            }
+        });
+
+        firestore.collection("users")
+                .document(myUid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+
+                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("applicated_count")));
+                        updateCount--;
+
+                        firestore.collection("users")
+                                .document(myUid)
+                                .update("applicated_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Log.d(LogUtil.getClassName(), "update(applicated_count):success");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
+                                    }
+                                });
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
             }
         });
     }
@@ -275,6 +345,7 @@ public class FollowModel extends Firebase {
         });
     }
 
+
     public void fetchApprovalPendingList(String userPath,
             final MutableLiveData<List<UserBean>> followList) {
         this.firestoreConnect();
@@ -355,6 +426,88 @@ public class FollowModel extends Firebase {
                 });
     }
 
+    public void fetchApplicatedList(String userPath,
+
+            final MutableLiveData<List<UserBean>> followList) {
+        this.firestoreConnect();
+        this.storageConnect();
+
+        final List<DocumentReference> refList = new ArrayList<>();
+        final List<UserBean> followingUserList = new ArrayList<>();
+
+        firestore.collection("users")
+                .document(userPath)
+                .collection("applicated_follows")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull final Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(LogUtil.getClassName(), "getRefList:success");
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                refList.add(document.getDocumentReference("path"));
+                            }
+                            for (DocumentReference ref : refList) {
+                                ref.get()
+                                        .addOnCompleteListener(
+                                                new OnCompleteListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(
+                                                            @NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            final DocumentSnapshot doc = task.getResult();
+                                                            final UserBean addBean = new UserBean();
+                                                            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+                                                            StorageReference imageRef = storage.getReference().child("icon").child(doc.getId()).child(doc.getString("icon"));
+
+                                                            System.out.println(imageRef);
+
+                                                            imageRef.getBytes(FIVE_MEGABYTE)
+                                                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                                        @Override
+                                                                        public void onSuccess(byte[] aByte) {
+                                                                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                                                                            System.out.println("icon/" + doc.getId() + "/" + doc.getString("icon"));
+                                                                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
+                                                                            addBean.setIcon(bitmap);
+                                                                            addBean.setIconName(doc.getString("icon"));
+                                                                            addBean.setMessage(doc.getString("message"));
+                                                                            addBean.setName(doc.getString("name"));
+                                                                            addBean.setUid(doc.getId());
+                                                                            addBean.setCommentNotice(doc.getBoolean("comment_notice"));
+                                                                            addBean.setFollowNotice(doc.getBoolean("follow_notice"));
+                                                                            addBean.setGoodNotice(doc.getBoolean("good_notice"));
+                                                                            addBean.setPublicationArea(doc.getString("publication_area"));
+                                                                            followingUserList.add(addBean);
+                                                                            followList.setValue(followingUserList);
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            Timber.i(MyDebugTree.FAILURE_LOG);
+                                                                            Timber.e(e.toString());
+                                                                        }
+                                                                    });
+                                                            Log.d(LogUtil.getClassName(),
+                                                                    "fetchApplicatedList:success");
+                                                        } else {
+                                                            Log.w(LogUtil.getClassName(), "fetchApplicatedList:failure",
+                                                                    task.getException());
+                                                        }
+
+                                                    }
+                                                });
+                            }
+                        } else {
+                            Log.w(LogUtil.getClassName(), "getRefList:failure",
+                                    task.getException());
+                        }
+                    }
+                });
+    }
+
+                                         
     public void fetchCount(String userPath, final String countPath, final MutableLiveData<Integer> userCount) {
         this.firestoreConnect();
 
