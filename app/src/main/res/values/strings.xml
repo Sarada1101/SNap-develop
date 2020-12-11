@@ -69,4 +69,5 @@
     <string name="latLng">%d, %d</string>
     <string name="backButtonText">←戻る</string>
     <string name="updateButtonText">更新</string>
+
 </resources>

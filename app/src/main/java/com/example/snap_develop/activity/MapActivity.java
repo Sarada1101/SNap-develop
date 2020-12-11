@@ -40,6 +40,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         View.OnClickListener {
 
+    private static final int REQUEST_PERMISSION = 0;
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
