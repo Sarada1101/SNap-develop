@@ -431,6 +431,7 @@ public class PostModel extends Firebase {
                         postBean.setLatLng(geopoint);
                         postBean.setMessage(document.getString("message"));
                         postBean.setPhotoName(document.getString("picture"));
+                        if (postBean.getPhotoName().equals("")) postBean.setPhotoName(" ");
                         postBean.setType(document.getString("type"));
                         postBean.setUid(document.getString("uid"));
 
