@@ -405,6 +405,7 @@ public class PostModel extends Firebase {
     //ここから
     public void fetchPost(String postPath, final MutableLiveData<PostBean> post) {
         Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", INPUT_LOG, "postPath", postPath, "post", post));
 
         this.firestoreConnect();
         this.storageConnect();
@@ -476,6 +477,9 @@ public class PostModel extends Firebase {
 
 
     public void fetchPostCommentList(String postPath, final MutableLiveData<List<PostBean>> postList) {
+        Timber.i(START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", INPUT_LOG, "postPath", postPath, "postList", postList));
+
         this.firestoreConnect();
 
         final List<DocumentReference> commentPathList = new ArrayList<>();
@@ -490,8 +494,10 @@ public class PostModel extends Firebase {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         Timber.i(START_LOG);
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             commentPathList.add(document.getDocumentReference("path"));
+                            Timber.i(String.format("%s=%s", "commentPath", document.getDocumentReference("path")));
                         }
 
                         // コメントの詳細を取得する
@@ -501,6 +507,9 @@ public class PostModel extends Firebase {
                             ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    Timber.i(START_LOG);
+                                    Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
+
                                     DocumentSnapshot document = task.getResult();
                                     PostBean postBean = new PostBean();
                                     postBean.setDocumentId(document.getId());
@@ -519,7 +528,6 @@ public class PostModel extends Firebase {
                             });
                         }
                     }
-
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
