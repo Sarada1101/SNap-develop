@@ -74,7 +74,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userCount", userCount));
                 followCount = userCount;
-                mFollowViewModel.fetchFollowingList(currentUid);
+                //mFollowViewModel.fetchFollowingList(currentUid);
             }
         });
 

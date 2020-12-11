@@ -92,7 +92,7 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
         });
     }
 
-    @Override
+ @Override
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();

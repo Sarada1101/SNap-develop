@@ -355,8 +355,6 @@ public class UserModel extends Firebase {
                     });
         }
     }
-    //fetchIconBmpは使わないので削除しました
-
 
 
     //fcmトークンをfirestoreに登録するメソッド
