@@ -37,7 +37,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     ListView lv;
     DisplayCommentAdapter mDisplayCommentAdapter;
     List<PostBean> postDataList;
-    String finalPostPath;
+    String mParentPostPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +50,15 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_display_comment);
 
         mBinding.commentButton.setOnClickListener(this);
+        mBinding.timelineImageButton.setOnClickListener(this);
+        mBinding.mapImageButton.setOnClickListener(this);
+        mBinding.userImageButton.setOnClickListener(this);
 
-        String postPath;
         // 投稿情報のパスを取得
-        postPath = getIntent().getStringExtra("postPath");
-        Timber.i(String.format("%s=%s", "postPath", postPath));
-        postPath = "5tz1lsaRGKHt59ntjiRj";
+        mParentPostPath = getIntent().getStringExtra("postPath");
+        Timber.i(String.format("%s=%s", "postPath", mParentPostPath));
 
         // 投稿情報を取得したら投稿のユーザー情報を取得する
-        finalPostPath = postPath;
         mPostViewModel.getPost().observe(this, new Observer<PostBean>() {
             @Override
             public void onChanged(PostBean postBean) {
@@ -67,12 +67,12 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 mUserViewModel.fetchUserInfo(postBean.getUid());
             }
         });
-        mPostViewModel.fetchPost(postPath);
+        mPostViewModel.fetchPost(mParentPostPath);
 
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
-                mPostViewModel.fetchPostCommentList(finalPostPath);
+                mPostViewModel.fetchPostCommentList(mParentPostPath);
             }
         });
 
@@ -105,7 +105,8 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mUserViewModel.getUserList().observe(this, new Observer<List<UserBean>>() {
             @Override
             public void onChanged(List<UserBean> userList) {
-                mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this, (ArrayList<UserBean>) userList
+                mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this,
+                        (ArrayList<UserBean>) userList
                         , (ArrayList<PostBean>) postDataList, R.layout.activity_display_comment_list);
                 lv = findViewById(R.id.postList);
                 lv.setAdapter(mDisplayCommentAdapter);
@@ -124,7 +125,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.commentButton) {
             startActivity(new Intent(getApplication(), CommentActivity.class)
-                    .putExtra("parentPost", finalPostPath));
+                    .putExtra("postPath", mParentPostPath));
         } else if (i == R.id.timelineImageButton) {
             startActivity(new Intent(getApplication(), TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {

@@ -40,6 +40,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         View.OnClickListener {
 
+    private static final int REQUEST_PERMISSION = 0;
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
@@ -186,9 +187,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "marker", marker));
 
         String postPath = marker.getTag().toString();
-        Intent intent = new Intent(MapActivity.this, DisplayCommentActivity.class);
-        intent.putExtra("postPath", postPath);
-        startActivity(intent);
+        startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath", postPath));
     }
 
 
@@ -198,13 +197,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(MapActivity.this, TimelineActivity.class));
+            startActivity(new Intent(getApplication(), TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(MapActivity.this, MapActivity.class));
+            startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(MapActivity.this, UserActivity.class));
+            startActivity(new Intent(getApplication(), UserActivity.class));
         } else if (i == R.id.postMapFloatingActionButton) {
-            startActivity(new Intent(MapActivity.this, PostActivity.class));
+            startActivity(new Intent(getApplication(), PostActivity.class));
         }
     }
 }
