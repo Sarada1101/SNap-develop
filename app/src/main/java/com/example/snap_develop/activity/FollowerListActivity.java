@@ -40,6 +40,7 @@ public class FollowerListActivity extends AppCompatActivity implements View.OnCl
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_follower_list);
+        setTitle("フォロワー");
 
         followViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);

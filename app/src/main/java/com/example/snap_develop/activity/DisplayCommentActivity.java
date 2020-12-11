@@ -44,6 +44,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_comment);
+        setTitle("詳細");
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);

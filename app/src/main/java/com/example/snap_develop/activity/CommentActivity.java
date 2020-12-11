@@ -32,6 +32,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
+        setTitle("コメント投稿");
 
         mParentPostPath = getIntent().getStringExtra("postPath");
 

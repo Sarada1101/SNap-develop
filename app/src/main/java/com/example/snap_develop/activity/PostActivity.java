@@ -48,6 +48,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        setTitle("投稿");
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);

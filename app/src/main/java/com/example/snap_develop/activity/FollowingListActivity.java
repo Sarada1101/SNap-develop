@@ -40,7 +40,7 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
         Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_following_list);
-
+        setTitle("フォロー");
 
         followViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         //userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
