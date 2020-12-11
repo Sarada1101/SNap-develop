@@ -72,13 +72,13 @@
                 android:id="@+id/followerButton"
                 android:layout_width="205dp"
                 android:layout_height="wrap_content"
-                android:text="@{userViewModel.user.followingCount.toString() + @string/followButtonText}" />
+                android:text="@{userViewModel.user.followingCount + @string/followButtonText}" />
 
             <Button
                 android:id="@+id/followButton"
                 android:layout_width="205dp"
                 android:layout_height="wrap_content"
-                android:text="@{userViewModel.user.followerCount.toString() + @string/followerButtonText}" />
+                android:text="@{userViewModel.user.followerCount + @string/followerButtonText}" />
         </LinearLayout>
 
         <ListView

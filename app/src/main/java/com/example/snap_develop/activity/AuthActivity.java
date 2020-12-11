@@ -1,11 +1,6 @@
 package com.example.snap_develop.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,12 +8,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
@@ -56,6 +50,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
                 //上記の値が変更されたときにonChangedメソッドが発生し、中に記述されている処理が実行される
                 if (TextUtils.equals(authResult, "success")) {
+                    //FCMトークンを登録する
+                    mUserViewModel.fcmTokenInsert(mUserViewModel.getCurrentUser().getUid());
                     Toast.makeText(AuthActivity.this, "成功しました", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(AuthActivity.this, MapActivity.class));
 
@@ -91,9 +87,9 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         UserBean userBean = new UserBean();
         userBean.setMessage("よろしくお願いします。");
         userBean.setIconName("no_img");
-        userBean.setIcon(getBitmapFromVectorDrawable(this, R.drawable.ic_baseline_account_circle_24));
-        userBean.setFollowingCount((long) 0);
-        userBean.setFollowerCount((long) 0);
+        userBean.setIcon(MainApplication.getBitmapFromVectorDrawable(this, R.drawable.ic_baseline_account_circle_24));
+        userBean.setFollowingCount(0);
+        userBean.setFollowerCount(0);
         userBean.setFollowNotice(true);
         userBean.setGoodNotice(true);
         userBean.setCommentNotice(true);
@@ -103,23 +99,6 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         mUserViewModel.createAccount(email, password, userBean);
-    }
-
-
-    // VectorDrawableをBitmapに変換
-    public static Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
-        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
     }
 
 

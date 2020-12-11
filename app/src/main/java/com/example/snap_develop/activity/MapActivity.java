@@ -43,6 +43,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
+    private final int REQUEST_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,18 +151,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 REQUEST_PERMISSION);
     }
 
+
     // 結果の受け取り
     @SuppressLint("MissingPermission")
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
+        Timber.i(MyDebugTree.START_LOG);
 
         if (requestCode == REQUEST_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                System.out.println(
-                        "---------------onRequestPermissionsResult:True-----------------");
+                Timber.i("onRequestPermissionsResult:True");
 
                 // 使用が許可された時の対応
                 //現在地取得
@@ -170,8 +170,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 //自分の位置をMapに表示する
                 mGoogleMap.setMyLocationEnabled(true);
             } else {
-                System.out.println(
-                        "---------------onRequestPermissionsResult:False-----------------");
+                Timber.i("onRequestPermissionsResult:False");
 
                 // 拒否された時の対応
                 return;
