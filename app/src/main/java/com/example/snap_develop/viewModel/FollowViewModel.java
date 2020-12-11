@@ -11,13 +11,12 @@ import com.example.snap_develop.model.FollowModel;
 import com.example.snap_develop.util.LogUtil;
 
 import java.util.List;
-
 import timber.log.Timber;
 
 public class FollowViewModel extends ViewModel {
 
     FollowModel followModel = new FollowModel();
-    MutableLiveData<List<UserBean>> followList;
+    private MutableLiveData<List<UserBean>> followList;
     private MutableLiveData<Integer> userCount;
 
     public MutableLiveData<List<UserBean>> getFollowList() {
