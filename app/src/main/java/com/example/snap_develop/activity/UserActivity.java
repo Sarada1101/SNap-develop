@@ -30,7 +30,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     ListView mListView;
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
-    private ActivityUserBinding mActivityUserBinding;
+    private ActivityUserBinding mBinding;
     private UserAdapter mUserAdapter;
     private String currentId;
 
@@ -42,10 +42,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
-        mActivityUserBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
 
-        mActivityUserBinding.followButton.setOnClickListener(this);
-        mActivityUserBinding.followerButton.setOnClickListener(this);
+        mBinding.followingButton.setOnClickListener(this);
+        mBinding.followerButton.setOnClickListener(this);
+        mBinding.timelineImageButton.setOnClickListener(this);
+        mBinding.mapImageButton.setOnClickListener(this);
+        mBinding.userImageButton.setOnClickListener(this);
+        mBinding.followRequestButton.setOnClickListener(this);
+        mBinding.profileUpdateButton.setOnClickListener(this);
 
         String uid;
         // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
@@ -74,12 +79,12 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 ArrayList<PostBean> dataList = (ArrayList<PostBean>) postList;
                 mUserAdapter = new UserAdapter(UserActivity.this, dataList, mUserViewModel.getUser().getValue(),
                         R.layout.list_user);
-                mListView = mActivityUserBinding.postList;
+                mListView = mBinding.postList;
                 mListView.setAdapter(mUserAdapter);
             }
         });
-        mActivityUserBinding.setUserViewModel(mUserViewModel);
-        mActivityUserBinding.setLifecycleOwner(this);
+        mBinding.setUserViewModel(mUserViewModel);
+        mBinding.setLifecycleOwner(this);
     }
 
     //フォロー申請ボタンが押されたときに動くonClickメソッド
@@ -101,6 +106,20 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         .putExtra("currentId", (Serializable) currentId)
                 );
             }
+        } else if (i == R.id.timelineImageButton) {
+            startActivity(new Intent(UserActivity.this, TimelineActivity.class));
+        } else if (i == R.id.mapImageButton) {
+            startActivity(new Intent(UserActivity.this, MapActivity.class));
+        } else if (i == R.id.userImageButton) {
+            startActivity(new Intent(UserActivity.this, UserActivity.class));
+        } else if (i == R.id.followerButton) {
+            startActivity(new Intent(UserActivity.this, FollowingListActivity.class));
+        } else if (i == R.id.followingButton) {
+            startActivity(new Intent(UserActivity.this, FollowerListActivity.class));
+        } else if (i == R.id.profileUpdateButton) {
+            startActivity(new Intent(UserActivity.this, UserUpdateActivity.class));
+        } else if (i == R.id.followRequestButton) {
+            startActivity(new Intent(UserActivity.this, ApprovalPendingFollowListActivity.class));
         }
     }
 }

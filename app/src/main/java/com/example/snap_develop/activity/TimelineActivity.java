@@ -135,6 +135,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                         public int compare(PostBean o1, PostBean o2) {
                             Date sortKey1 = o1.getDatetime();
                             Date sortKey2 = o2.getDatetime();
+                            System.out.println(sortKey1 + "/" + sortKey2);
                             return sortKey1.compareTo(sortKey2);
                         }
                     }

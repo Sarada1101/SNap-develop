@@ -17,21 +17,14 @@ import com.example.snap_develop.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import timber.log.Timber;
 
 public class TimelineAdapter extends BaseAdapter {
 
-    public static final String TEXT = "TEXT";
-    public static final String IMAGE = "IMAGE";
     private LayoutInflater mInflater;
     private int mLayoutID;
     ArrayList<HashMap<String, Object>> dataList;
-    HashMap<String, Integer> textViewData;
-    HashMap<String, Integer> imageViewData;
-    List<String> textKeyList;
-    List<String> imageKeyList;
 
     static class ViewHolder {
         ImageView userIcon;
@@ -98,7 +91,7 @@ public class TimelineAdapter extends BaseAdapter {
         holder.uid.setText((String) nextData.get("uid"));
         holder.message.setText((String) nextData.get("message"));
         holder.location.setText((String) nextData.get("location"));
-        holder.goodCount.setText((String) nextData.get("goodCount"));
+        holder.goodCount.setText(String.valueOf(nextData.get("goodCount")));
         holder.datetime.setText((String) nextData.get("date"));
         holder.userIcon.setImageBitmap((Bitmap) nextData.get("userIcon"));
 
@@ -112,6 +105,8 @@ public class TimelineAdapter extends BaseAdapter {
 
         if ((Boolean) nextData.get("danger")) {
             holder.danger.setBackgroundColor(Color.rgb(255, 100, 100));
+        } else {
+            holder.danger.setBackgroundColor(Color.rgb(255, 255, 255));
         }
 
 

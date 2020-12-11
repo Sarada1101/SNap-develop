@@ -2,19 +2,16 @@ package com.example.snap_develop.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
-import com.example.snap_develop.util.LogUtil;
+import com.example.snap_develop.databinding.ActivityCommentBinding;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
@@ -26,45 +23,55 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     private PostViewModel mPostViewModel;
     private UserViewModel mUserViewModel;
-    String parentPost;
+    private String mParentPostPath;
+    private ActivityCommentBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
 
-        parentPost = getIntent().getStringExtra("parentPost");
+        mParentPostPath = getIntent().getStringExtra("postPath");
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_comment);
+
+        mBinding.postCommentButton.setOnClickListener(this);
+        mBinding.timelineImageButton.setOnClickListener(this);
+        mBinding.mapImageButton.setOnClickListener(this);
+        mBinding.userImageButton.setOnClickListener(this);
     }
 
     private void insertComment() {
-        EditText comment = findViewById(R.id.posteditText);
-        Switch anonymousSwitch = findViewById(R.id.anonymousswitch1);
+        Timber.i(MyDebugTree.START_LOG);
 
         PostBean commentBean = new PostBean();
+        commentBean.setAnonymous(mBinding.commentAnonymousSwitch.isChecked());
+        commentBean.setMessage(mBinding.commentTextInputEeditText.getText().toString());
+        commentBean.setDatetime(new Date());
         commentBean.setUid(mUserViewModel.getCurrentUser().getUid());
         commentBean.setType("comment");
-        commentBean.setPostPath(parentPost);
-        commentBean.setMessage(comment.getText().toString());
-        commentBean.setDatetime(new Date());
-        commentBean.setAnonymous(anonymousSwitch.getShowText());
+        commentBean.setPostPath(mParentPostPath);
 
         mPostViewModel.insertComment(commentBean);
-        Toast.makeText(this, "成功しました！！", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(getApplication(), DisplayCommentActivity.class));
+        startActivity(new Intent(CommentActivity.this, DisplayCommentActivity.class).putExtra("postPath",
+                mParentPostPath));
     }
 
     @Override
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
-        if (i == R.id.replybutton) {
+        if (i == R.id.postCommentButton) {
             insertComment();
-        } else if (i == R.id.toDisplayCommentButton) {
-            startActivity(new Intent(getApplication(), DisplayCommentActivity.class));
+        } else if (i == R.id.timelineImageButton) {
+            startActivity(new Intent(CommentActivity.this, TimelineActivity.class));
+        } else if (i == R.id.mapImageButton) {
+            startActivity(new Intent(CommentActivity.this, MapActivity.class));
+        } else if (i == R.id.userImageButton) {
+            startActivity(new Intent(CommentActivity.this, UserActivity.class));
         }
     }
 }

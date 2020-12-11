@@ -50,6 +50,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
                 //上記の値が変更されたときにonChangedメソッドが発生し、中に記述されている処理が実行される
                 if (TextUtils.equals(authResult, "success")) {
+                    //FCMトークンを登録する
+                    mUserViewModel.fcmTokenInsert(mUserViewModel.getCurrentUser().getUid());
                     Toast.makeText(AuthActivity.this, "成功しました", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(AuthActivity.this, MapActivity.class));
 
