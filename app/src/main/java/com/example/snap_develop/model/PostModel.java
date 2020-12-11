@@ -360,26 +360,25 @@ public class PostModel extends Firebase {
                                     if (!document.getString("picture").isEmpty()) {
                                         addPost.setPhotoName(document.getString("picture"));
                                     }
-
-                                    PostBean postBean = new PostBean();
-                                    postBean.setAnonymous(document.getBoolean("anonymous"));
-                                    postBean.setDatetime(document.getDate("datetime"));
-                                    postBean.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(
+                                    
+                                    addPost.setAnonymous(document.getBoolean("anonymous"));
+                                    addPost.setDatetime(document.getDate("datetime"));
+                                    addPost.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(
                                             document.getDate("datetime")));
-                                    postBean.setMessage(document.getString("message"));
-                                    postBean.setType(document.getString("type"));
-                                    postBean.setUid(document.getString("uid"));
+                                    addPost.setMessage(document.getString("message"));
+                                    addPost.setType(document.getString("type"));
+                                    addPost.setUid(document.getString("uid"));
                                     addPost.setDocumentId(document.getId());
 
-                                    if (postBean.getType().equals("post")) {
-                                        postBean.setPhotoName(document.getString("picture"));
-                                        postBean.setDanger(document.getBoolean("danger"));
-                                        postBean.setGoodCount(
+                                    if (addPost.getType().equals("post")) {
+                                        addPost.setPhotoName(document.getString("picture"));
+                                        addPost.setDanger(document.getBoolean("danger"));
+                                        addPost.setGoodCount(
                                                 Integer.parseInt(document.getLong("good_count").toString()));
                                         LatLng geopoint = new LatLng(
                                                 document.getGeoPoint("geopoint").getLatitude(),
                                                 document.getGeoPoint("geopoint").getLongitude());
-                                        postBean.setLatLng(geopoint);
+                                        addPost.setLatLng(geopoint);
                                     }
                                     setList.add(addPost);
                                 }
