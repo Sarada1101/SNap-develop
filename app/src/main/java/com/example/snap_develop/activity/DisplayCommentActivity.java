@@ -94,7 +94,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     }
                 }
                 Collections.sort(postList, new PostSortCompare().reversed());
-                
+
                 for (final PostBean postBean : postList) {
                     uidList.add(postBean.getUid());
                 }
@@ -121,9 +121,16 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.commentButton) {
             startActivity(new Intent(getApplication(), CommentActivity.class)
                     .putExtra("parentPost", finalPostPath));
+        } else if (i == R.id.timelineImageButton) {
+            startActivity(new Intent(getApplication(), TimelineActivity.class));
+        } else if (i == R.id.mapImageButton) {
+            startActivity(new Intent(getApplication(), MapActivity.class));
+        } else if (i == R.id.userImageButton) {
+            startActivity(new Intent(getApplication(), UserActivity.class));
         }
     }
 }

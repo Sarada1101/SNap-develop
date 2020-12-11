@@ -44,9 +44,9 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onChanged(UserBean userBean) {
                 //画面に値をセット
-                TextView userName = findViewById(R.id.updateUserName);
-                TextView userMessage = findViewById(R.id.updateUserMessage);
-                ImageView userIcon = findViewById(R.id.updateUserIcon);
+                TextView userName = findViewById(R.id.updateNameTextInputEditText);
+                TextView userMessage = findViewById(R.id.updateProfileTextInputEditText);
+                ImageView userIcon = findViewById(R.id.updateIconImageButton);
 
                 userName.setText(userBean.getName());
                 userMessage.setText(userBean.getMessage());
@@ -69,14 +69,22 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
+        if (i == R.id.timelineImageButton) {
+            startActivity(new Intent(getApplication(), TimelineActivity.class));
+        } else if (i == R.id.mapImageButton) {
+            startActivity(new Intent(getApplication(), MapActivity.class));
+        } else if (i == R.id.userImageButton) {
+            startActivity(new Intent(getApplication(), UserActivity.class));
+        }
         if (i == R.id.toUserBackButton) {
             //ユーザー情報表示画面に戻る処理
             startActivity(new Intent(getApplication(), UserActivity.class));
         } else if (i == R.id.updateSaveButton) {
             //ユーザー情報を更新する処理
-            TextView updateName = view.findViewById(R.id.updateUserName);
-            TextView updateMessage = view.findViewById(R.id.updateUserMessage);
-            ImageView updateIcon = view.findViewById(R.id.updateUserIcon);
+            TextView updateName = view.findViewById(R.id.updateNameTextInputEditText);
+            TextView updateMessage = view.findViewById(R.id.updateProfileTextInputEditText);
+            ImageView updateIcon = view.findViewById(R.id.updateIconImageButton);
 
             UserBean updateBean = new UserBean();
             updateBean.setUid(currentId);
@@ -86,7 +94,7 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
             updateBean.setIconName("userIcon.png");
 
             mUserViewModel.updateUser(updateBean);
-        } else if (i == R.id.updateUserIcon) {
+        } else if (i == R.id.updateIconImageButton) {
             //画像を選択する画面に遷移する処理
             startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT)
                             .addCategory(Intent.CATEGORY_OPENABLE)
@@ -107,7 +115,7 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
                 try {
                     //URIからBitmapに変換してimageViewにセット
                     Bitmap bmp = getBitmapFromUri(uri);
-                    ImageView iconView = findViewById(R.id.updateUserIcon);
+                    ImageView iconView = findViewById(R.id.updateIconImageButton);
                     iconView.setImageBitmap(bmp);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -125,4 +133,5 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
         parcelFileDescriptor.close();
         return image;
     }
+
 }

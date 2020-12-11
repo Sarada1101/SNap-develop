@@ -61,10 +61,17 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.replybutton) {
             insertComment();
         } else if (i == R.id.toDisplayCommentButton) {
             startActivity(new Intent(getApplication(), DisplayCommentActivity.class));
+        } else if (i == R.id.timelineImageButton) {
+            startActivity(new Intent(getApplication(), TimelineActivity.class));
+        } else if (i == R.id.mapImageButton) {
+            startActivity(new Intent(getApplication(), MapActivity.class));
+        } else if (i == R.id.userImageButton) {
+            startActivity(new Intent(getApplication(), UserActivity.class));
         }
     }
 }

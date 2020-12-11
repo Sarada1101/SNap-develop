@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.databinding.ActivityPostBinding;
@@ -119,11 +120,20 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.postFloatingActionButton) {
             insertPost();
         } else if (i == R.id.photoImageButton) {
             pickPhoto();
+        } else if (i == R.id.timelineImageButton) {
+            startActivity(new Intent(getApplication(), TimelineActivity.class));
+        } else if (i == R.id.mapImageButton) {
+            startActivity(new Intent(getApplication(), MapActivity.class));
+        } else if (i == R.id.userImageButton) {
+            startActivity(new Intent(getApplication(), UserActivity.class));
         }
+
     }
 }

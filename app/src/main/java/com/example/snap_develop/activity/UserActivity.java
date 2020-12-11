@@ -100,6 +100,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.profileUpdateButton) {
             if (currentId != null) {
                 startActivity(new Intent(getApplicationContext(), UserUpdateActivity.class)
