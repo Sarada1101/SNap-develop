@@ -37,7 +37,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     ListView lv;
     DisplayCommentAdapter mDisplayCommentAdapter;
     List<PostBean> postDataList;
-    String finalPostPath;
+    String mParentPostPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +50,15 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_display_comment);
 
         mBinding.commentButton.setOnClickListener(this);
+        mBinding.timelineImageButton.setOnClickListener(this);
+        mBinding.mapImageButton.setOnClickListener(this);
+        mBinding.userImageButton.setOnClickListener(this);
 
-        String postPath;
         // 投稿情報のパスを取得
-        postPath = getIntent().getStringExtra("postPath");
-        Timber.i(String.format("%s=%s", "postPath", postPath));
+        mParentPostPath = getIntent().getStringExtra("postPath");
+        Timber.i(String.format("%s=%s", "postPath", mParentPostPath));
 
         // 投稿情報を取得したら投稿のユーザー情報を取得する
-        finalPostPath = postPath;
         mPostViewModel.getPost().observe(this, new Observer<PostBean>() {
             @Override
             public void onChanged(PostBean postBean) {
@@ -66,12 +67,12 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 mUserViewModel.fetchUserInfo(postBean.getUid());
             }
         });
-        mPostViewModel.fetchPost(postPath);
+        mPostViewModel.fetchPost(mParentPostPath);
 
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
-                mPostViewModel.fetchPostCommentList(finalPostPath);
+                mPostViewModel.fetchPostCommentList(mParentPostPath);
             }
         });
 
