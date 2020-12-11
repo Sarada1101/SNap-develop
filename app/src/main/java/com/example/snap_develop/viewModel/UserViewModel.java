@@ -96,7 +96,7 @@ public class UserViewModel extends ViewModel {
 
     public void updateUser(UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
-        //TODO 引数のログ出力
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
         if (updateResult == null) {
             updateResult = new MutableLiveData<>();
         }
