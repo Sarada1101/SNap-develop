@@ -28,6 +28,9 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.functions.FirebaseFunctions;
+import com.google.firebase.functions.FirebaseFunctionsException;
+import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
@@ -820,5 +823,41 @@ public class PostModel extends Firebase {
                         }
                     });
         }
+    }
+
+    public void callGoodNotification(String uid, String postPath) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("uid", uid);
+        data.put("postPath", postPath);
+
+        FirebaseFunctions mFunctions = FirebaseFunctions.getInstance();
+        mFunctions.getHttpsCallable("goodNotification")
+                .call(data)
+                .addOnCompleteListener(new OnCompleteListener<HttpsCallableResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<HttpsCallableResult> task) {
+                        if (!task.isSuccessful()) {
+                            Exception e = task.getException();
+                            System.out.println(e);
+                            if (e instanceof FirebaseFunctionsException) {
+                                FirebaseFunctionsException ffe = (FirebaseFunctionsException) e;
+                                FirebaseFunctionsException.Code code = ffe.getCode();
+                                Object details = ffe.getDetails();
+                            }
+
+                            // ...
+                        } else {
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                        }
+                        //Timber.d(String.format("%s : %s", "result", (String) task.getResult().getData()));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
     }
 }
