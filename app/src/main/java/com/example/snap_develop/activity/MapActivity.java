@@ -44,7 +44,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
-    private final int REQUEST_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
