@@ -44,6 +44,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
+    private final int REQUEST_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,18 +152,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 REQUEST_PERMISSION);
     }
 
+
     // 結果の受け取り
     @SuppressLint("MissingPermission")
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String[] permissions,
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
             @NonNull int[] grantResults) {
+        Timber.i(MyDebugTree.START_LOG);
 
         if (requestCode == REQUEST_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                System.out.println(
-                        "---------------onRequestPermissionsResult:True-----------------");
+                Timber.i("onRequestPermissionsResult:True");
 
                 // 使用が許可された時の対応
                 //現在地取得
@@ -171,8 +171,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 //自分の位置をMapに表示する
                 mGoogleMap.setMyLocationEnabled(true);
             } else {
-                System.out.println(
-                        "---------------onRequestPermissionsResult:False-----------------");
+                Timber.i("onRequestPermissionsResult:False");
 
                 // 拒否された時の対応
                 return;
@@ -188,9 +187,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "marker", marker));
 
         String postPath = marker.getTag().toString();
-        Intent intent = new Intent(MapActivity.this, DisplayCommentActivity.class);
-        intent.putExtra("postPath", postPath);
-        startActivity(intent);
+        startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath", postPath));
     }
 
 
@@ -198,14 +195,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
+
         if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(MapActivity.this, TimelineActivity.class));
+            startActivity(new Intent(getApplication(), TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(MapActivity.this, MapActivity.class));
+            startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(MapActivity.this, UserActivity.class));
+            startActivity(new Intent(getApplication(), UserActivity.class));
         } else if (i == R.id.postMapFloatingActionButton) {
-            startActivity(new Intent(MapActivity.this, PostActivity.class));
+            startActivity(new Intent(getApplication(), PostActivity.class));
         }
     }
 }

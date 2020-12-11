@@ -111,7 +111,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                     resultPostList = timeLine;
                     for (PostBean bean : resultPostList) {
                         if (!isEmpty(bean.getPhotoName())) {
-                            pathList.put(bean.getPostId(), bean.getPhotoName());
+                            pathList.put(bean.getDocumentId(), bean.getPhotoName());
                         }
                     }
                     System.out.println(pathList);
@@ -135,6 +135,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                         public int compare(PostBean o1, PostBean o2) {
                             Date sortKey1 = o1.getDatetime();
                             Date sortKey2 = o2.getDatetime();
+                            System.out.println(sortKey1 + "/" + sortKey2);
                             return sortKey1.compareTo(sortKey2);
                         }
                     }
@@ -150,12 +151,12 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                         String str = new SimpleDateFormat("yyyy/MM/dd hh:mm").format(postBean.getDatetime());
                         addData.put("date", str);
                         addData.put("message", postBean.getMessage());
-                        addData.put("goodCount", String.valueOf(postBean.getGoodCount_int()));
+                        addData.put("goodCount", postBean.getGoodCount());
                         addData.put("location", "住所");
                         addData.put("anonymous", postBean.isAnonymous());
                         addData.put("danger", postBean.isDanger());
                         addData.put("userIcon", resultUserData.get(postBean.getUid()).get("userIcon"));
-                        addData.put("postPicture", timeLinePictureList.get(postBean.getPostId()));
+                        addData.put("postPicture", timeLinePictureList.get(postBean.getDocumentId()));
 
                         dataList.add(addData);
                     }
