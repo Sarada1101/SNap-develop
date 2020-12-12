@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/iconImageView"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             app:imageBitmap="@{userViewModel.user.icon}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,16 +43,18 @@
             android:id="@+id/favorite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/commentButton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/photoImageView"
+            app:layout_constraintTop_toTopOf="@+id/commentButton"
             app:srcCompat="@drawable/ic_baseline_favorite_24" />
 
         <ImageView
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/commentButton"
             app:layout_constraintStart_toEndOf="@+id/goodCountTextView"
-            app:layout_constraintTop_toBottomOf="@+id/photoImageView"
+            app:layout_constraintTop_toTopOf="@+id/commentButton"
             app:srcCompat="@drawable/ic_baseline_location_on_24" />
 
         <ImageView
@@ -61,7 +63,6 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:maxHeight="100dp"
-            android:maxWidth="100dp"
             app:imageBitmap="@{postViewModel.post.photo}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,16 +103,18 @@
             android:layout_height="wrap_content"
             android:text="@{postViewModel.post.strDatetime}"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/commentButton"
             app:layout_constraintEnd_toStartOf="@+id/commentButton"
-            app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
+            app:layout_constraintTop_toTopOf="@+id/commentButton" />
 
         <TextView
             android:id="@+id/goodCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{Integer.toString(postViewModel.post.goodCount)}"
+            app:layout_constraintBottom_toBottomOf="@+id/commentButton"
             app:layout_constraintStart_toEndOf="@+id/favorite"
-            app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
+            app:layout_constraintTop_toTopOf="@+id/commentButton" />
 
 
         <TextView
@@ -119,8 +122,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.format(@string/latLng, (int) postViewModel.post.latLng.latitude,(int) postViewModel.post.latLng.longitude)}"
+            app:layout_constraintBottom_toBottomOf="@+id/commentButton"
             app:layout_constraintStart_toEndOf="@+id/location"
-            app:layout_constraintTop_toBottomOf="@+id/photoImageView" />
+            app:layout_constraintTop_toTopOf="@+id/commentButton" />
 
         <ListView
             android:id="@+id/postList"
