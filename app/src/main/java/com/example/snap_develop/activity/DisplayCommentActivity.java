@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
@@ -31,15 +32,18 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class DisplayCommentActivity extends AppCompatActivity implements View.OnClickListener {
+public class DisplayCommentActivity extends AppCompatActivity implements View.OnClickListener,
+        AdapterView.OnItemClickListener {
 
-    PostViewModel mPostViewModel;
-    UserViewModel mUserViewModel;
-    ActivityDisplayCommentBinding mBinding;
-    ListView mListView;
-    DisplayCommentAdapter mDisplayCommentAdapter;
-    List<PostBean> mPostBeanList;
-    String mParentPostPath;
+    private PostViewModel mPostViewModel;
+    private UserViewModel mUserViewModel;
+    private ActivityDisplayCommentBinding mBinding;
+    private ListView mListView;
+    private DisplayCommentAdapter mDisplayCommentAdapter;
+    private List<PostBean> mPostBeanList;
+    private String mParentPostPath;
+    private String mUid;
+    List<Map<String, Object>> mCommentDataMapList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +76,12 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         });
         mPostViewModel.fetchPost(mParentPostPath);
 
+        // ユーザー情報を取得したらアイコンにクリックリスナーを設定する
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
-                mPostViewModel.fetchPostCommentList(mParentPostPath);
+                mUid = userBean.getUid();
+                mBinding.iconImageView.setOnClickListener(DisplayCommentActivity.this);
             }
         });
 
@@ -103,13 +109,14 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 mPostBeanList = postList;
             }
         });
+        mPostViewModel.fetchPostCommentList(mParentPostPath);
 
         //コメントごとのユーザー情報を取得したらリスト表示する
         mUserViewModel.getUserList().observe(this, new Observer<List<UserBean>>() {
             @Override
             public void onChanged(List<UserBean> userList) {
                 // コメントリストとユーザー情報を紐付ける
-                List<Map<String, Object>> commentDataMapList = new ArrayList<>();
+                mCommentDataMapList = new ArrayList<>();
                 for (PostBean postBean : mPostBeanList) {
                     Map<String, Object> commentDataMap = new HashMap<>();
                     commentDataMap.put("postBean", postBean);
@@ -119,13 +126,13 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                             break;
                         }
                     }
-                    commentDataMapList.add(commentDataMap);
+                    mCommentDataMapList.add(commentDataMap);
                 }
-
                 mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this,
-                        commentDataMapList, R.layout.activity_display_comment_list);
-                mListView = findViewById(R.id.postList);
+                        mCommentDataMapList, R.layout.activity_display_comment_list);
+                mListView = mBinding.commentListView;
                 mListView.setAdapter(mDisplayCommentAdapter);
+                mListView.setOnItemClickListener(DisplayCommentActivity.this);
             }
         });
 
@@ -148,6 +155,15 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
+        } else if (i == R.id.iconImageView) {
+            startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", mUid));
         }
+    }
+
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
+        startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
     }
 }
