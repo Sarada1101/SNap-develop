@@ -20,7 +20,7 @@
 
         <Button
             android:id="@+id/profileUpdateButton"
-            android:layout_width="94dp"
+            android:layout_width="100dp"
             android:layout_height="40dp"
             android:onClick="onClick"
             android:text="@string/changeButten"
@@ -30,9 +30,9 @@
 
         <Button
             android:id="@+id/followRequestButton"
-            android:layout_width="94dp"
+            android:layout_width="100dp"
             android:layout_height="40dp"
-            android:text="@string/approvalbutten"
+            android:text="@string/followRequestText"
             android:textColor="#000000"
             android:textColorHint="#070707"
             android:textSize="8sp"
@@ -87,7 +87,6 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/followButtonLinerLayout" />
 
