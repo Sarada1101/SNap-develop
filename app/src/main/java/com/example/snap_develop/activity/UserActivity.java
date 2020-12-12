@@ -78,7 +78,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             public void onChanged(List<PostBean> postList) {
                 mPostBeanList = postList;
                 mUserAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue(),
-                        R.layout.list_user);
+                        R.layout.activity_user_list_row);
                 mListView = mBinding.postListView;
                 mListView.setAdapter(mUserAdapter);
                 mListView.setOnItemClickListener(UserActivity.this);
