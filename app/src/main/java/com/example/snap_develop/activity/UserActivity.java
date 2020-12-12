@@ -103,9 +103,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
         String currentId = mUserViewModel.getCurrentUser().getUid();
         if (id == R.id.update_user) {
-            startActivity(new Intent(this, UserUpdateActivity.class).putExtra("currentId", currentId));
+            startActivity(new Intent(this, UserUpdateActivity.class));
         } else if (id == R.id.setting) {
-            startActivity(new Intent(this, SettingActivity.class).putExtra("currentId", currentId));
+            startActivity(new Intent(this, SettingActivity.class));
         }
         return true;
     }
