@@ -259,6 +259,7 @@ public class PostModel extends Firebase {
                             postBean.setMessage(document.getString("message"));
                             postBean.setType(document.getString("type"));
                             postBean.setUid(document.getString("uid"));
+                            postBean.setPostPath(document.getReference().getPath());
 
                             if (postBean.getType().equals("post")) {
                                 postBean.setPhotoName(document.getString("picture"));
@@ -268,6 +269,8 @@ public class PostModel extends Firebase {
                                         document.getGeoPoint("geopoint").getLatitude(),
                                         document.getGeoPoint("geopoint").getLongitude());
                                 postBean.setLatLng(geopoint);
+                            } else if (postBean.getType().equals("comment")) {
+                                postBean.setParentPost(document.getDocumentReference("parent_post").getPath());
                             }
                             postBeanList.add(postBean);
                         }
@@ -363,7 +366,7 @@ public class PostModel extends Firebase {
                                     if (!document.getString("picture").isEmpty()) {
                                         addPost.setPhotoName(document.getString("picture"));
                                     }
-                                    
+
                                     addPost.setAnonymous(document.getBoolean("anonymous"));
                                     addPost.setDatetime(document.getDate("datetime"));
                                     addPost.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(
