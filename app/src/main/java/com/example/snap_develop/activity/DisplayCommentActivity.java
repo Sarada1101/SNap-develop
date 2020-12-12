@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -34,9 +36,9 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     PostViewModel mPostViewModel;
     UserViewModel mUserViewModel;
     ActivityDisplayCommentBinding mBinding;
-    ListView lv;
+    ListView mListView;
     DisplayCommentAdapter mDisplayCommentAdapter;
-    List<PostBean> postDataList;
+    List<PostBean> mPostBeanList;
     String mParentPostPath;
 
     @Override
@@ -65,9 +67,6 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             public void onChanged(PostBean postBean) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s=%s", "postBean", postBean));
-                if (postBean.getPhoto() == null) {
-                    mBinding.photoImageView.setMaxHeight(0);
-                }
                 mUserViewModel.fetchUserInfo(postBean.getUid());
             }
         });
@@ -86,7 +85,10 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             @Override
             public void onChanged(List<PostBean> postList) {
                 List<String> uidList = new ArrayList<>();
-                postDataList = postList;
+                for (final PostBean postBean : postList) {
+                    uidList.add(postBean.getUid());
+                }
+                mUserViewModel.fetchUserInfoList(uidList);
 
                 //投稿を日時順にソート
                 class PostSortCompare implements Comparator<PostBean> {
@@ -98,22 +100,32 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     }
                 }
                 Collections.sort(postList, new PostSortCompare().reversed());
-
-                for (final PostBean postBean : postList) {
-                    uidList.add(postBean.getUid());
-                }
-                mUserViewModel.fetchUserInfoList(uidList);
+                mPostBeanList = postList;
             }
         });
 
+        //コメントごとのユーザー情報を取得したらリスト表示する
         mUserViewModel.getUserList().observe(this, new Observer<List<UserBean>>() {
             @Override
             public void onChanged(List<UserBean> userList) {
+                // コメントリストとユーザー情報を紐付ける
+                List<Map<String, Object>> commentDataMapList = new ArrayList<>();
+                for (PostBean postBean : mPostBeanList) {
+                    Map<String, Object> commentDataMap = new HashMap<>();
+                    commentDataMap.put("postBean", postBean);
+                    for (UserBean userBean : userList) {
+                        if (userBean.getUid().equals(postBean.getUid())) {
+                            commentDataMap.put("userBean", userBean);
+                            break;
+                        }
+                    }
+                    commentDataMapList.add(commentDataMap);
+                }
+
                 mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this,
-                        (ArrayList<UserBean>) userList
-                        , (ArrayList<PostBean>) postDataList, R.layout.activity_display_comment_list);
-                lv = findViewById(R.id.postList);
-                lv.setAdapter(mDisplayCommentAdapter);
+                        commentDataMapList, R.layout.activity_display_comment_list);
+                mListView = findViewById(R.id.postList);
+                mListView.setAdapter(mDisplayCommentAdapter);
             }
         });
 

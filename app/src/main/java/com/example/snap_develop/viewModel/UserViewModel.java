@@ -106,6 +106,14 @@ public class UserViewModel extends ViewModel {
         userModel.updateUser(userBean, updateResult);
     }
 
+
+    public void updateSetting(UserBean userBean) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
+        userModel.updateSetting(userBean);
+    }
+
+
     public void fetchUserInfo(String uid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));

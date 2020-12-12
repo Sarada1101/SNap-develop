@@ -214,6 +214,38 @@ public class UserModel extends Firebase {
     }
 
 
+    public void updateSetting(UserBean userBean) {
+        Timber.i(START_LOG);
+        Timber.i(String.format("%s %s=%s", INPUT_LOG, "userBean", userBean));
+
+        Map<String, Object> setting = new HashMap<>();
+        setting.put("follow_notice", userBean.isFollowNotice());
+        setting.put("good_notice", userBean.isGoodNotice());
+        setting.put("comment_notice", userBean.isCommentNotice());
+        setting.put("publication_area", userBean.getPublicationArea());
+
+        this.firestoreConnect();
+
+        firestore.collection("users")
+                .document(userBean.getUid())
+                .update(setting)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.i(SUCCESS_LOG);
+                        Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
+    }
+
+
     public void fetchUserInfo(final String uid, final MutableLiveData<UserBean> user) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "user", user));
@@ -244,6 +276,10 @@ public class UserModel extends Firebase {
                             userBean.setFollowingCount(
                                     Integer.parseInt(document.getLong("following_count").toString()));
                             userBean.setFollowerCount(Integer.parseInt(document.getLong("follower_count").toString()));
+                            userBean.setFollowNotice(document.getBoolean("follow_notice"));
+                            userBean.setGoodNotice(document.getBoolean("good_notice"));
+                            userBean.setCommentNotice(document.getBoolean("comment_notice"));
+                            userBean.setPublicationArea(document.getString("publication_area"));
                         }
 
                         final long ONE_MEGABYTE = 1024 * 1024 * 5;
