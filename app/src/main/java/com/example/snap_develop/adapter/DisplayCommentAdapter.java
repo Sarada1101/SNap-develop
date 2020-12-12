@@ -13,14 +13,14 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
 public class DisplayCommentAdapter extends BaseAdapter {
 
-    private ArrayList<UserBean> mUserList;
-    private ArrayList<PostBean> mPostList;
+    private List<Map<String, Object>> mCommentDataMapList;
     private Context mContext;
     private LayoutInflater mInflater;
     private int mLayoutID;
@@ -34,12 +34,10 @@ public class DisplayCommentAdapter extends BaseAdapter {
     }
 
 
-    public DisplayCommentAdapter(Context context, ArrayList<UserBean> userList, ArrayList<PostBean> postList,
-            int rowLayout) {
+    public DisplayCommentAdapter(Context context, List<Map<String, Object>> commentDataMapList, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
         this.mContext = context;
-        this.mUserList = userList;
-        this.mPostList = postList;
+        this.mCommentDataMapList = commentDataMapList;
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;
     }
@@ -47,7 +45,7 @@ public class DisplayCommentAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return this.mPostList.size();
+        return this.mCommentDataMapList.size();
     }
 
 
@@ -81,11 +79,14 @@ public class DisplayCommentAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.icon.setImageBitmap(mUserList.get(position).getIcon());
-        holder.username.setText(mUserList.get(position).getName());
-        holder.uid.setText(mUserList.get(position).getUid());
-        holder.comment.setText(mPostList.get(position).getMessage());
-        holder.datetime.setText(mPostList.get(position).getStrDatetime());
+        UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
+        PostBean postBean = (PostBean) mCommentDataMapList.get(position).get("postBean");
+
+        holder.icon.setImageBitmap(userBean.getIcon());
+        holder.username.setText(userBean.getName());
+        holder.uid.setText(userBean.getUid());
+        holder.comment.setText(postBean.getMessage());
+        holder.datetime.setText(postBean.getStrDatetime());
 
         return convertView;
     }
