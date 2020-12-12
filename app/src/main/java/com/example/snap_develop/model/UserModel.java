@@ -326,6 +326,7 @@ public class UserModel extends Firebase {
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uidList", uidList, "userList", userList));
 
         this.firestoreConnect();
+        this.storageConnect();
 
         final List<UserBean> userBeanList = new ArrayList<>();
 
