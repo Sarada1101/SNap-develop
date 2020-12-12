@@ -55,7 +55,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post);
 
-        mBinding.postFloatingActionButton.setOnClickListener(this);
+        mBinding.postButton.setOnClickListener(this);
         mBinding.photoImageButton.setOnClickListener(this);
         mBinding.timelineImageButton.setOnClickListener(this);
         mBinding.mapImageButton.setOnClickListener(this);
@@ -158,7 +158,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.postFloatingActionButton) {
+        if (i == R.id.postButton) {
             insertPost();
         } else if (i == R.id.photoImageButton) {
             pickPhoto();
