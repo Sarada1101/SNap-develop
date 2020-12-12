@@ -12,117 +12,85 @@
         android:layout_height="match_parent"
         tools:context=".activity.SettingActivity">
 
-        <TextView
-            android:id="@+id/disclosureRangeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/DisclosureRange"
-            android:textColor="#69FF7D"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <RadioGroup
-            android:id="@+id/disclosureRangeRadioGroup"
+            android:id="@+id/publicationRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/disclosureRangeTextView">
+            app:layout_constraintTop_toBottomOf="@+id/publicationTextView">
 
             <RadioButton
-                android:id="@+id/openRadio"
+                android:id="@+id/publicRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/theEntire"
                 android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/followerRadio"
+                android:id="@+id/followerPublicRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/follower"
                 android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/anonymousRadio"
+                android:id="@+id/anonymousRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/anonymous"
                 android:textSize="18sp" />
         </RadioGroup>
 
-        <TextView
-            android:id="@+id/notificationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/notification"
-            android:textColor="#69FF7D"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/disclosureRangeRadioGroup" />
-
         <Switch
-            android:id="@+id/followedSwitch"
+            android:id="@+id/followSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:text="@string/followed"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notificationTextView" />
 
         <Switch
-            android:id="@+id/goodedSwitch"
+            android:id="@+id/goodSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/gooded"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/followedSwitch" />
+            app:layout_constraintEnd_toEndOf="@+id/followSwitch"
+            app:layout_constraintStart_toStartOf="@+id/followSwitch"
+            app:layout_constraintTop_toBottomOf="@+id/followSwitch" />
 
         <Switch
             android:id="@+id/commentSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/commented"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/goodedSwitch" />
+            app:layout_constraintEnd_toEndOf="@+id/goodSwitch"
+            app:layout_constraintStart_toStartOf="@+id/goodSwitch"
+            app:layout_constraintTop_toBottomOf="@+id/goodSwitch" />
 
         <Switch
             android:id="@+id/touristSpotSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/touristSpot"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/commentSwitch"
+            app:layout_constraintStart_toStartOf="@+id/commentSwitch"
             app:layout_constraintTop_toBottomOf="@+id/commentSwitch" />
 
         <LinearLayout
@@ -161,5 +129,37 @@
                 android:src="@drawable/ic_baseline_account_circle_24"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/publicationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/DisclosureRange"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/notificationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/notification"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/publicationRadioGroup" />
+
+        <Button
+            android:id="@+id/settingUpdateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/updateButtonText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/touristSpotSwitch" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
