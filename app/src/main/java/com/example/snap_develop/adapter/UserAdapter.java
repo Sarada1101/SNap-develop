@@ -13,13 +13,13 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
 public class UserAdapter extends BaseAdapter {
 
-    private ArrayList<PostBean> mPostList;
+    private List<PostBean> mPostList;
     private Context mContext;
     private UserBean mUserBean;
     private LayoutInflater mInflater;
@@ -37,7 +37,7 @@ public class UserAdapter extends BaseAdapter {
     }
 
 
-    public UserAdapter(Context context, ArrayList<PostBean> postList, UserBean userBean, int rowLayout) {
+    public UserAdapter(Context context, List<PostBean> postList, UserBean userBean, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
         this.mContext = context;
         this.mPostList = postList;

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,12 +22,11 @@ import com.example.snap_develop.databinding.ActivityUserBinding;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
-public class UserActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     ListView mListView;
     private UserViewModel mUserViewModel;
@@ -34,6 +34,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private ActivityUserBinding mBinding;
     private UserAdapter mUserAdapter;
     private String mUid;
+    private List<PostBean> mPostBeanList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +76,12 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
             @Override
             public void onChanged(List<PostBean> postList) {
-                ArrayList<PostBean> dataList = (ArrayList<PostBean>) postList;
-                mUserAdapter = new UserAdapter(UserActivity.this, dataList, mUserViewModel.getUser().getValue(),
+                mPostBeanList = postList;
+                mUserAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue(),
                         R.layout.list_user);
                 mListView = mBinding.postListView;
                 mListView.setAdapter(mUserAdapter);
+                mListView.setOnItemClickListener(UserActivity.this);
             }
         });
         mBinding.setUserViewModel(mUserViewModel);
@@ -129,5 +131,18 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         } else if (i == R.id.followRequestButton) {
             startActivity(new Intent(UserActivity.this, ApprovalPendingFollowListActivity.class));
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        PostBean postBean = mPostBeanList.get(position);
+        Intent intent = new Intent(getApplication(), DisplayCommentActivity.class);
+
+        if (postBean.getType().equals("post")) {
+            intent.putExtra("postPath", postBean.getPostPath());
+        } else if (postBean.getType().equals("comment")) {
+            intent.putExtra("postPath", postBean.getParentPost());
+        }
+        startActivity(intent);
     }
 }
