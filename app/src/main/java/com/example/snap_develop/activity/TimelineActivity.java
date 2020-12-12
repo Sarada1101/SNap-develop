@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
@@ -172,30 +170,6 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "menu", menu));
-        getMenuInflater().inflate(R.menu.menu_user, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "item", item));
-        int id = item.getItemId();
-        String currentId = mUserViewModel.getCurrentUser().getUid();
-        if (id == R.id.update_user) {
-            startActivity(new Intent(this, UserUpdateActivity.class).putExtra("currentId", currentId));
-        } else if (id == R.id.setting) {
-            startActivity(new Intent(this, SettingActivity.class).putExtra("currentId", currentId));
-        }
-        return true;
-    }
-    
 
     protected void displayTimeline() {
         Timber.i(MyDebugTree.START_LOG);

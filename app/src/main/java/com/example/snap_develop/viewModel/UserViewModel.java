@@ -1,7 +1,6 @@
 package com.example.snap_develop.viewModel;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

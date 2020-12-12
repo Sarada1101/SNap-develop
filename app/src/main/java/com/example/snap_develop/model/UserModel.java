@@ -147,7 +147,6 @@ public class UserModel extends Firebase {
                 updateResult));
 
         this.firestoreConnect();
-        this.storageConnect();
 
         firestore.collection("users")
                 .document(userBean.getUid())
@@ -332,7 +331,6 @@ public class UserModel extends Firebase {
 
         for (int i = 0; i < uidList.size(); i++) {
             String uid = uidList.get(i);
-            final int finalI = i;
             firestore.collection("users")
                     .document(uid)
                     .get()
