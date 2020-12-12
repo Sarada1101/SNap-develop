@@ -103,7 +103,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "item", item));
         int id = item.getItemId();
-        String currentId = mUserViewModel.getCurrentUser().getUid();
         if (id == R.id.update_user) {
             startActivity(new Intent(this, UserUpdateActivity.class));
         } else if (id == R.id.setting) {
