@@ -71,6 +71,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             public void onChanged(PostBean postBean) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s=%s", "postBean", postBean));
+                if (postBean.getPhotoName() != null) mBinding.photoImageView.setMaxHeight(300);
                 mUserViewModel.fetchUserInfo(postBean.getUid());
             }
         });
