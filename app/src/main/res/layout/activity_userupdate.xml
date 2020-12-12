@@ -22,7 +22,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorAccent"
             android:text="@string/updateButtonText"
+            android:textColor="@color/colorTextwhite"
             app:layout_constraintEnd_toEndOf="@+id/updateProfileTextInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/updateProfileTextInputLayout" />
 
@@ -72,6 +74,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:src="@drawable/ic_baseline_account_circle_24"
+                android:tint="@color/colorPrimary"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 

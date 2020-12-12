@@ -40,28 +40,6 @@
             app:layout_constraintTop_toBottomOf="@+id/anonymousSwitch"
             tools:ignore="MissingConstraints" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/postFloatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="64dp"
-            android:clickable="true"
-            android:contentDescription="@string/postFABContentDescription"
-            android:focusable="true"
-            android:onClick="onClick"
-            android:src="@android:drawable/ic_menu_send"
-            android:tint="#00FFFFFF"
-            app:fabSize="auto"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.924"
-            app:layout_constraintStart_toEndOf="@+id/anonymousSwitch"
-            app:layout_constraintTop_toBottomOf="@+id/postTextInputLayout"
-            app:maxImageSize="40dp"
-            app:rippleColor="#00FFFFFF"
-            tools:ignore="MissingConstraints"
-            tools:srcCompat="@android:drawable/ic_menu_send" />
-
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
             android:layout_width="match_parent"
@@ -85,6 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/ic_baseline_location_on_24"
+                android:tint="@color/colorPrimary"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
@@ -111,6 +90,18 @@
                 android:layout_height="match_parent"
                 android:hint="@string/post" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/postButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="48dp"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/postButtonText"
+            android:textColor="@color/colorTextwhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/anonymousSwitch" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

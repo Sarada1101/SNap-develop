@@ -22,32 +22,23 @@
             android:id="@+id/followRequestButton"
             android:layout_width="94dp"
             android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/colorSecondly"
             android:text="@string/approvalbutten"
-            android:textColor="#000000"
-            android:textColorHint="#070707"
+            android:textColor="@color/colorTextwhite"
             android:textSize="8sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <FrameLayout
-            android:id="@+id/contents_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/background_light"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-        </FrameLayout>
+            app:layout_constraintTop_toTopOf="@+id/iconImageView" />
 
         <ImageView
             android:id="@+id/iconImageView"
-            android:layout_width="88dp"
-            android:layout_height="88dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:imageBitmap="@{userViewModel.user.icon}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:imageBitmap="@{userViewModel.user.icon}" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/followButtonLinerLayout"
@@ -63,54 +54,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{userViewModel.user.followingCount + @string/followButtonText}" />
+                android:backgroundTint="@color/colorAccent"
+                android:text="@{userViewModel.user.followingCount + @string/followButtonText}"
+                android:textColor="@color/colorTextwhite" />
 
             <Button
                 android:id="@+id/followerButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{userViewModel.user.followerCount + @string/followerButtonText}" />
+                android:backgroundTint="@color/colorAccent"
+                android:text="@{userViewModel.user.followerCount + @string/followerButtonText}"
+                android:textColor="@color/colorTextwhite" />
         </LinearLayout>
-
-        <ListView
-            android:id="@+id/postListView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/followButtonLinerLayout" />
-
-        <TextView
-            android:id="@+id/idTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{userViewModel.user.uid}"
-            android:textSize="8sp"
-            app:layout_constraintEnd_toEndOf="@+id/nameTextView"
-            app:layout_constraintStart_toEndOf="@+id/iconImageView"
-            app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
-
-        <TextView
-            android:id="@+id/nameTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{userViewModel.user.name}"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/followRequestButton"
-            app:layout_constraintStart_toEndOf="@+id/iconImageView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/postTextView"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:text="@{userViewModel.user.message}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iconImageView" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
@@ -143,8 +99,53 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/ic_baseline_account_circle_24"
+                android:tint="@color/colorPrimary"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
+
+        <ListView
+            android:id="@+id/postListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/followButtonLinerLayout" />
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{userViewModel.user.name}"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/followRequestButton"
+            app:layout_constraintStart_toEndOf="@+id/iconImageView"
+            app:layout_constraintTop_toTopOf="@+id/iconImageView" />
+
+        <TextView
+            android:id="@+id/postTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{userViewModel.user.message}"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintEnd_toEndOf="@+id/followRequestButton"
+            app:layout_constraintStart_toStartOf="@+id/iconImageView"
+            app:layout_constraintTop_toBottomOf="@+id/iconImageView" />
+
+        <TextView
+            android:id="@+id/idTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{userViewModel.user.uid}"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/nameTextView"
+            app:layout_constraintStart_toStartOf="@+id/nameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
