@@ -18,6 +18,7 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.viewModel.MapViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
+import com.example.snap_develop.viewModel.UserViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,6 +45,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
+    private UserViewModel mUserViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         // SupportMapFragmentを取得し、マップが使用可能になったら通知を受けることができる
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -196,13 +199,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(getApplication(), TimelineActivity.class));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+            }
         } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(getApplication(), MapActivity.class));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(new Intent(getApplication(), MapActivity.class));
+            }
         } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(getApplication(), UserActivity.class));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(new Intent(getApplication(), UserActivity.class));
+            }
         } else if (i == R.id.postMapFloatingActionButton) {
-            startActivity(new Intent(getApplication(), PostActivity.class));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(new Intent(getApplication(), PostActivity.class));
+            }
         }
     }
 }

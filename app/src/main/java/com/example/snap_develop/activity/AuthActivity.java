@@ -37,6 +37,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
         mBinding.createAccountButton.setOnClickListener(this);
         mBinding.loginButton.setOnClickListener(this);
+        mBinding.notRegisterTextView.setOnClickListener(this);
 
         //TODO 開発が終わったら削除する
         mUserViewModel.signOut();
@@ -146,6 +147,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             createAccount();
         } else if (i == R.id.loginButton) {
             signIn();
+        } else if (i == R.id.notRegisterTextView) {
+            startActivity(new Intent(getApplication(), MapActivity.class));
         }
     }
 }
