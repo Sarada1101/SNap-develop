@@ -37,6 +37,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@android:drawable/ic_menu_recent_history"
+                android:tint="@color/colorPrimary"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
