@@ -47,6 +47,7 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
 
         mBinding.updateIconImageButton.setOnClickListener(this);
         mBinding.updateButton.setOnClickListener(this);
+        mBinding.signoutButton.setOnClickListener(this);
 
         mUid = mUserViewModel.getCurrentUser().getUid();
 
@@ -168,6 +169,9 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
             startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
+        } else if (i == R.id.signoutButton) {
+            mUserViewModel.signOut();
+            startActivity(new Intent(getApplication(), AuthActivity.class));
         }
     }
 }

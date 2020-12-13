@@ -74,5 +74,6 @@
     <string name="postButtonText">投稿する</string>
     <string name="cancel">取消</string>
     <string name="followRequestButtonText">フォロー申請</string>
+    <string name="signoutButton">ログアウト</string>
 
 </resources>
