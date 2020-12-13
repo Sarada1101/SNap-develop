@@ -1,7 +1,6 @@
 package com.example.snap_develop.viewModel;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -106,6 +105,14 @@ public class UserViewModel extends ViewModel {
         }
         userModel.updateUser(userBean, updateResult);
     }
+
+
+    public void updateSetting(UserBean userBean) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
+        userModel.updateSetting(userBean);
+    }
+
 
     public void fetchUserInfo(String uid) {
         Timber.i(MyDebugTree.START_LOG);

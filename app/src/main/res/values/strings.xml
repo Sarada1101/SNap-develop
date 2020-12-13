@@ -40,7 +40,7 @@
     <string name="notification">通知設定</string>
     <string name="followed">フォローされたとき通知</string>
     <string name="gooded">いいねされたとき通知</string>
-    <string name="commented">コメント通知</string>
+    <string name="commented">コメントされたとき通知</string>
     <string name="touristSpot">近くの観光地を通知</string>
     <string name="createacount">新規登録</string>
     <string name="nameTextEdit">ユーザー名</string>
@@ -69,4 +69,10 @@
     <string name="latLng">%d, %d</string>
     <string name="backButtonText">←戻る</string>
     <string name="updateButtonText">更新</string>
+    <string name="followRequestText">フォローリクエスト</string>
+    <string name="notRegisterTextViwText">登録せずに使う</string>
+    <string name="postButtonText">投稿する</string>
+    <string name="cancel">取消</string>
+    <string name="followRequestButtonText">フォロー申請</string>
+
 </resources>
