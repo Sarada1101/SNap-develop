@@ -100,11 +100,12 @@
             android:id="@+id/postTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="@{postViewModel.post.message}"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintEnd_toEndOf="@+id/nameTextView"
             app:layout_constraintStart_toStartOf="@+id/iconImageView"
-            app:layout_constraintTop_toBottomOf="@+id/iconImageView" />
+            app:layout_constraintTop_toBottomOf="@+id/idTextView" />
 
         <TextView
             android:id="@+id/dateTextView"
