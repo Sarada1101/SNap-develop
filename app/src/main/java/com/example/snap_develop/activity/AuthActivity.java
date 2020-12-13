@@ -39,6 +39,10 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.loginButton.setOnClickListener(this);
         mBinding.notRegisterTextView.setOnClickListener(this);
 
+        if (mUserViewModel.getCurrentUser() != null) {
+            startActivity(new Intent(getApplication(), MapActivity.class));
+        }
+
         //userViewModelのgetAuthResultメソッドで取得できる値を監視する
         mUserViewModel.getAuthResult().observe(this, new Observer<String>() {
             @Override
