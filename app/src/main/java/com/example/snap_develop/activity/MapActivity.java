@@ -18,6 +18,7 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.viewModel.MapViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
+import com.example.snap_develop.viewModel.UserViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,10 +41,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         View.OnClickListener {
 
+    private static final int REQUEST_PERMISSION = 0;
     private GoogleMap mGoogleMap;
     private MapViewModel mMapViewModel;
     private PostViewModel mPostViewModel;
-    private final int REQUEST_PERMISSION = 0;
+    private UserViewModel mUserViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
+        mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
         // SupportMapFragmentを取得し、マップが使用可能になったら通知を受けることができる
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -186,9 +189,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "marker", marker));
 
         String postPath = marker.getTag().toString();
-        Intent intent = new Intent(MapActivity.this, DisplayCommentActivity.class);
-        intent.putExtra("postPath", postPath);
-        startActivity(intent);
+        startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath", postPath));
     }
 
 
@@ -196,14 +197,31 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
+        Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(MapActivity.this, TimelineActivity.class));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+            }
         } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(MapActivity.this, MapActivity.class));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(new Intent(getApplication(), MapActivity.class));
+            }
         } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(MapActivity.this, UserActivity.class));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(new Intent(getApplication(), UserActivity.class));
+            }
         } else if (i == R.id.postMapFloatingActionButton) {
-            startActivity(new Intent(MapActivity.this, PostActivity.class));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(new Intent(getApplication(), PostActivity.class));
+            }
         }
     }
 }

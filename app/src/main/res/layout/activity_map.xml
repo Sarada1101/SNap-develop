@@ -25,6 +25,23 @@
             map:layout_constraintStart_toStartOf="parent"
             map:layout_constraintTop_toTopOf="parent" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/postMapFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="@color/colorAccent"
+            android:clickable="true"
+            android:tint="@color/colorTextwhite"
+            map:layout_constraintBottom_toBottomOf="@+id/map"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintHorizontal_bias="1.0"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent"
+            map:layout_constraintVertical_bias="0.878"
+            map:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
+
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
             android:layout_width="0dp"
@@ -51,6 +68,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:src="@drawable/ic_baseline_location_on_24"
+                android:tint="@color/colorPrimary"
                 tools:ignore="ContentDescription" />
 
             <ImageButton
@@ -64,19 +82,19 @@
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/postMapFloatingActionButton"
+            android:id="@+id/searchMapFloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/colorSecondly"
             android:clickable="true"
-            map:layout_constraintBottom_toBottomOf="@+id/map"
-            map:layout_constraintEnd_toEndOf="parent"
-            map:layout_constraintHorizontal_bias="1.0"
-            map:layout_constraintStart_toStartOf="parent"
-            map:layout_constraintTop_toTopOf="parent"
-            map:layout_constraintVertical_bias="0.883"
-            map:srcCompat="@android:drawable/ic_menu_send" />
+            android:tint="@color/colorTextwhite"
+            map:backgroundTint="@android:color/darker_gray"
+            map:fabSize="auto"
+            map:layout_constraintBottom_toTopOf="@+id/postMapFloatingActionButton"
+            map:layout_constraintEnd_toEndOf="@+id/postMapFloatingActionButton"
+            map:layout_constraintStart_toStartOf="@+id/postMapFloatingActionButton"
+            map:srcCompat="@drawable/baseline_search_black_24dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

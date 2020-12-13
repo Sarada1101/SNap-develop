@@ -43,8 +43,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:20.0.1'  // Authentication
     implementation 'com.google.firebase:firebase-analytics'  // Analytics
     implementation 'com.google.firebase:firebase-firestore:22.0.0'  // Firestore
-    implementation 'com.google.firebase:firebase-storage:19.2.0'  // CloudStorage
-    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    implementation 'com.google.firebase:firebase-storage:19.2.0'
+    implementation 'com.google.firebase:firebase-functions:19.1.0'
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'// CloudStorage
 
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"  // LiveData
@@ -63,7 +64,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-basement:17.5.0'
     compile 'com.jakewharton.timber:timber:3.1.0'  // Timber
 
-//    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.2.0'  // MySQL
+    //    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.2.0'  // MySQL
 }
 
 apply plugin: 'com.google.gms.google-services'

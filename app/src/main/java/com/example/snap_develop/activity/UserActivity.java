@@ -2,7 +2,10 @@ package com.example.snap_develop.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +25,11 @@ import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
-public class UserActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     ListView mListView;
     private UserViewModel mUserViewModel;
@@ -35,14 +37,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private FollowViewModel mFollowViewModel;
     private ActivityUserBinding mBinding;
     private UserAdapter mUserAdapter;
-    private String currentId;
-    private String displayUserId;
+    private String mUid;
+    private List<PostBean> mPostBeanList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
+        setTitle("ユーザー情報");
 
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
@@ -55,49 +58,41 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
         mBinding.followRequestButton.setOnClickListener(this);
-        mBinding.profileUpdateButton.setOnClickListener(this);
-
-        //現在ログイン中のユーザーID取得
-        currentId = mUserViewModel.getCurrentUser().getUid();
 
         // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
-        displayUserId = getIntent().getStringExtra("uid");
-        if (displayUserId == null) {
+        mUid = getIntent().getStringExtra("uid");
+        if (mUid == null) {
             // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
-            displayUserId = currentId;
-            mBinding.followRequestButton.setText(R.string.approvalbutten);
+            mUid = mUserViewModel.getCurrentUser().getUid();
         }
-        Timber.i(String.format("%s=%s", "uid", displayUserId));
+        Timber.i(String.format("%s=%s", "mUid", mUid));
 
         // ユーザー情報を取得したら投稿リストを取得する
+        final String finalUid = mUid;
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
                 mPostViewModel.fetchPostList(displayUserId);
             }
         });
-        mUserViewModel.fetchUserInfo(displayUserId);
+        mUserViewModel.fetchUserInfo(mUid);
 
         // 投稿リストを取得したらリストを表示する
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
             @Override
             public void onChanged(List<PostBean> postList) {
-                ArrayList<PostBean> dataList = new ArrayList<>();
-                //投稿だけを表示させる
-                for (PostBean bean : postList) {
-                    if (bean.getType().equals("post")) {
-                        dataList.add(bean);
-                    }
-                }
-                mUserAdapter = new UserAdapter(UserActivity.this, dataList, mUserViewModel.getUser().getValue(),
-                        R.layout.list_user);
-                mListView = mBinding.postList;
+                mPostBeanList = postList;
+                mUserAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue(),
+                        R.layout.activity_user_list_row);
+                mListView = mBinding.postListView;
                 mListView.setAdapter(mUserAdapter);
+                mListView.setOnItemClickListener(UserActivity.this);
             }
         });
         mBinding.setUserViewModel(mUserViewModel);
         mBinding.setLifecycleOwner(this);
     }
+
 
     //フォロー申請ボタンが押されたときに動くメソッド
     public void followRequest() {
@@ -106,30 +101,46 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mFollowViewModel.insertApplicatedFollow(displayUserId, currentId);
 
         Toast.makeText(this, "フォローリクエストしました！", Toast.LENGTH_LONG).show();
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "menu", menu));
+        getMenuInflater().inflate(R.menu.menu_user, menu);
+        return true;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "item", item));
+        int id = item.getItemId();
+        if (id == R.id.update_user) {
+            startActivity(new Intent(this, UserUpdateActivity.class));
+        } else if (id == R.id.setting) {
+            startActivity(new Intent(this, SettingActivity.class));
+        }
+        return true;
+    }
+
 
     @Override
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
-        if (i == R.id.profileUpdateButton) {
-            if (currentId != null) {
-                startActivity(new Intent(getApplicationContext(), UserUpdateActivity.class)
-                        .putExtra("currentId", currentId)
-                );
-            }
-        } else if (i == R.id.timelineImageButton) {
+        Timber.i(getResources().getResourceEntryName(i));
+        if (i == R.id.timelineImageButton) {
             startActivity(new Intent(UserActivity.this, TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {
             startActivity(new Intent(UserActivity.this, MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(UserActivity.this, UserActivity.class));
         } else if (i == R.id.followerButton) {
-            startActivity(new Intent(UserActivity.this, FollowingListActivity.class));
+            startActivity(new Intent(UserActivity.this, FollowerListActivity.class).putExtra("uid", mUid));
         } else if (i == R.id.followingButton) {
-            startActivity(new Intent(UserActivity.this, FollowerListActivity.class));
-        } else if (i == R.id.profileUpdateButton) {
-            startActivity(new Intent(UserActivity.this, UserUpdateActivity.class));
+            startActivity(new Intent(UserActivity.this, FollowingListActivity.class).putExtra("uid", mUid));
         } else if (i == R.id.followRequestButton) {
             TextView textView = findViewById(i);
             if (textView.getText().toString() == getString(R.string.approvalbutten)) {
@@ -138,5 +149,18 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 followRequest();
             }
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        PostBean postBean = mPostBeanList.get(position);
+        Intent intent = new Intent(getApplication(), DisplayCommentActivity.class);
+
+        if (postBean.getType().equals("post")) {
+            intent.putExtra("postPath", postBean.getPostPath());
+        } else if (postBean.getType().equals("comment")) {
+            intent.putExtra("postPath", postBean.getParentPost());
+        }
+        startActivity(intent);
     }
 }

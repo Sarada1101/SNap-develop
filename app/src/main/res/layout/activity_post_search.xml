@@ -30,6 +30,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
+            android:onClick="onClick"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/baseline_search_black_24dp" />
@@ -48,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:src="@android:drawable/ic_menu_recent_history"
                 tools:ignore="ContentDescription" />
 
@@ -56,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:src="@drawable/ic_baseline_location_on_24"
                 tools:ignore="ContentDescription" />
 
@@ -64,6 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:onClick="onClick"
                 android:src="@drawable/ic_baseline_account_circle_24"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
