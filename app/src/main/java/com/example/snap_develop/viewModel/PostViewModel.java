@@ -112,13 +112,6 @@ public class PostViewModel extends ViewModel {
     }
 
 
-    public void fetchPostPictures(Map<String, String> pathList) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "pathList", pathList));
-        postModel.fetchPostPictures(pathList, timeLinePictureList);
-    }
-
-
     public void fetchSearchPost(String searchWord) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "searchWord", searchWord));
