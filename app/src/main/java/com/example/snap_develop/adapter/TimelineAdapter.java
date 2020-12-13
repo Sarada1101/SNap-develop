@@ -1,6 +1,7 @@
 package com.example.snap_develop.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.activity.UserActivity;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 
@@ -21,6 +25,7 @@ import timber.log.Timber;
 public class TimelineAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
+    private Context mContext;
     private int mLayoutID;
     List<Map<String, Object>> mTimelineDataMapList;
 
@@ -33,10 +38,12 @@ public class TimelineAdapter extends BaseAdapter {
         TextView goodCount;
         TextView latLng;
         ImageView photo;
+        ConstraintLayout userInfo;
     }
 
     public TimelineAdapter(Context context, List<Map<String, Object>> timelineDataMapList, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
+        this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;
         this.mTimelineDataMapList = timelineDataMapList;
@@ -75,12 +82,13 @@ public class TimelineAdapter extends BaseAdapter {
             holder.photo = convertView.findViewById(R.id.timelinePhotoImageView);
             holder.uid = convertView.findViewById(R.id.timelineUidTextView);
             holder.username = convertView.findViewById(R.id.timelineNameTextView);
+            holder.userInfo = convertView.findViewById(R.id.userInfoConstraintLayout);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        UserBean userBean = (UserBean) mTimelineDataMapList.get(position).get("userBean");
+        final UserBean userBean = (UserBean) mTimelineDataMapList.get(position).get("userBean");
         PostBean postBean = (PostBean) mTimelineDataMapList.get(position).get("postBean");
 
         holder.icon.setImageBitmap(userBean.getIcon());
@@ -96,6 +104,13 @@ public class TimelineAdapter extends BaseAdapter {
             holder.latLng.setText(String.format("%d, %d", (int) postBean.getLatLng().latitude,
                     (int) postBean.getLatLng().longitude));
         }
+
+        holder.userInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra("uid", userBean.getUid()));
+            }
+        });
         return convertView;
     }
 }

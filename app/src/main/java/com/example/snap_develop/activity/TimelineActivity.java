@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
@@ -32,7 +33,8 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class TimelineActivity extends AppCompatActivity implements View.OnClickListener {
+public class TimelineActivity extends AppCompatActivity implements View.OnClickListener,
+        AdapterView.OnItemClickListener {
 
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
@@ -111,6 +113,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                         R.layout.activity_timeline_list);
                 mListView = mBinding.timeLineListView;
                 mListView.setAdapter(mTimelineAdapter);
+                mListView.setOnItemClickListener(TimelineActivity.this);
             }
         });
     }
@@ -127,6 +130,17 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
         }
+    }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        PostBean postBean = (PostBean) mTimelineDataMapList.get(position).get("postBean");
+        if (postBean.getType().equals("post")) {
+            startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath",
+                    postBean.getPostPath()));
+        } else if (postBean.getType().equals("comment")) {
+            startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath",
+                    postBean.getParentPost()));
+        }
     }
 }
