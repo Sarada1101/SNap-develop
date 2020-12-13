@@ -7,7 +7,6 @@ import static com.example.snap_develop.MyDebugTree.SUCCESS_LOG;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -15,7 +14,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
-import com.example.snap_develop.util.LogUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -758,125 +756,48 @@ public class PostModel extends Firebase {
 
     }
 
-    public void addGood(final String userPath, final String postPath) {
+    public void addGood(String uid, final String postPath) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "postPath", postPath));
+
         this.firestoreConnect();
 
-        final DocumentReference goodPost = firestore.collection("posts").document(postPath);
-
-        firestore.collection("users")
-                .document(userPath)
-                .collection("good_posts")
-                .whereEqualTo("path", goodPost)
+        firestore.document(postPath)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.getResult().isEmpty()) {
-                            firestore.collection("posts")
-                                    .document(postPath)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            DocumentSnapshot doc = task.getResult();
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                        int goodCount = Integer.parseInt(String.valueOf(task.getResult().getLong("good_count")));
 
-                                            Integer updateGood = Integer.valueOf(
-                                                    String.valueOf(doc.get("good_count")));
-                                            updateGood++;
-
-                                            firestore.collection("posts")
-                                                    .document(postPath)
-                                                    .update("good_count", updateGood)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-//                                                            Log.d(LogUtil.getClassName(), "update(updategood_count)
-//                                                            :success");
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-//                                                            Log.w(LogUtil.getClassName(), "update(good_count)
-//                                                            :failure", e);
-                                                        }
-                                                    });
-
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-//                                    Log.w(LogUtil.getClassName(), "update(good_count):failure", e);
-                                }
-                            });
-
-                            Map<String, Object> addData = new HashMap<>();
-                            addData.put("path", goodPost);
-
-                            firestore.collection("users")
-                                    .document(userPath)
-                                    .collection("good_posts")
-                                    .document(postPath)
-                                    .set(addData)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-//                                            Log.d(LogUtil.getClassName(), "insertGoodPath:success");
-                                            System.out.println(
-                                                    "-----------------insertGoodPath:comp----------------");
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-//                                            Log.w(LogUtil.getClassName(), "insertGoodPath:failure:" + e);
-                                        }
-                                    });
-                        } else {
-//                            Log.w(LogUtil.getClassName(), "Already good");
-                        }
+                        firestore.document(postPath)
+                                .update("good_count", goodCount + 1)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.e(e.toString());
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(LogUtil.getClassName(), "insertGoodPath:failure:" + e);
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
                 });
     }
 
-    public void fetchPostPictures(Map<String, String> pathList,
-            final MutableLiveData<Map<String, Bitmap>> timeLinePictureList) {
-        this.storageConnect();
-        final Map<String, Bitmap> addData = new HashMap<>();
-
-        for (final Map.Entry<String, String> entry : pathList.entrySet()) {
-            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
-            storage.getReference()
-                    .child("postPhoto")
-                    .child(entry.getKey())
-                    .child(entry.getValue())
-                    .getBytes(FIVE_MEGABYTE)
-                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] aByte) {
-                            Timber.i(MyDebugTree.SUCCESS_LOG);
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0, aByte.length);
-                            addData.put(entry.getKey(), bitmap);
-                            timeLinePictureList.setValue(addData);
-                            System.out.println("---------------postPicture:Success-----------------");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Timber.i(MyDebugTree.FAILURE_LOG);
-                            Timber.e(e.toString());
-                            System.out.println("--------------postPicture:false-----------------");
-                        }
-                    });
-        }
-    }
 
     public void callGoodNotification(String uid, String postPath) {
         Map<String, Object> data = new HashMap<>();

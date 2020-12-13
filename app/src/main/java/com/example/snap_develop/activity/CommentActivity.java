@@ -86,9 +86,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         return isValidSuccess;
     }
 
-    private void addGood() {
-        mPostViewModel.addGood(mUserViewModel.getCurrentUser().getUid(), parentPost);
-    }
 
     @Override
     public void onClick(View view) {
@@ -103,8 +100,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
-        } else if (i == R.id.favorite) {
-            addGood();
         }
     }
 }
