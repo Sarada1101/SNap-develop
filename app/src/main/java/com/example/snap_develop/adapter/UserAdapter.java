@@ -94,7 +94,6 @@ public class UserAdapter extends BaseAdapter {
         holder.post.setText(mPostList.get(position).getMessage());
         holder.datetime.setText(mPostList.get(position).getStrDatetime());
 
-        // 写真がないなら高さを０にする
         if (mPostList.get(position).getPhoto() != null) holder.photo.setImageBitmap(mPostList.get(position).getPhoto());
 
         if (mPostList.get(position).getType().equals("post")) {
