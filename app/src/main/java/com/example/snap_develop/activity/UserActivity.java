@@ -7,7 +7,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,14 +30,14 @@ import timber.log.Timber;
 
 public class UserActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    ListView mListView;
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityUserBinding mBinding;
     private UserAdapter mUserAdapter;
-    private String mUid;
+    private ListView mListView;
     private List<PostBean> mPostBeanList;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,28 +58,22 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.userImageButton.setOnClickListener(this);
         mBinding.followRequestButton.setOnClickListener(this);
 
-        // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
-        mUid = getIntent().getStringExtra("uid");
-        if (mUid == null) {
-            // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
-            mUid = mUserViewModel.getCurrentUser().getUid();
-        }
-        Timber.i(String.format("%s=%s", "mUid", mUid));
-
         // ユーザー情報を取得したら投稿リストを取得する
-        final String finalUid = mUid;
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
-                mPostViewModel.fetchPostList(displayUserId);
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
+                mPostViewModel.fetchPostList(mUid);
             }
         });
-        mUserViewModel.fetchUserInfo(mUid);
 
         // 投稿リストを取得したらリストを表示する
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
             @Override
             public void onChanged(List<PostBean> postList) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postList", postList));
                 mPostBeanList = postList;
                 mUserAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue(),
                         R.layout.activity_user_list_row);
@@ -89,18 +82,51 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 mListView.setOnItemClickListener(UserActivity.this);
             }
         });
+
+        mFollowViewModel.getFollowing().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "aBoolean", aBoolean));
+                if (aBoolean) {
+                    mBinding.followRequestButton.setText("フォロー済み");
+                    mBinding.followRequestButton.setOnClickListener(null);
+                }
+            }
+        });
+
+        mFollowViewModel.getApprovalPendingFollow().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "aBoolean", aBoolean));
+                if (aBoolean) {
+                    mBinding.followRequestButton.setText("申請済み");
+                    mBinding.followRequestButton.setOnClickListener(null);
+                }
+            }
+        });
+
+        // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
+        mUid = getIntent().getStringExtra("uid");
+        if (mUid == null) {
+            // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
+            mUid = mUserViewModel.getCurrentUser().getUid();
+            mBinding.followRequestButton.setText("フォロー申請/承認");
+        }
+        Timber.i(String.format("%s=%s", "mUid", mUid));
+
+        mUserViewModel.fetchUserInfo(mUid);
+
+        if (!mUserViewModel.getCurrentUser().getUid().equals(mUid)) {
+            Timber.d("check");
+            mFollowViewModel.checkFollowing(mUserViewModel.getCurrentUser().getUid(), mUid);
+            mFollowViewModel.checkApprovalPendingFollow(mUserViewModel.getCurrentUser().getUid(), mUid);
+        }
+
         mBinding.setUserViewModel(mUserViewModel);
         mBinding.setLifecycleOwner(this);
     }
-
-
-    //フォロー申請ボタンが押されたときに動くメソッド
-    public void followRequest() {
-
-        mFollowViewModel.insertApprovalPendingFollow(displayUserId, currentId);
-        mFollowViewModel.insertApplicatedFollow(displayUserId, currentId);
-
-        Toast.makeText(this, "フォローリクエストしました！", Toast.LENGTH_LONG).show();
 
 
     @Override
@@ -126,6 +152,16 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    public void followRequest(String uid, String myUid) {
+        mFollowViewModel.insertApprovalPendingFollow(myUid, uid);
+        mFollowViewModel.insertApplicatedFollow(uid, myUid);
+        mBinding.followRequestButton.setText("申請済み");
+        // クリックリスナー解除
+        mBinding.followRequestButton.setOnClickListener(null);
+        Toast.makeText(this, "フォロー申請しました！", Toast.LENGTH_LONG).show();
+    }
+
+
     @Override
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
@@ -142,14 +178,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         } else if (i == R.id.followingButton) {
             startActivity(new Intent(UserActivity.this, FollowingListActivity.class).putExtra("uid", mUid));
         } else if (i == R.id.followRequestButton) {
-            TextView textView = findViewById(i);
-            if (textView.getText().toString() == getString(R.string.approvalbutten)) {
+            // 表示されている情報がログインしているユーザーの情報なら
+            if (mUserViewModel.getCurrentUser().getUid().equals(mUid)) {
                 startActivity(new Intent(UserActivity.this, ApprovalPendingFollowListActivity.class));
             } else {
-                followRequest();
+                followRequest(mUid, mUserViewModel.getCurrentUser().getUid());
             }
         }
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
