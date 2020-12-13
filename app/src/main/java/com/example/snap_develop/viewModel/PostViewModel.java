@@ -129,10 +129,10 @@ public class PostViewModel extends ViewModel {
     }
 
 
-    public void addGood(String userPath, String postPath) {
+    public void addGood(String uid, String postPath) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath, "postPath", postPath));
-        postModel.addGood(userPath, postPath);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "postPath", postPath));
+        postModel.addGood(uid, postPath);
     }
 
     public void callGoodNotification(String uid, String postPath) {

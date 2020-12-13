@@ -56,6 +56,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_display_comment);
 
+        mBinding.favorite.setOnClickListener(this);
         mBinding.commentButton.setOnClickListener(this);
         mBinding.timelineImageButton.setOnClickListener(this);
         mBinding.mapImageButton.setOnClickListener(this);
@@ -142,6 +143,14 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mBinding.setLifecycleOwner(this);
     }
 
+
+    private void addGood() {
+        int goodCount = Integer.parseInt(mBinding.goodCountTextView.getText().toString());
+        mBinding.goodCountTextView.setText(Integer.toString(goodCount + 1));
+        mPostViewModel.addGood(mUserViewModel.getCurrentUser().getUid(), mParentPostPath);
+    }
+
+
     @Override
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
@@ -158,6 +167,8 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             startActivity(new Intent(getApplication(), UserActivity.class));
         } else if (i == R.id.iconImageView) {
             startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", mUid));
+        } else if (i == R.id.favorite) {
+            addGood();
         }
     }
 
