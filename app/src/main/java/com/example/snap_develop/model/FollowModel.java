@@ -28,141 +28,65 @@ import timber.log.Timber;
 
 public class FollowModel extends Firebase {
 
-    //uid : 申請された人のuid
-    //myUid : 申請した人のuid
-    //フォロー申請された人のapplicated_followsに申請された人のuidのパスを追加
-    public void insertApplicatedFollow(final String uid, String myUid) {
+    // toUid へ insetUid を追加する
+    public void insertApplicatedFollow(final String toUid, String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "myUid", myUid));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
 
         this.firestoreConnect();
 
-        DocumentReference applicatedPath = firestore.collection("users").document(myUid);
-
         Map<String, Object> addData = new HashMap<>();
-        addData.put("path", applicatedPath);
+        addData.put("path", firestore.collection("users").document(insertUid));
 
         firestore.collection("users")
-                .document(uid)
+                .document(toUid)
                 .collection("applicated_follows")
-                .document(myUid)//ドキュメントIDを申請された人のuidに指定
+                .document(insertUid)//ドキュメントIDを申請された人のuidに指定
                 .set(addData)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Log.d(LogUtil.getClassName(), "insertApplicatedFoolow:success");
-                        System.out.println(
-                                "-----------------insertApplicated:comp----------------");
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "insertApplicatedFoolow:failure:" + e);
-            }
-        });
-
-        firestore.collection("users")
-                .document(uid)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                })
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot doc = task.getResult();
-
-                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("applicated_count")));
-                        updateCount++;
-
-                        firestore.collection("users")
-                                .document(uid)
-                                .update("applicated_count", updateCount)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Log.d(LogUtil.getClassName(), "update(applicated_count):success");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
-                                    }
-                                });
-
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
-            }
-        });
+                });
     }
 
-    //uid : 申請された人のuid
-    //myUid : 申請した人のuid
-    //フォロー申請した人のapproval_pending_followsに申請した人のuidのパスを追加
-    public void insertApprovalPendingFollow(String uid, final String myUid) {
+    public void insertApprovalPendingFollow(String toUid, final String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "myUid", myUid));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
 
         this.firestoreConnect();
 
-        DocumentReference approvalPath = firestore.collection("users").document(uid);
-
         Map<String, Object> addData = new HashMap<>();
-        addData.put("path", approvalPath);
+        addData.put("path", firestore.collection("users").document(insertUid));
 
         firestore.collection("users")
-                .document(myUid)
+                .document(toUid)
                 .collection("approval_pending_follows")
-                .document(uid)//ドキュメントIDを申請した人のuidに指定
+                .document(insertUid)
                 .set(addData)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Log.d(LogUtil.getClassName(), "insertApprovvalPendingFollow:success");
-                        System.out.println("-----------------insertApproval:comp----------------");
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "insertApprovalPendingFollow:failure:" + e);
-            }
-        });
-
-        firestore.collection("users")
-                .document(myUid)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                })
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot doc = task.getResult();
-
-                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("approval_pending_count")));
-                        updateCount++;
-
-                        firestore.collection("users")
-                                .document(myUid)
-                                .update("approval_pending_count", updateCount)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Log.d(LogUtil.getClassName(), "update(approval_pending_count):success");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(LogUtil.getClassName(), "update(approval_pending_count):failure", e);
-                                    }
-                                });
-
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "update(approval_pending_count):failure", e);
-            }
-        });
+                });
     }
 
     // toUid から deleteUid を削除する

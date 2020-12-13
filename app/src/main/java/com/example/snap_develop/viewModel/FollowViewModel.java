@@ -59,17 +59,17 @@ public class FollowViewModel extends ViewModel {
     }
 
 
-    public void insertApplicatedFollow(String userPath, String myUid) {
+    public void insertApplicatedFollow(String toUid, String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath, "myUid", myUid));
-        followModel.insertApplicatedFollow(userPath, myUid);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
+        followModel.insertApplicatedFollow(toUid, insertUid);
     }
 
 
-    public void insertApprovalPendingFollow(String userPath, String myUid) {
+    public void insertApprovalPendingFollow(String toUid, String inseertUid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath, "myUid", myUid));
-        followModel.insertApprovalPendingFollow(userPath, myUid);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", inseertUid));
+        followModel.insertApprovalPendingFollow(toUid, inseertUid);
     }
 
 
