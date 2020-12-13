@@ -405,6 +405,7 @@ public class PostModel extends Firebase {
         }
     }
 
+
     //ここから
     public void fetchPost(String postPath, final MutableLiveData<PostBean> post) {
         Timber.i(MyDebugTree.START_LOG);
@@ -619,7 +620,8 @@ public class PostModel extends Firebase {
             String instanceConnectionName = "intense-pointer-297407:us-central1:test-snap";
             String jdbcUrl = String.format(
                     "jdbc:mysql://google/%s?cloudSqlInstance=%s&"
-                            + "socketFactory=com.google.cloud.sql.mysql.SocketFactory&serverTimezone=JST&useSSL=false",
+                            + "socketFactory=com.google.cloud.sql.mysql"
+                            + ".SocketFactory&serverTimezone=JST&useSSL=false",
                     databaseName,
                     instanceConnectionName);
 
@@ -731,7 +733,8 @@ public class PostModel extends Firebase {
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                             DocumentSnapshot doc = task.getResult();
 
-                                            Integer updateGood = Integer.valueOf(String.valueOf(doc.get("good_count")));
+                                            Integer updateGood = Integer.valueOf(
+                                                    String.valueOf(doc.get("good_count")));
                                             updateGood++;
 
                                             firestore.collection("posts")

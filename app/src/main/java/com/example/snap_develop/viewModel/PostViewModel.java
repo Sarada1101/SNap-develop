@@ -102,13 +102,13 @@ public class PostViewModel extends ViewModel {
     }
 
 
-    public void fetchTimeLine(List<UserBean> userList) {
+    public void fetchTimeLine(List<UserBean> userBeanList) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userList", userList));
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userList", userBeanList));
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        postModel.fetchTimeLine(userList, postList);
+        postModel.fetchTimeLine(userBeanList, postList);
     }
 
 
