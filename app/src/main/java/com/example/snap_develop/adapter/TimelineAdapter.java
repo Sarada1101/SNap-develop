@@ -1,8 +1,6 @@
 package com.example.snap_develop.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.bean.PostBean;
+import com.example.snap_develop.bean.UserBean;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -24,36 +22,34 @@ public class TimelineAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private int mLayoutID;
-    ArrayList<HashMap<String, Object>> dataList;
+    List<Map<String, Object>> mTimelineDataMapList;
 
     static class ViewHolder {
-        ImageView userIcon;
-        TextView userName;
+        ImageView icon;
+        TextView username;
         TextView uid;
         TextView message;
         TextView datetime;
         TextView goodCount;
-        TextView location;
-        TextView anonymous;
-        ConstraintLayout userInfo;
-        ConstraintLayout danger;
-        ImageView postPicture;
+        TextView latLng;
+        ImageView photo;
     }
 
-    public TimelineAdapter(Context context, ArrayList<HashMap<String, Object>> dataList, int rowLayout) {
+    public TimelineAdapter(Context context, List<Map<String, Object>> timelineDataMapList, int rowLayout) {
+        Timber.i(MyDebugTree.START_LOG);
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;
-        this.dataList = dataList;
+        this.mTimelineDataMapList = timelineDataMapList;
     }
 
     @Override
     public int getCount() {
-        return this.dataList.size();
+        return this.mTimelineDataMapList.size();
     }
 
     @Override
-    public HashMap<String, Object> getItem(int position) {
-        return this.dataList.get(position);
+    public Map<String, Object> getItem(int position) {
+        return this.mTimelineDataMapList.get(position);
     }
 
     @Override
@@ -64,58 +60,42 @@ public class TimelineAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "position", position, "convertView",
+                convertView, "parent", parent));
         ViewHolder holder;
 
         if (convertView == null) {
             convertView = mInflater.inflate(mLayoutID, null);
             holder = new ViewHolder();
-            holder.userIcon = convertView.findViewById(R.id.imageView);
-            holder.anonymous = convertView.findViewById(R.id.anonymous);
-            holder.danger = convertView.findViewById(R.id.timeLinePost);
-            holder.datetime = convertView.findViewById(R.id.textView3);
-            holder.goodCount = convertView.findViewById(R.id.textView4);
-            holder.location = convertView.findViewById(R.id.textView5);
+            holder.icon = convertView.findViewById(R.id.timelineIconImageView);
+            holder.datetime = convertView.findViewById(R.id.timelineDatetimeTextView);
+            holder.goodCount = convertView.findViewById(R.id.timelineGoodCountTextView);
+            holder.latLng = convertView.findViewById(R.id.timelineLatLngTextView);
             holder.message = convertView.findViewById(R.id.timeLineMessage);
-            holder.postPicture = convertView.findViewById(R.id.imageView2);
-            holder.uid = convertView.findViewById(R.id.textView2);
-            holder.userInfo = convertView.findViewById(R.id.userInfo);
-            holder.userName = convertView.findViewById(R.id.textView);
+            holder.photo = convertView.findViewById(R.id.timelinePhotoImageView);
+            holder.uid = convertView.findViewById(R.id.timelineUidTextView);
+            holder.username = convertView.findViewById(R.id.timelineNameTextView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        HashMap<String, Object> nextData = getItem(position);
+        UserBean userBean = (UserBean) mTimelineDataMapList.get(position).get("userBean");
+        PostBean postBean = (PostBean) mTimelineDataMapList.get(position).get("postBean");
 
-        holder.userName.setText((String) nextData.get("userName"));
-        holder.uid.setText((String) nextData.get("uid"));
-        holder.message.setText((String) nextData.get("message"));
-        holder.location.setText((String) nextData.get("location"));
-        holder.goodCount.setText(String.valueOf(nextData.get("goodCount")));
-        holder.datetime.setText((String) nextData.get("date"));
-        holder.userIcon.setImageBitmap((Bitmap) nextData.get("userIcon"));
+        holder.icon.setImageBitmap(userBean.getIcon());
+        holder.username.setText(userBean.getName());
+        holder.uid.setText(userBean.getUid());
+        holder.message.setText(postBean.getMessage());
+        holder.datetime.setText(postBean.getStrDatetime());
 
-        if ((Boolean) nextData.get("anonymous")) {
-            holder.anonymous.setVisibility(View.VISIBLE);
-            holder.userInfo.setVisibility(View.INVISIBLE);
-        } else {
-            holder.anonymous.setVisibility(View.INVISIBLE);
-            holder.userInfo.setVisibility(View.VISIBLE);
+        if (postBean.getPhoto() != null) holder.photo.setImageBitmap(postBean.getPhoto());
+
+        if (postBean.getType().equals("post")) {
+            holder.goodCount.setText(Integer.toString(postBean.getGoodCount()));
+            holder.latLng.setText(String.format("%d, %d", (int) postBean.getLatLng().latitude,
+                    (int) postBean.getLatLng().longitude));
         }
-
-        if ((Boolean) nextData.get("danger")) {
-            holder.danger.setBackgroundColor(Color.rgb(255, 100, 100));
-        } else {
-            holder.danger.setBackgroundColor(Color.rgb(255, 255, 255));
-        }
-
-
-        if (nextData.get("postPicture") == null) {
-            holder.postPicture.setVisibility(View.GONE);
-        } else {
-            holder.postPicture.setImageBitmap((Bitmap) nextData.get("postPicture"));
-        }
-
         return convertView;
     }
 }

@@ -1,14 +1,11 @@
 package com.example.snap_develop.viewModel;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.model.FollowModel;
-import com.example.snap_develop.util.LogUtil;
 
 import java.util.List;
 
@@ -76,30 +73,31 @@ public class FollowViewModel extends ViewModel {
     }
 
 
-    public void fetchFollowingList(String userPath) {
+    public void fetchFollowingList(String uid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath));
-        followModel.fetchFollowingList(userPath, followList);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
+        followModel.fetchFollowingList(uid, followList);
     }
 
 
-    public void fetchFollowerList(String userPath) {
+    public void fetchFollowerList(String uid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath));
-        followModel.fetchFollowerList(userPath, followList);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
+        followModel.fetchFollowerList(uid, followList);
     }
 
 
-    public void fetchApprovalPendingList(String userPath) {
+    public void fetchApprovalPendingList(String uid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath));
-        followModel.fetchApprovalPendingList(userPath, followList);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
+        followModel.fetchApprovalPendingList(uid, followList);
     }
 
 
-    public void fetchApplicatedList(String userPath) {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
-        followModel.fetchApplicatedList(userPath, followList);
+    public void fetchApplicatedList(String uid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
+        followModel.fetchApplicatedList(uid, followList);
     }
 
     public void fetchCount(String userPath, String countPath) {

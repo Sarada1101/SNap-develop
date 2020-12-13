@@ -416,105 +416,90 @@ public class FollowModel extends Firebase {
     }
 
 
-    public void fetchFollowingList(String userPath,
-            final MutableLiveData<List<UserBean>> followList) {
+    public void fetchFollowingList(String uid, final MutableLiveData<List<UserBean>> followList) {
         this.firestoreConnect();
         this.storageConnect();
 
-        final List<DocumentReference> refList = new ArrayList<>();
+        final List<DocumentReference> followingRefList = new ArrayList<>();
         final List<UserBean> followingUserList = new ArrayList<>();
 
+        // フォローリストを取得
         firestore.collection("users")
-                .document(userPath)
+                .document(uid)
                 .collection("following")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(LogUtil.getClassName(), "getRefList:success");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                refList.add(document.getDocumentReference("path"));
-                            }
-                            for (DocumentReference ref : refList) {
-                                ref.get()
-                                        .addOnCompleteListener(
-                                                new OnCompleteListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onComplete(
-                                                            @NonNull Task<DocumentSnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            final DocumentSnapshot doc = task.getResult();
-                                                            final UserBean addBean = new UserBean();
-                                                            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
-                                                            StorageReference imageRef = storage.getReference().child(
-                                                                    "icon").child(doc.getId()).child(
-                                                                    doc.getString("icon"));
-
-                                                            System.out.println(imageRef);
-
-                                                            imageRef.getBytes(FIVE_MEGABYTE)
-                                                                    .addOnSuccessListener(
-                                                                            new OnSuccessListener<byte[]>() {
-                                                                                @Override
-                                                                                public void onSuccess(byte[] aByte) {
-                                                                                    Timber.i(MyDebugTree.SUCCESS_LOG);
-                                                                                    System.out.println(
-                                                                                            "icon/" + doc.getId() + "/"
-                                                                                                    + doc.getString(
-                                                                                                    "icon"));
-                                                                                    Bitmap bitmap =
-                                                                                            BitmapFactory.decodeByteArray(
-                                                                                                    aByte, 0,
-                                                                                                    aByte.length);
-                                                                                    addBean.setIcon(bitmap);
-                                                                                    addBean.setIconName(
-                                                                                            doc.getString("icon"));
-                                                                                    addBean.setMessage(
-                                                                                            doc.getString("message"));
-                                                                                    addBean.setName(
-                                                                                            doc.getString("name"));
-                                                                                    addBean.setUid(doc.getId());
-                                                                                    addBean.setCommentNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "comment_notice"));
-                                                                                    addBean.setFollowNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "follow_notice"));
-                                                                                    addBean.setGoodNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "good_notice"));
-                                                                                    addBean.setPublicationArea(
-                                                                                            doc.getString(
-                                                                                                    "publication_area"
-                                                                                            ));
-                                                                                    followingUserList.add(addBean);
-                                                                                    followList.setValue(
-                                                                                            followingUserList);
-                                                                                }
-                                                                            })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            Timber.i(MyDebugTree.FAILURE_LOG);
-                                                                            Timber.e(e.toString());
-                                                                        }
-                                                                    });
-                                                            Log.d(LogUtil.getClassName(),
-                                                                    "fetchApprovalPendingList:success");
-                                                        } else {
-                                                            Log.w(LogUtil.getClassName(),
-                                                                    "fetchApprovalPendingList:failure",
-                                                                    task.getException());
-                                                        }
-
-                                                    }
-                                                });
-                            }
-                        } else {
-                            Log.w(LogUtil.getClassName(), "getRefList:failure",
-                                    task.getException());
+                        Timber.i(MyDebugTree.START_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            followingRefList.add(document.getDocumentReference("path"));
                         }
+
+                        // フォローしているユーザー情報を取得
+                        for (DocumentReference ref : followingRefList) {
+                            ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    Timber.i(MyDebugTree.START_LOG);
+                                    Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
+                                    DocumentSnapshot document = task.getResult();
+                                    final UserBean userBean = new UserBean();
+                                    userBean.setIconName(document.getString("icon"));
+                                    userBean.setName(document.getString("name"));
+                                    userBean.setUid(document.getId());
+
+                                    // アイコン画像を取得
+                                    final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+                                    storage.getReference()
+                                            .child("icon")
+                                            .child(userBean.getUid())
+                                            .child(userBean.getIconName())
+                                            .getBytes(FIVE_MEGABYTE)
+                                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] aByte) {
+                                                    Timber.i(MyDebugTree.SUCCESS_LOG);
+                                                    Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                            userBean.getIconName()));
+                                                    Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0,
+                                                            aByte.length);
+                                                    userBean.setIcon(bitmap);
+                                                    followingUserList.add(userBean);
+
+                                                    // もし画像を全て取得したら
+                                                    if (followingUserList.size() >= followingRefList.size()) {
+                                                        Timber.i(String.valueOf(followingUserList));
+                                                        followList.setValue(followingUserList);
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Timber.i(MyDebugTree.FAILURE_LOG);
+                                                    Timber.e(e.toString());
+                                                }
+                                            });
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Timber.i(MyDebugTree.FAILURE_LOG);
+                                            Timber.e(e.toString());
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
                 });
     }
