@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.snap_develop.MyDebugTree;
@@ -16,9 +18,10 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class FollowListAdapter extends BaseAdapter {
+public class ApplicatedFollowListAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
+    private Context mContext;
     private int mLayoutID;
     private List<UserBean> mFollowList;
 
@@ -26,11 +29,14 @@ public class FollowListAdapter extends BaseAdapter {
         ImageView icon;
         TextView username;
         TextView uid;
+        Button approvalButton;
+        Button rejectButton;
     }
 
-    public FollowListAdapter(Context context, List<UserBean> followList, int rowLayout) {
+    public ApplicatedFollowListAdapter(Context context, List<UserBean> followList, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
         this.mInflater = LayoutInflater.from(context);
+        this.mContext = context;
         this.mLayoutID = rowLayout;
         this.mFollowList = followList;
     }
@@ -51,7 +57,7 @@ public class FollowListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
         Timber.i(MyDebugTree.START_LOG);
         ViewHolder holder;
 
@@ -61,6 +67,8 @@ public class FollowListAdapter extends BaseAdapter {
             holder.username = convertView.findViewById(R.id.nameTextView);
             holder.uid = convertView.findViewById(R.id.idTextView);
             holder.icon = convertView.findViewById(R.id.iconImageView);
+            holder.approvalButton = convertView.findViewById(R.id.approvalButton);
+            holder.rejectButton = convertView.findViewById(R.id.rejectButton);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -70,6 +78,20 @@ public class FollowListAdapter extends BaseAdapter {
         holder.username.setText(userBean.getName());
         holder.uid.setText(userBean.getUid());
         holder.icon.setImageBitmap(userBean.getIcon());
+
+        holder.approvalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ListView) parent).performItemClick(v, position, R.id.approvalButton);
+            }
+        });
+
+        holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ListView) parent).performItemClick(v, position, R.id.rejectButton);
+            }
+        });
 
         return convertView;
     }
