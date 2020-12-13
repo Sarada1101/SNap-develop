@@ -245,7 +245,7 @@ public class PostModel extends Firebase {
                         postBean.setGoodCount(Integer.parseInt(document.getLong("good_count").toString()));
                         postBean.setDatetime(document.getDate("datetime"));
                         postBean.setStrDatetime(
-                                new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime")));
+                                new SimpleDateFormat("yyyy/MM/dd HH:mm").format(document.getDate("datetime")));
                         LatLng geopoint = new LatLng(
                                 document.getGeoPoint("geopoint").getLatitude(),
                                 document.getGeoPoint("geopoint").getLongitude());
@@ -324,7 +324,7 @@ public class PostModel extends Firebase {
                             postBean.setAnonymous(document.getBoolean("anonymous"));
                             postBean.setDatetime(document.getDate("datetime"));
                             postBean.setStrDatetime(
-                                    new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime")));
+                                    new SimpleDateFormat("yyyy/MM/dd HH:mm").format(document.getDate("datetime")));
                             postBean.setMessage(document.getString("message"));
                             postBean.setType(document.getString("type"));
                             postBean.setUid(document.getString("uid"));
@@ -444,7 +444,7 @@ public class PostModel extends Firebase {
                                     postBean.setDocumentId(document.getId());
                                     postBean.setAnonymous(document.getBoolean("anonymous"));
                                     postBean.setDatetime(document.getDate("datetime"));
-                                    postBean.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd hh:mm").format(
+                                    postBean.setStrDatetime(new SimpleDateFormat("yyyy/MM/dd HH:mm").format(
                                             document.getDate("datetime")));
                                     postBean.setMessage(document.getString("message"));
                                     postBean.setType(document.getString("type"));
@@ -560,7 +560,7 @@ public class PostModel extends Firebase {
                                 postBean.setAnonymous(document.getBoolean("anonymous"));
                                 postBean.setDatetime(document.getDate("datetime"));
                                 postBean.setStrDatetime(
-                                        new SimpleDateFormat("yyyy/MM/dd hh:mm").format(document.getDate("datetime")));
+                                        new SimpleDateFormat("yyyy/MM/dd HH:mm").format(document.getDate("datetime")));
                                 postBean.setMessage(document.getString("message"));
                                 postBean.setType(document.getString("type"));
                                 postBean.setUid(document.getString("uid"));
