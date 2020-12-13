@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -19,6 +21,7 @@ import com.example.snap_develop.adapter.UserAdapter;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityUserBinding;
+import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
@@ -31,6 +34,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     ListView mListView;
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
+    private FollowViewModel mFollowViewModel;
     private ActivityUserBinding mBinding;
     private UserAdapter mUserAdapter;
     private String mUid;
@@ -45,6 +49,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
+        mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
 
         mBinding.followingButton.setOnClickListener(this);
@@ -67,7 +72,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
-                mPostViewModel.fetchPostList(finalUid);
+                mPostViewModel.fetchPostList(displayUserId);
             }
         });
         mUserViewModel.fetchUserInfo(mUid);
@@ -87,6 +92,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.setUserViewModel(mUserViewModel);
         mBinding.setLifecycleOwner(this);
     }
+
+
+    //フォロー申請ボタンが押されたときに動くメソッド
+    public void followRequest() {
+
+        mFollowViewModel.insertApprovalPendingFollow(displayUserId, currentId);
+        mFollowViewModel.insertApplicatedFollow(displayUserId, currentId);
+
+        Toast.makeText(this, "フォローリクエストしました！", Toast.LENGTH_LONG).show();
 
 
     @Override
@@ -128,7 +142,12 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         } else if (i == R.id.followingButton) {
             startActivity(new Intent(UserActivity.this, FollowingListActivity.class).putExtra("uid", mUid));
         } else if (i == R.id.followRequestButton) {
-            startActivity(new Intent(UserActivity.this, ApprovalPendingFollowListActivity.class));
+            TextView textView = findViewById(i);
+            if (textView.getText().toString() == getString(R.string.approvalbutten)) {
+                startActivity(new Intent(UserActivity.this, ApprovalPendingFollowListActivity.class));
+            } else {
+                followRequest();
+            }
         }
     }
 

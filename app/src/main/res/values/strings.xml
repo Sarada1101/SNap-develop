@@ -69,6 +69,7 @@
     <string name="latLng">%d, %d</string>
     <string name="backButtonText">←戻る</string>
     <string name="updateButtonText">更新</string>
+    <string name="followRequestText">フォローリクエスト</string>
     <string name="notRegisterTextViwText">登録せずに使う</string>
     <string name="postButtonText">投稿する</string>
     <string name="cancel">取消</string>
