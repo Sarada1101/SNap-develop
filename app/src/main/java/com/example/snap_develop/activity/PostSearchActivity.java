@@ -33,7 +33,5 @@ public class PostSearchActivity extends AppCompatActivity implements View.OnClic
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
         }
-
     }
-
 }

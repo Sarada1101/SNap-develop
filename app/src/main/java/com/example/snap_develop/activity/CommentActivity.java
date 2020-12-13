@@ -22,10 +22,10 @@ import timber.log.Timber;
 
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private PostViewModel mPostViewModel;
     private UserViewModel mUserViewModel;
-    private String mParentPostPath;
+    private PostViewModel mPostViewModel;
     private ActivityCommentBinding mBinding;
+    private String mParentPostPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,6 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         setTitle("コメント投稿");
-
-        mParentPostPath = getIntent().getStringExtra("postPath");
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
@@ -44,7 +42,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         mBinding.timelineImageButton.setOnClickListener(this);
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
+
+        mParentPostPath = getIntent().getStringExtra("postPath");
     }
+
 
     private void insertComment() {
         Timber.i(MyDebugTree.START_LOG);
@@ -66,6 +67,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         startActivity(new Intent(CommentActivity.this, DisplayCommentActivity.class).putExtra("postPath",
                 mParentPostPath));
     }
+
 
     private boolean validateForm(String comment) {
         Timber.i(MyDebugTree.START_LOG);

@@ -21,7 +21,6 @@ import timber.log.Timber;
 public class ApprovalPendingFollowListAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
-    private Context mContext;
     private int mLayoutID;
     private List<UserBean> mFollowList;
 
@@ -29,14 +28,12 @@ public class ApprovalPendingFollowListAdapter extends BaseAdapter {
         ImageView icon;
         TextView username;
         TextView uid;
-        Button approvalButton;
         Button cancelButton;
     }
 
     public ApprovalPendingFollowListAdapter(Context context, List<UserBean> followList, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
         this.mInflater = LayoutInflater.from(context);
-        this.mContext = context;
         this.mLayoutID = rowLayout;
         this.mFollowList = followList;
     }

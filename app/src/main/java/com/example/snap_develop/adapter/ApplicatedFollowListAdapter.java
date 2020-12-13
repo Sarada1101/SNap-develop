@@ -21,7 +21,6 @@ import timber.log.Timber;
 public class ApplicatedFollowListAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
-    private Context mContext;
     private int mLayoutID;
     private List<UserBean> mFollowList;
 
@@ -36,7 +35,6 @@ public class ApplicatedFollowListAdapter extends BaseAdapter {
     public ApplicatedFollowListAdapter(Context context, List<UserBean> followList, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
         this.mInflater = LayoutInflater.from(context);
-        this.mContext = context;
         this.mLayoutID = rowLayout;
         this.mFollowList = followList;
     }

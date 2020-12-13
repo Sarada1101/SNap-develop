@@ -20,7 +20,6 @@ import timber.log.Timber;
 public class UserAdapter extends BaseAdapter {
 
     private List<PostBean> mPostList;
-    private Context mContext;
     private UserBean mUserBean;
     private LayoutInflater mInflater;
     private int mLayoutID;
@@ -39,7 +38,6 @@ public class UserAdapter extends BaseAdapter {
 
     public UserAdapter(Context context, List<PostBean> postList, UserBean userBean, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
-        this.mContext = context;
         this.mPostList = postList;
         this.mUserBean = userBean;
         this.mInflater = LayoutInflater.from(context);

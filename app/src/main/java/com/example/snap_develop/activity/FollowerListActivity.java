@@ -26,13 +26,13 @@ import timber.log.Timber;
 public class FollowerListActivity extends AppCompatActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener {
 
-    FollowViewModel mFollowViewModel;
-    UserViewModel mUserViewModel;
-    String mUid;
-    ListView mListView;
-    FollowListAdapter mFollowListAdapter;
+    private UserViewModel mUserViewModel;
+    private FollowViewModel mFollowViewModel;
     private ActivityFollowingListBinding mBinding;
+    private FollowListAdapter mFollowListAdapter;
+    private ListView mListView;
     private List<UserBean> mFollowList;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +49,6 @@ public class FollowerListActivity extends AppCompatActivity implements View.OnCl
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
 
-        mUid = mUserViewModel.getCurrentUser().getUid();
-
         // フォロワーリストを取得したら
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
             @Override
@@ -66,8 +64,11 @@ public class FollowerListActivity extends AppCompatActivity implements View.OnCl
                 mListView.setOnItemClickListener(FollowerListActivity.this);
             }
         });
+
+        mUid = mUserViewModel.getCurrentUser().getUid();
         mFollowViewModel.fetchFollowerList(mUid);
     }
+
 
     @Override
     public void onClick(View view) {
@@ -82,6 +83,7 @@ public class FollowerListActivity extends AppCompatActivity implements View.OnCl
             startActivity(new Intent(getApplication(), UserActivity.class));
         }
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

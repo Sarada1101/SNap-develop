@@ -26,13 +26,13 @@ import timber.log.Timber;
 public class ApprovalPendingFollowListActivity extends AppCompatActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener {
 
-    private FollowViewModel mFollowViewModel;
     private UserViewModel mUserViewModel;
-    private String mUid;
-    private ListView mListView;
-    private ApprovalPendingFollowListAdapter mApprovalPendingFollowListAdapter;
-    private List<UserBean> mFollowList;
+    private FollowViewModel mFollowViewModel;
     private ActivityApprovalPendingFollowListBinding mBinding;
+    private ApprovalPendingFollowListAdapter mApprovalPendingFollowListAdapter;
+    private ListView mListView;
+    private List<UserBean> mFollowList;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,6 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
 
-        mUid = mUserViewModel.getCurrentUser().getUid();
-
         // フォロー承認待ちリストを取得したら
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
             @Override
@@ -69,6 +67,8 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
                 mListView.setOnItemClickListener(ApprovalPendingFollowListActivity.this);
             }
         });
+
+        mUid = mUserViewModel.getCurrentUser().getUid();
         mFollowViewModel.fetchApprovalPendingList(mUid);
     }
 
@@ -96,6 +96,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
             startActivity(new Intent(getApplication(), ApprovalPendingFollowListActivity.class));
         }
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -27,50 +27,20 @@ import timber.log.Timber;
 public class FollowModel extends Firebase {
 
     // toUid へ insetUid を追加する
-    public void insertApplicatedFollow(final String toUid, String insertUid) {
+    public void insertFollowing(final String toUid, String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
 
         this.firestoreConnect();
 
-        Map<String, Object> addData = new HashMap<>();
-        addData.put("path", firestore.collection("users").document(insertUid));
+        Map<String, Object> followingPath = new HashMap<>();
+        followingPath.put("path", firestore.collection("users").document(insertUid));
 
         firestore.collection("users")
                 .document(toUid)
-                .collection("applicated_follows")
-                .document(insertUid)//ドキュメントIDを申請された人のuidに指定
-                .set(addData)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
-                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Timber.i(MyDebugTree.FAILURE_LOG);
-                        Timber.e(e.toString());
-                    }
-                });
-    }
-
-    public void insertApprovalPendingFollow(String toUid, final String insertUid) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
-
-        this.firestoreConnect();
-
-        Map<String, Object> addData = new HashMap<>();
-        addData.put("path", firestore.collection("users").document(insertUid));
-
-        firestore.collection("users")
-                .document(toUid)
-                .collection("approval_pending_follows")
+                .collection("following")
                 .document(insertUid)
-                .set(addData)
+                .set(followingPath)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -85,25 +55,33 @@ public class FollowModel extends Firebase {
                         Timber.e(e.toString());
                     }
                 });
-    }
-
-    // toUid から deleteUid を削除する
-    public void deleteApplicatedFollow(String fromUid, final String deleteUid) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
-
-        this.firestoreConnect();
 
         firestore.collection("users")
-                .document(fromUid)
-                .collection("applicated_follows")
-                .document(deleteUid)
-                .delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .document(toUid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
-                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Integer updateCount = Integer.valueOf(String.valueOf(task.getResult().get("following_count")));
+                        updateCount++;
+
+                        firestore.collection("users")
+                                .document(toUid)
+                                .update("following_count", updateCount)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Timber.i(MyDebugTree.INPUT_LOG);
+                                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.e(e.toString());
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -115,33 +93,6 @@ public class FollowModel extends Firebase {
                 });
     }
 
-    // toUid から deleteUid を削除する
-    public void deleteApprovalPendingFollow(final String fromUid, String deleteUid) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
-
-        this.firestoreConnect();
-
-        firestore.collection("users")
-                .document(fromUid)
-                .collection("approval_pending_follows")
-                .document(deleteUid)
-                .delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
-                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Timber.i(MyDebugTree.FAILURE_LOG);
-                        Timber.e(e.toString());
-                    }
-                });
-    }
 
     // toUid へ insetUid を追加する
     public void insertFollower(final String toUid, String insertUid) {
@@ -211,21 +162,21 @@ public class FollowModel extends Firebase {
                 });
     }
 
-    // toUid へ insetUid を追加する
-    public void insertFollowing(final String toUid, String insertUid) {
+
+    public void insertApprovalPendingFollow(String toUid, final String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
 
         this.firestoreConnect();
 
-        Map<String, Object> followingPath = new HashMap<>();
-        followingPath.put("path", firestore.collection("users").document(insertUid));
+        Map<String, Object> addData = new HashMap<>();
+        addData.put("path", firestore.collection("users").document(insertUid));
 
         firestore.collection("users")
                 .document(toUid)
-                .collection("following")
+                .collection("approval_pending_follows")
                 .document(insertUid)
-                .set(followingPath)
+                .set(addData)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -240,33 +191,87 @@ public class FollowModel extends Firebase {
                         Timber.e(e.toString());
                     }
                 });
+    }
+
+
+    // toUid へ insetUid を追加する
+    public void insertApplicatedFollow(final String toUid, String insertUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
+
+        this.firestoreConnect();
+
+        Map<String, Object> addData = new HashMap<>();
+        addData.put("path", firestore.collection("users").document(insertUid));
 
         firestore.collection("users")
                 .document(toUid)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                .collection("applicated_follows")
+                .document(insertUid)//ドキュメントIDを申請された人のuidに指定
+                .set(addData)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        Integer updateCount = Integer.valueOf(String.valueOf(task.getResult().get("following_count")));
-                        updateCount++;
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
+    }
 
-                        firestore.collection("users")
-                                .document(toUid)
-                                .update("following_count", updateCount)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Timber.i(MyDebugTree.INPUT_LOG);
-                                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Timber.i(MyDebugTree.FAILURE_LOG);
-                                        Timber.e(e.toString());
-                                    }
-                                });
+
+    // toUid から deleteUid を削除する
+    public void deleteApprovalPendingFollow(final String fromUid, String deleteUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
+
+        this.firestoreConnect();
+
+        firestore.collection("users")
+                .document(fromUid)
+                .collection("approval_pending_follows")
+                .document(deleteUid)
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
+    }
+
+
+    // toUid から deleteUid を削除する
+    public void deleteApplicatedFollow(String fromUid, final String deleteUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
+
+        this.firestoreConnect();
+
+        firestore.collection("users")
+                .document(fromUid)
+                .collection("applicated_follows")
+                .document(deleteUid)
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -645,6 +650,7 @@ public class FollowModel extends Firebase {
                     }
                 });
     }
+
 
     public void checkFollowing(String fromUid, String checkUid, final MutableLiveData<Boolean> following) {
         Timber.i(MyDebugTree.START_LOG);

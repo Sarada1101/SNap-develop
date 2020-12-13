@@ -35,15 +35,15 @@ import timber.log.Timber;
 public class DisplayCommentActivity extends AppCompatActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener {
 
-    private PostViewModel mPostViewModel;
     private UserViewModel mUserViewModel;
+    private PostViewModel mPostViewModel;
     private ActivityDisplayCommentBinding mBinding;
-    private ListView mListView;
     private DisplayCommentAdapter mDisplayCommentAdapter;
+    private ListView mListView;
     private List<PostBean> mPostBeanList;
+    private List<Map<String, Object>> mCommentDataMapList;
     private String mParentPostPath;
     private String mUid;
-    List<Map<String, Object>> mCommentDataMapList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +62,6 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
 
-        // 投稿情報のパスを取得
-        mParentPostPath = getIntent().getStringExtra("postPath");
-        Timber.i(String.format("%s=%s", "postPath", mParentPostPath));
-
         // 投稿情報を取得したら投稿のユーザー情報を取得する
         mPostViewModel.getPost().observe(this, new Observer<PostBean>() {
             @Override
@@ -76,7 +72,6 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 mUserViewModel.fetchUserInfo(postBean.getUid());
             }
         });
-        mPostViewModel.fetchPost(mParentPostPath);
 
         // ユーザー情報を取得したらアイコンにクリックリスナーを設定する
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
@@ -111,7 +106,6 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 mPostBeanList = postList;
             }
         });
-        mPostViewModel.fetchPostCommentList(mParentPostPath);
 
         //コメントごとのユーザー情報を取得したらリスト表示する
         mUserViewModel.getUserList().observe(this, new Observer<List<UserBean>>() {
@@ -137,6 +131,13 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 mListView.setOnItemClickListener(DisplayCommentActivity.this);
             }
         });
+
+        // 投稿情報のパスを取得
+        mParentPostPath = getIntent().getStringExtra("postPath");
+        Timber.i(String.format("%s=%s", "postPath", mParentPostPath));
+
+        mPostViewModel.fetchPost(mParentPostPath);
+        mPostViewModel.fetchPostCommentList(mParentPostPath);
 
         mBinding.setPostViewModel(mPostViewModel);
         mBinding.setUserViewModel(mUserViewModel);

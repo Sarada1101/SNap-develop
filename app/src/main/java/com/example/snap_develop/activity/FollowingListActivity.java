@@ -19,8 +19,6 @@ import com.example.snap_develop.databinding.ActivityFollowingListBinding;
 import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import timber.log.Timber;
@@ -28,14 +26,13 @@ import timber.log.Timber;
 public class FollowingListActivity extends AppCompatActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener {
 
-    private FollowViewModel mFollowViewModel;
     private UserViewModel mUserViewModel;
+    private FollowViewModel mFollowViewModel;
     private ActivityFollowingListBinding mBinding;
     private FollowListAdapter mFollowListAdapter;
     private ListView mListView;
-    private ArrayList<HashMap<String, Object>> dataList;
-    private String mUid;
     private List<UserBean> mFollowList;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +49,6 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
 
-        mUid = mUserViewModel.getCurrentUser().getUid();
-
         // フォローリストを取得したら
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
             @Override
@@ -69,8 +64,11 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
                 mListView.setOnItemClickListener(FollowingListActivity.this);
             }
         });
+
+        mUid = mUserViewModel.getCurrentUser().getUid();
         mFollowViewModel.fetchFollowingList(mUid);
     }
+
 
     @Override
     public void onClick(View view) {
@@ -86,6 +84,7 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         UserBean userBean = mFollowList.get(position);

@@ -21,7 +21,6 @@ import timber.log.Timber;
 public class DisplayCommentAdapter extends BaseAdapter {
 
     private List<Map<String, Object>> mCommentDataMapList;
-    private Context mContext;
     private LayoutInflater mInflater;
     private int mLayoutID;
 
@@ -36,7 +35,6 @@ public class DisplayCommentAdapter extends BaseAdapter {
 
     public DisplayCommentAdapter(Context context, List<Map<String, Object>> commentDataMapList, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
-        this.mContext = context;
         this.mCommentDataMapList = commentDataMapList;
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;

@@ -25,11 +25,13 @@ public class MapModel {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fusedLocationClient", fusedLocationClient,
                 "deviceLatLng", deviceLatLng));
+
         fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
                 if (task.isSuccessful() && task.getResult() != null) {
                     Location location = task.getResult();
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());

@@ -28,12 +28,12 @@ import timber.log.Timber;
 
 public class UserUpdateActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String mUid;
     private UserViewModel mUserViewModel;
-    private static final int REQUEST_GALLERY = 0;
     private ActivityUserupdateBinding mBinding;
+    private String mUid;
     private String mIconName;
     private Bitmap mBitMap;
+    private static final int REQUEST_GALLERY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +49,6 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
         mBinding.updateButton.setOnClickListener(this);
         mBinding.signoutButton.setOnClickListener(this);
 
-        mUid = mUserViewModel.getCurrentUser().getUid();
-
-        mUserViewModel.fetchUserInfo(mUid);
-
         //ユーザー情報の変化が完了した後の処理
         mUserViewModel.getUpdateResult().observe(this, new Observer<String>() {
             @Override
@@ -63,6 +59,9 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
                 startActivity(new Intent(getApplication(), UserActivity.class));
             }
         });
+
+        mUid = mUserViewModel.getCurrentUser().getUid();
+        mUserViewModel.fetchUserInfo(mUid);
     }
 
 

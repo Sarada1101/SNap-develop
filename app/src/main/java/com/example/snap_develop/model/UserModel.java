@@ -33,6 +33,7 @@ import java.util.Map;
 import timber.log.Timber;
 
 public class UserModel extends Firebase {
+
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final static String SUCCESS = "success";
 
@@ -67,35 +68,6 @@ public class UserModel extends Firebase {
                         }
                     }
                 });
-    }
-
-
-    public void signIn(String email, String password, final MutableLiveData<String> authResult) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "authResult", authResult));
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
-                new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Timber.i(MyDebugTree.START_LOG);
-                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
-
-                        if (task.isSuccessful()) {
-                            Timber.i(MyDebugTree.SUCCESS_LOG);
-                            authResult.setValue(SUCCESS);
-                        } else {
-                            Timber.i(MyDebugTree.FAILURE_LOG);
-                            Timber.e(task.getException().toString());
-                            authResult.setValue(String.valueOf(task.getException()));
-                        }
-                    }
-                });
-    }
-
-
-    public void signOut() {
-        Timber.i(MyDebugTree.START_LOG);
-        firebaseAuth.signOut();
     }
 
 
@@ -138,6 +110,35 @@ public class UserModel extends Firebase {
                         Timber.e(e.toString());
                     }
                 });
+    }
+
+
+    public void signIn(String email, String password, final MutableLiveData<String> authResult) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "authResult", authResult));
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
+                new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Timber.i(MyDebugTree.START_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
+                        if (task.isSuccessful()) {
+                            Timber.i(MyDebugTree.SUCCESS_LOG);
+                            authResult.setValue(SUCCESS);
+                        } else {
+                            Timber.i(MyDebugTree.FAILURE_LOG);
+                            Timber.e(task.getException().toString());
+                            authResult.setValue(String.valueOf(task.getException()));
+                        }
+                    }
+                });
+    }
+
+
+    public void signOut() {
+        Timber.i(MyDebugTree.START_LOG);
+        firebaseAuth.signOut();
     }
 
 

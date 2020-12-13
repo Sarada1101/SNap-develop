@@ -20,9 +20,9 @@ import timber.log.Timber;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private UserViewModel mUserViewModel;
     private ActivitySettingBinding mBinding;
     private String mUid;
-    private UserViewModel mUserViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +38,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mBinding.timelineImageButton.setOnClickListener(this);
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
-
-        mUid = mUserViewModel.getCurrentUser().getUid();
 
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
@@ -59,6 +57,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 mBinding.commentSwitch.setChecked(userBean.isCommentNotice());
             }
         });
+
+        mUid = mUserViewModel.getCurrentUser().getUid();
         mUserViewModel.fetchUserInfo(mUid);
     }
 
@@ -88,6 +88,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         Toast.makeText(SettingActivity.this, "設定を更新しました", Toast.LENGTH_LONG).show();
         startActivity(new Intent(getApplication(), UserActivity.class));
     }
+
 
     @Override
     public void onClick(View view) {

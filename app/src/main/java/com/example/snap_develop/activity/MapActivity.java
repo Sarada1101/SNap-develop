@@ -41,11 +41,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener,
         View.OnClickListener {
 
-    private static final int REQUEST_PERMISSION = 0;
-    private GoogleMap mGoogleMap;
-    private MapViewModel mMapViewModel;
-    private PostViewModel mPostViewModel;
     private UserViewModel mUserViewModel;
+    private PostViewModel mPostViewModel;
+    private MapViewModel mMapViewModel;
+    private GoogleMap mGoogleMap;
+    private static final int REQUEST_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +57,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // SupportMapFragmentを取得し、マップが使用可能になったら通知を受けることができる
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
         findViewById(R.id.timelineImageButton).setOnClickListener(this);
         findViewById(R.id.mapImageButton).setOnClickListener(this);
         findViewById(R.id.userImageButton).setOnClickListener(this);
         findViewById(R.id.postMapFloatingActionButton).setOnClickListener(this);
+
+        // SupportMapFragmentを取得し、マップが使用可能になったら通知を受けることができる
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         //デバイスの現在地を取得したら実行
         mMapViewModel.getDeviceLatLng().observe(this, new Observer<LatLng>() {

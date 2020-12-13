@@ -13,7 +13,7 @@ import timber.log.Timber;
 
 public class FollowViewModel extends ViewModel {
 
-    FollowModel followModel = new FollowModel();
+    private FollowModel mFollowModel = new FollowModel();
     private MutableLiveData<List<UserBean>> followList;
     private MutableLiveData<Boolean> following;
     private MutableLiveData<Boolean> approvalPendingFollow;
@@ -25,12 +25,14 @@ public class FollowViewModel extends ViewModel {
         return followList;
     }
 
+
     public MutableLiveData<Boolean> getFollowing() {
         if (following == null) {
             following = new MutableLiveData<>();
         }
         return following;
     }
+
 
     public MutableLiveData<Boolean> getApprovalPendingFollow() {
         if (approvalPendingFollow == null) {
@@ -39,45 +41,46 @@ public class FollowViewModel extends ViewModel {
         return approvalPendingFollow;
     }
 
-    public void deleteApplicatedFollow(String fromUid, String deleteUid) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", fromUid, "insertUid", deleteUid));
-        followModel.deleteApplicatedFollow(fromUid, deleteUid);
-    }
 
-
-    public void deleteApprovalPendingFollow(String fromUid, String deleteUid) {
+    public void insertFollowing(String toUid, String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
-        followModel.deleteApprovalPendingFollow(fromUid, deleteUid);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
+        mFollowModel.insertFollowing(toUid, insertUid);
     }
 
 
     public void insertFollower(String toUid, String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
-        followModel.insertFollower(toUid, insertUid);
-    }
-
-
-    public void insertFollowing(String toUid, String insertUid) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
-        followModel.insertFollowing(toUid, insertUid);
-    }
-
-
-    public void insertApplicatedFollow(String toUid, String insertUid) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
-        followModel.insertApplicatedFollow(toUid, insertUid);
+        mFollowModel.insertFollower(toUid, insertUid);
     }
 
 
     public void insertApprovalPendingFollow(String toUid, String inseertUid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", inseertUid));
-        followModel.insertApprovalPendingFollow(toUid, inseertUid);
+        mFollowModel.insertApprovalPendingFollow(toUid, inseertUid);
+    }
+
+
+    public void insertApplicatedFollow(String toUid, String insertUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
+        mFollowModel.insertApplicatedFollow(toUid, insertUid);
+    }
+
+
+    public void deleteApprovalPendingFollow(String fromUid, String deleteUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
+        mFollowModel.deleteApprovalPendingFollow(fromUid, deleteUid);
+    }
+
+
+    public void deleteApplicatedFollow(String fromUid, String deleteUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", fromUid, "insertUid", deleteUid));
+        mFollowModel.deleteApplicatedFollow(fromUid, deleteUid);
     }
 
 
@@ -87,7 +90,7 @@ public class FollowViewModel extends ViewModel {
         if (followList == null) {
             followList = new MutableLiveData<>();
         }
-        followModel.fetchFollowingList(uid, followList);
+        mFollowModel.fetchFollowingList(uid, followList);
     }
 
 
@@ -97,7 +100,7 @@ public class FollowViewModel extends ViewModel {
         if (followList == null) {
             followList = new MutableLiveData<>();
         }
-        followModel.fetchFollowerList(uid, followList);
+        mFollowModel.fetchFollowerList(uid, followList);
     }
 
 
@@ -107,7 +110,7 @@ public class FollowViewModel extends ViewModel {
         if (followList == null) {
             followList = new MutableLiveData<>();
         }
-        followModel.fetchApprovalPendingList(uid, followList);
+        mFollowModel.fetchApprovalPendingList(uid, followList);
     }
 
 
@@ -117,18 +120,26 @@ public class FollowViewModel extends ViewModel {
         if (followList == null) {
             followList = new MutableLiveData<>();
         }
-        followModel.fetchApplicatedList(uid, followList);
+        mFollowModel.fetchApplicatedList(uid, followList);
     }
+
 
     public void checkFollowing(String fromUid, String checkUid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "checkUid", checkUid));
-        followModel.checkFollowing(fromUid, checkUid, following);
+        if (following == null) {
+            following = new MutableLiveData<>();
+        }
+        mFollowModel.checkFollowing(fromUid, checkUid, following);
     }
+
 
     public void checkApprovalPendingFollow(String fromUid, String checkUid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "checkUid", checkUid));
-        followModel.checkApprovalPendingFollow(fromUid, checkUid, approvalPendingFollow);
+        if (approvalPendingFollow == null) {
+            approvalPendingFollow = new MutableLiveData<>();
+        }
+        mFollowModel.checkApprovalPendingFollow(fromUid, checkUid, approvalPendingFollow);
     }
 }

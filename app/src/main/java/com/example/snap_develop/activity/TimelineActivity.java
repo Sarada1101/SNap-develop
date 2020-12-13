@@ -36,16 +36,15 @@ import timber.log.Timber;
 public class TimelineActivity extends AppCompatActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener {
 
+    private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
-    private UserViewModel mUserViewModel;
-    private ListView lv;
-    private String mUid;
-    private List<UserBean> mUserBeanList;
-    private List<Map<String, Object>> mTimelineDataMapList;
+    private ActivityTimelineBinding mBinding;
     private TimelineAdapter mTimelineAdapter;
     private ListView mListView;
-    private ActivityTimelineBinding mBinding;
+    private List<Map<String, Object>> mTimelineDataMapList;
+    private List<UserBean> mUserBeanList;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +62,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
 
-        //現在ログイン中のユーザーのUidを取得する処理
-        mUid = mUserViewModel.getCurrentUser().getUid();
-
-        // フォローリストを取得したら
+        // フォローリストを取得したらタイムラインを取得
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
             @Override
             public void onChanged(List<UserBean> followList) {
@@ -76,8 +72,8 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                 mPostViewModel.fetchTimeLine(followList);
             }
         });
-        mFollowViewModel.fetchFollowingList(mUid);
 
+        // タイムラインを取得したらソートして表示する
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -116,7 +112,12 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                 mListView.setOnItemClickListener(TimelineActivity.this);
             }
         });
+
+        //現在ログイン中のユーザーのUidを取得する処理
+        mUid = mUserViewModel.getCurrentUser().getUid();
+        mFollowViewModel.fetchFollowingList(mUid);
     }
+
 
     @Override
     public void onClick(View view) {
@@ -131,6 +132,7 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
             startActivity(new Intent(getApplication(), UserActivity.class));
         }
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

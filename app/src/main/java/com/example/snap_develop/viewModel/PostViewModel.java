@@ -1,7 +1,5 @@
 package com.example.snap_develop.viewModel;
 
-import android.graphics.Bitmap;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,16 +10,14 @@ import com.example.snap_develop.model.PostModel;
 import com.google.android.gms.maps.model.VisibleRegion;
 
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
 public class PostViewModel extends ViewModel {
 
+    PostModel mPostModel = new PostModel();
     MutableLiveData<PostBean> post;
     MutableLiveData<List<PostBean>> postList;
-    MutableLiveData<Map<String, Bitmap>> timeLinePictureList;
-    PostModel postModel = new PostModel();
 
     public MutableLiveData<PostBean> getPost() {
         Timber.i(MyDebugTree.START_LOG);
@@ -41,25 +37,17 @@ public class PostViewModel extends ViewModel {
     }
 
 
-    public MutableLiveData<Map<String, Bitmap>> getTimeLinePictureList() {
-        if (timeLinePictureList == null) {
-            timeLinePictureList = new MutableLiveData<>();
-        }
-        return timeLinePictureList;
-    }
-
-
     public void insertPost(PostBean postBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postBean", postBean));
-        postModel.insertPost(postBean);
+        mPostModel.insertPost(postBean);
     }
 
 
     public void insertComment(PostBean postBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postBean", postBean));
-        postModel.insertComment(postBean);
+        mPostModel.insertComment(postBean);
     }
 
 
@@ -69,7 +57,7 @@ public class PostViewModel extends ViewModel {
         if (post == null) {
             post = new MutableLiveData<>();
         }
-        postModel.fetchPost(postPath, post);
+        mPostModel.fetchPost(postPath, post);
     }
 
 
@@ -79,7 +67,7 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        postModel.fetchPostList(uid, postList);
+        mPostModel.fetchPostList(uid, postList);
     }
 
 
@@ -88,7 +76,7 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        postModel.fetchPostCommentList(postPath, postList);
+        mPostModel.fetchPostCommentList(postPath, postList);
     }
 
 
@@ -98,7 +86,7 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        postModel.fetchMapPostList(visibleRegion, postList);
+        mPostModel.fetchMapPostList(visibleRegion, postList);
     }
 
 
@@ -108,7 +96,7 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        postModel.fetchTimeLine(userBeanList, postList);
+        mPostModel.fetchTimeLine(userBeanList, postList);
     }
 
 
@@ -118,20 +106,20 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        postModel.fetchSearchPost(searchWord, postList);
+        mPostModel.fetchSearchPost(searchWord, postList);
     }
 
 
     public void addGood(String uid, String postPath) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "postPath", postPath));
-        postModel.addGood(uid, postPath);
+        mPostModel.addGood(uid, postPath);
     }
+
 
     public void callGoodNotification(String uid, String postPath) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "uid", uid));
-
-        postModel.callGoodNotification(uid, postPath);
+        mPostModel.callGoodNotification(uid, postPath);
     }
 }

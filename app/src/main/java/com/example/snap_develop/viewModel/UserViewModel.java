@@ -1,7 +1,5 @@
 package com.example.snap_develop.viewModel;
 
-import android.graphics.Bitmap;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,17 +9,16 @@ import com.example.snap_develop.model.UserModel;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
 public class UserViewModel extends ViewModel {
+
+    UserModel userModel = new UserModel();
     private MutableLiveData<String> authResult;
     private MutableLiveData<String> updateResult;
-    private MutableLiveData<Map<String, Bitmap>> iconList;
     private MutableLiveData<UserBean> user;
     private MutableLiveData<List<UserBean>> userList;
-    UserModel userModel = new UserModel();
 
     public MutableLiveData<String> getAuthResult() {
         Timber.i(MyDebugTree.START_LOG);
@@ -90,12 +87,6 @@ public class UserViewModel extends ViewModel {
         userModel.signOut();
     }
 
-    public void insertUser(UserBean userBean) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
-        userModel.insertUser(userBean);
-    }
-
 
     public void updateUser(UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
@@ -132,6 +123,7 @@ public class UserViewModel extends ViewModel {
         }
         userModel.fetchUserInfoList(uidList, userList);
     }
+
 
     public void fcmTokenInsert(String uid) {
         Timber.i(MyDebugTree.START_LOG);

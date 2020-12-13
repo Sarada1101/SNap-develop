@@ -34,14 +34,14 @@ import timber.log.Timber;
 
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FusedLocationProviderClient mFusedLocationClient;
+    private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
     private MapViewModel mMapViewModel;
-    private UserViewModel mUserViewModel;
     private ActivityPostBinding mBinding;
-    private static final int REQUEST_GALLERY = 0;
+    private FusedLocationProviderClient mFusedLocationClient;
     private String mPhotoName = "";
-    Bitmap mBitMap;
+    private Bitmap mBitMap;
+    private static final int REQUEST_GALLERY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 postBean.setType("post");
 
                 mPostViewModel.insertPost(postBean);
-
                 startActivity(new Intent(getApplication(), MapActivity.class));
             }
         });
@@ -127,6 +126,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         startActivityForResult(intent, REQUEST_GALLERY);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Timber.i(MyDebugTree.START_LOG);
@@ -153,6 +153,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
     @Override
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
@@ -169,6 +170,5 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
         }
-
     }
 }

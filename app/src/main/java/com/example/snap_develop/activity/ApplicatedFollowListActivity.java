@@ -26,13 +26,13 @@ import timber.log.Timber;
 public class ApplicatedFollowListActivity extends AppCompatActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener {
 
-    private FollowViewModel mFollowViewModel;
     private UserViewModel mUserViewModel;
-    private String mUid;
-    private ListView mListView;
-    private ApplicatedFollowListAdapter mApplicatedFollowListAdapter;
-    private List<UserBean> mFollowList;
+    private FollowViewModel mFollowViewModel;
     private ActivityApplicatedFollowListBinding mBinding;
+    private ApplicatedFollowListAdapter mApplicatedFollowListAdapter;
+    private ListView mListView;
+    private List<UserBean> mFollowList;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +51,6 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
 
-        mUid = mUserViewModel.getCurrentUser().getUid();
-
         // フォロー申請リストを取得したら
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
             @Override
@@ -68,6 +66,8 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
                 mListView.setOnItemClickListener(ApplicatedFollowListActivity.this);
             }
         });
+
+        mUid = mUserViewModel.getCurrentUser().getUid();
         mFollowViewModel.fetchApplicatedList(mUid);
     }
 
@@ -78,6 +78,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
         mFollowViewModel.insertFollowing(uid, myUid);
         mFollowViewModel.deleteApprovalPendingFollow(uid, myUid);
     }
+
 
     private void rejectFollow(String uid, String myUid) {
         mFollowViewModel.deleteApplicatedFollow(/*from*/myUid, /*delete*/uid);
@@ -102,6 +103,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
             startActivity(new Intent(getApplication(), ApprovalPendingFollowListActivity.class));
         }
     }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
