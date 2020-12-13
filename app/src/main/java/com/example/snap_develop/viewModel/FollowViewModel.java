@@ -15,7 +15,8 @@ public class FollowViewModel extends ViewModel {
 
     FollowModel followModel = new FollowModel();
     private MutableLiveData<List<UserBean>> followList;
-    private MutableLiveData<Integer> userCount;
+    private MutableLiveData<Boolean> following;
+    private MutableLiveData<Boolean> approvalPendingFollow;
 
     public MutableLiveData<List<UserBean>> getFollowList() {
         if (followList == null) {
@@ -24,11 +25,18 @@ public class FollowViewModel extends ViewModel {
         return followList;
     }
 
-    public MutableLiveData<Integer> getUserCount() {
-        if (userCount == null) {
-            userCount = new MutableLiveData<>();
+    public MutableLiveData<Boolean> getFollowing() {
+        if (following == null) {
+            following = new MutableLiveData<>();
         }
-        return userCount;
+        return following;
+    }
+
+    public MutableLiveData<Boolean> getApprovalPendingFollow() {
+        if (approvalPendingFollow == null) {
+            approvalPendingFollow = new MutableLiveData<>();
+        }
+        return approvalPendingFollow;
     }
 
     public void deleteApplicatedFollow(String fromUid, String deleteUid) {
@@ -112,11 +120,15 @@ public class FollowViewModel extends ViewModel {
         followModel.fetchApplicatedList(uid, followList);
     }
 
-    public void fetchCount(String userPath, String countPath) {
+    public void checkFollowing(String fromUid, String checkUid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "userPath", userPath, "countPath", countPath));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "checkUid", checkUid));
+        followModel.checkFollowing(fromUid, checkUid, following);
+    }
 
-        userCount = new MutableLiveData<>();
-        followModel.fetchCount(userPath, countPath, userCount);
+    public void checkApprovalPendingFollow(String fromUid, String checkUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "checkUid", checkUid));
+        followModel.checkApprovalPendingFollow(fromUid, checkUid, approvalPendingFollow);
     }
 }
