@@ -1,22 +1,22 @@
 package com.example.snap_develop.model;
 
-import android.util.Log;
-
-import com.example.snap_develop.util.LogUtil;
+import com.example.snap_develop.MyDebugTree;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+
+import timber.log.Timber;
 
 public class Firebase {
     protected FirebaseFirestore firestore;
     protected FirebaseStorage storage;
 
     public void firestoreConnect() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         firestore = FirebaseFirestore.getInstance();
     }
 
     public void storageConnect() {
-        Log.i(LogUtil.getClassName(), LogUtil.getLogMessage());
+        Timber.i(MyDebugTree.START_LOG);
         storage = FirebaseStorage.getInstance();
     }
 }
