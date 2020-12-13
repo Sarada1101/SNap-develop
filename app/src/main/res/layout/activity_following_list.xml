@@ -13,23 +13,17 @@
         android:minWidth="3dp"
         tools:context=".activity.FollowingListActivity">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ListView
+            android:id="@+id/followingListView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ListView
-                android:id="@+id/followView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
@@ -65,6 +59,7 @@
                 android:layout_weight="1"
                 android:onClick="onClick"
                 android:src="@drawable/ic_baseline_account_circle_24"
+                android:tint="@color/colorPrimary"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 

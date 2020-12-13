@@ -18,7 +18,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,11 +28,12 @@ import timber.log.Timber;
 
 public class FollowModel extends Firebase {
 
-    //userPath : 申請された人のuid
+    //uid : 申請された人のuid
     //myUid : 申請した人のuid
     //フォロー申請された人のapplicated_followsに申請された人のuidのパスを追加
-    public void insertApplicatedFollow(final String userPath, String myUid) {
-        System.out.println("-----------------insertApplicated----------------");
+    public void insertApplicatedFollow(final String uid, String myUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "myUid", myUid));
 
         this.firestoreConnect();
 
@@ -43,7 +43,7 @@ public class FollowModel extends Firebase {
         addData.put("path", applicatedPath);
 
         firestore.collection("users")
-                .document(userPath)
+                .document(uid)
                 .collection("applicated_follows")
                 .document(myUid)//ドキュメントIDを申請された人のuidに指定
                 .set(addData)
@@ -62,7 +62,7 @@ public class FollowModel extends Firebase {
         });
 
         firestore.collection("users")
-                .document(userPath)
+                .document(uid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -73,7 +73,7 @@ public class FollowModel extends Firebase {
                         updateCount++;
 
                         firestore.collection("users")
-                                .document(userPath)
+                                .document(uid)
                                 .update("applicated_count", updateCount)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -97,13 +97,16 @@ public class FollowModel extends Firebase {
         });
     }
 
-    //userPath : 申請された人のuid
+    //uid : 申請された人のuid
     //myUid : 申請した人のuid
     //フォロー申請した人のapproval_pending_followsに申請した人のuidのパスを追加
-    public void insertApprovalPendingFollow(String userPath, final String myUid) {
+    public void insertApprovalPendingFollow(String uid, final String myUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "myUid", myUid));
+
         this.firestoreConnect();
 
-        DocumentReference approvalPath = firestore.collection("users").document(userPath);
+        DocumentReference approvalPath = firestore.collection("users").document(uid);
 
         Map<String, Object> addData = new HashMap<>();
         addData.put("path", approvalPath);
@@ -111,7 +114,7 @@ public class FollowModel extends Firebase {
         firestore.collection("users")
                 .document(myUid)
                 .collection("approval_pending_follows")
-                .document(userPath)//ドキュメントIDを申請した人のuidに指定
+                .document(uid)//ドキュメントIDを申請した人のuidに指定
                 .set(addData)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -162,261 +165,202 @@ public class FollowModel extends Firebase {
         });
     }
 
-    //userPath : 申請して許可を待っている人のuid
-    //myUid : 申請を拒否しようとしている人のuid
-    //申請を拒否しようとしている人のapplicated_followsのドキュメントIDが申請して許可を待っている人のuidのとこを削除
-    public void deleteApplicatedFollow(String userPath, final String myUid) {
+    // toUid から deleteUid を削除する
+    public void deleteApplicatedFollow(String fromUid, final String deleteUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
+
         this.firestoreConnect();
 
         firestore.collection("users")
-                .document(myUid)
+                .document(fromUid)
                 .collection("applicated_follows")
-                .document(userPath)
+                .document(deleteUid)
                 .delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Log.d(LogUtil.getClassName(), "deleteApplicatedFollow:success");
-                        System.out.println(
-                                "-----------------deleteApplicated:comp----------------");
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "deleteApplicatedFollow:failure:" + e);
-            }
-        });
-
-        firestore.collection("users")
-                .document(myUid)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                })
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot doc = task.getResult();
-
-                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("applicated_count")));
-                        updateCount--;
-
-                        firestore.collection("users")
-                                .document(myUid)
-                                .update("applicated_count", updateCount)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Log.d(LogUtil.getClassName(), "update(applicated_count):success");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
-                                    }
-                                });
-
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "update(applicated_count):failure", e);
-            }
-        });
+                });
     }
 
-    //userPath : 申請して許可を待っている人のuid
-    //myUid : 申請を拒否しようとしている人のuid
-    //申請して許可を待っている人のapproval_pending_followsのドキュメントIDが申請を拒否しようとしている人のuidのとこを削除
-    public void deleteApprovalPendingFollow(final String userPath, String myUid) {
+    // toUid から deleteUid を削除する
+    public void deleteApprovalPendingFollow(final String fromUid, String deleteUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
+
         this.firestoreConnect();
 
         firestore.collection("users")
-                .document(userPath)
+                .document(fromUid)
                 .collection("approval_pending_follows")
-                .document(myUid)
+                .document(deleteUid)
                 .delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Log.d(LogUtil.getClassName(), "deleteApprovvalPendingFollow:success");
-                        System.out.println("-----------------deleteApproval:comp----------------");
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "deleteApprovalPendingFollow:failure:" + e);
-            }
-        });
-
-        firestore.collection("users")
-                .document(userPath)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                })
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot doc = task.getResult();
-
-                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("approval_pending_count")));
-                        updateCount--;
-
-                        firestore.collection("users")
-                                .document(userPath)
-                                .update("approval_pending_count", updateCount)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        Log.d(LogUtil.getClassName(), "update(approval_pending_count):success");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(LogUtil.getClassName(), "update(approval_pending_count):failure", e);
-                                    }
-                                });
-
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "update(approval_pending_count):failure", e);
-            }
-        });
+                });
     }
 
-    //userPath : 申請して許可を待っている人のuid
-    //myUid : 申請を許可した人のuid
-    //申請を許可した人のfollowerのコレクションの中に申請して許可を待っている人のuidのパスを追加
-    public void insertFollower(String userPath, final String myUid) {
+    // toUid へ insetUid を追加する
+    public void insertFollower(final String toUid, String insertUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
+
         this.firestoreConnect();
 
-        DocumentReference followerPath = firestore.collection("users").document(userPath);
-
-        Map<String, Object> addData = new HashMap<>();
-        addData.put("path", followerPath);
+        Map<String, Object> followerPath = new HashMap<>();
+        followerPath.put("path", firestore.collection("users").document(insertUid));
 
         firestore.collection("users")
-                .document(myUid)
+                .document(toUid)
                 .collection("follower")
-                .document(userPath)//ドキュメントIDを申請された人のuidに指定
-                .set(addData)
+                .document(insertUid)
+                .set(followerPath)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Log.d(LogUtil.getClassName(), "insertFollower:success");
-                        System.out.println(
-                                "-----------------insertFollower:comp----------------");
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "insertFollower:failure:" + e);
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
 
         firestore.collection("users")
-                .document(myUid)
+                .document(toUid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot doc = task.getResult();
-
-                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("follower_count")));
+                        Integer updateCount = Integer.valueOf(
+                                String.valueOf(task.getResult().getLong("follower_count")));
                         updateCount++;
 
                         firestore.collection("users")
-                                .document(myUid)
+                                .document(toUid)
                                 .update("follower_count", updateCount)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Log.d(LogUtil.getClassName(), "update(follower_count):success");
+                                        Timber.i(MyDebugTree.INPUT_LOG);
+                                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.w(LogUtil.getClassName(), "update(follower_count):failure", e);
+                                        Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.e(e.toString());
                                     }
                                 });
-
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "update(following_count):failure", e);
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
     }
 
-    //userPath : 申請して許可を待っている人のuid
-    //myUid : 申請を許可した人のuid
-    //申請して許可を待っている人のfollowingのコレクションの中に申請を許可した人のuidのパスを追加
-    public void insertFollowing(final String userPath, String myUid) {
+    // toUid へ insetUid を追加する
+    public void insertFollowing(final String toUid, String insertUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
+
         this.firestoreConnect();
 
-        DocumentReference followingPath = firestore.collection("users").document(myUid);
-
-        Map<String, Object> addData = new HashMap<>();
-        addData.put("path", followingPath);
+        Map<String, Object> followingPath = new HashMap<>();
+        followingPath.put("path", firestore.collection("users").document(insertUid));
 
         firestore.collection("users")
-                .document(userPath)
+                .document(toUid)
                 .collection("following")
-                .document(myUid)//ドキュメントIDを申請された人のuidに指定
-                .set(addData)
+                .document(insertUid)
+                .set(followingPath)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Log.d(LogUtil.getClassName(), "insertFollowing:success");
-                        System.out.println(
-                                "-----------------insertFollowing:comp----------------");
+                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "insertFollowing:failure:" + e);
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
 
         firestore.collection("users")
-                .document(userPath)
+                .document(toUid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot doc = task.getResult();
-
-                        Integer updateCount = Integer.valueOf(String.valueOf(doc.get("following_count")));
+                        Integer updateCount = Integer.valueOf(String.valueOf(task.getResult().get("following_count")));
                         updateCount++;
 
                         firestore.collection("users")
-                                .document(userPath)
+                                .document(toUid)
                                 .update("following_count", updateCount)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Log.d(LogUtil.getClassName(), "update(following_count):success");
+                                        Timber.i(MyDebugTree.INPUT_LOG);
+                                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.w(LogUtil.getClassName(), "update(following_count):failure", e);
+                                        Timber.i(MyDebugTree.FAILURE_LOG);
+                                        Timber.e(e.toString());
                                     }
                                 });
-
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(LogUtil.getClassName(), "update(following_count):failure", e);
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
     }
 
 
     public void fetchFollowingList(String uid, final MutableLiveData<List<UserBean>> followList) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "followList", followList));
+
         this.firestoreConnect();
         this.storageConnect();
 
@@ -505,313 +449,277 @@ public class FollowModel extends Firebase {
     }
 
 
-    public void fetchFollowerList(String userPath,
-            final MutableLiveData<List<UserBean>> followList) {
+    public void fetchFollowerList(String uid, final MutableLiveData<List<UserBean>> followList) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "followList", followList));
+
         this.firestoreConnect();
         this.storageConnect();
 
-        final List<DocumentReference> refList = new ArrayList<>();
+        final List<DocumentReference> followingRefList = new ArrayList<>();
         final List<UserBean> followingUserList = new ArrayList<>();
 
+        // フォロワーリストを取得
         firestore.collection("users")
-                .document(userPath)
+                .document(uid)
                 .collection("follower")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(LogUtil.getClassName(), "getRefList:success");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                refList.add(document.getDocumentReference("path"));
-                            }
-                            for (DocumentReference ref : refList) {
-                                ref.get()
-                                        .addOnCompleteListener(
-                                                new OnCompleteListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onComplete(
-                                                            @NonNull Task<DocumentSnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            final DocumentSnapshot doc = task.getResult();
-                                                            final UserBean addBean = new UserBean();
-                                                            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
-                                                            StorageReference imageRef = storage.getReference().child(
-                                                                    "icon").child(doc.getId()).child(
-                                                                    doc.getString("icon"));
-
-                                                            System.out.println(imageRef);
-
-                                                            imageRef.getBytes(FIVE_MEGABYTE)
-                                                                    .addOnSuccessListener(
-                                                                            new OnSuccessListener<byte[]>() {
-                                                                                @Override
-                                                                                public void onSuccess(byte[] aByte) {
-                                                                                    Timber.i(MyDebugTree.SUCCESS_LOG);
-                                                                                    System.out.println(
-                                                                                            "icon/" + doc.getId() + "/"
-                                                                                                    + doc.getString(
-                                                                                                    "icon"));
-                                                                                    Bitmap bitmap =
-                                                                                            BitmapFactory.decodeByteArray(
-                                                                                                    aByte, 0,
-                                                                                                    aByte.length);
-                                                                                    addBean.setIcon(bitmap);
-                                                                                    addBean.setIconName(
-                                                                                            doc.getString("icon"));
-                                                                                    addBean.setMessage(
-                                                                                            doc.getString("message"));
-                                                                                    addBean.setName(
-                                                                                            doc.getString("name"));
-                                                                                    addBean.setUid(doc.getId());
-                                                                                    addBean.setCommentNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "comment_notice"));
-                                                                                    addBean.setFollowNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "follow_notice"));
-                                                                                    addBean.setGoodNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "good_notice"));
-                                                                                    addBean.setPublicationArea(
-                                                                                            doc.getString(
-                                                                                                    "publication_area"
-                                                                                            ));
-                                                                                    followingUserList.add(addBean);
-                                                                                    followList.setValue(
-                                                                                            followingUserList);
-                                                                                }
-                                                                            })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            Timber.i(MyDebugTree.FAILURE_LOG);
-                                                                            Timber.e(e.toString());
-                                                                        }
-                                                                    });
-                                                            Log.d(LogUtil.getClassName(),
-                                                                    "fetchApprovalPendingList:success");
-                                                        } else {
-                                                            Log.w(LogUtil.getClassName(),
-                                                                    "fetchApprovalPendingList:failure",
-                                                                    task.getException());
-                                                        }
-
-                                                    }
-                                                });
-                            }
-                        } else {
-                            Log.w(LogUtil.getClassName(), "getRefList:failure",
-                                    task.getException());
+                        Timber.i(MyDebugTree.START_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            followingRefList.add(document.getDocumentReference("path"));
                         }
+
+                        // フォロワーしているユーザー情報を取得
+                        for (DocumentReference ref : followingRefList) {
+                            ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    Timber.i(MyDebugTree.START_LOG);
+                                    Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
+                                    DocumentSnapshot document = task.getResult();
+                                    final UserBean userBean = new UserBean();
+                                    userBean.setIconName(document.getString("icon"));
+                                    userBean.setName(document.getString("name"));
+                                    userBean.setUid(document.getId());
+
+                                    // アイコン画像を取得
+                                    final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+                                    storage.getReference()
+                                            .child("icon")
+                                            .child(userBean.getUid())
+                                            .child(userBean.getIconName())
+                                            .getBytes(FIVE_MEGABYTE)
+                                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] aByte) {
+                                                    Timber.i(MyDebugTree.SUCCESS_LOG);
+                                                    Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                            userBean.getIconName()));
+                                                    Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0,
+                                                            aByte.length);
+                                                    userBean.setIcon(bitmap);
+                                                    followingUserList.add(userBean);
+
+                                                    // もし画像を全て取得したら
+                                                    if (followingUserList.size() >= followingRefList.size()) {
+                                                        Timber.i(String.valueOf(followingUserList));
+                                                        followList.setValue(followingUserList);
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Timber.i(MyDebugTree.FAILURE_LOG);
+                                                    Timber.e(e.toString());
+                                                }
+                                            });
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Timber.i(MyDebugTree.FAILURE_LOG);
+                                            Timber.e(e.toString());
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
                 });
     }
 
 
-    public void fetchApprovalPendingList(String userPath,
-            final MutableLiveData<List<UserBean>> followList) {
+    public void fetchApprovalPendingList(String uid, final MutableLiveData<List<UserBean>> followList) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "followList", followList));
+
         this.firestoreConnect();
         this.storageConnect();
 
-        final List<DocumentReference> refList = new ArrayList<>();
+        final List<DocumentReference> followingRefList = new ArrayList<>();
         final List<UserBean> followingUserList = new ArrayList<>();
 
+        // フォロー承認待ちリストを取得
         firestore.collection("users")
-                .document(userPath)
+                .document(uid)
                 .collection("approval_pending_follows")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(LogUtil.getClassName(), "getRefList:success");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                refList.add(document.getDocumentReference("path"));
-                            }
-                            for (DocumentReference ref : refList) {
-                                ref.get()
-                                        .addOnCompleteListener(
-                                                new OnCompleteListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onComplete(
-                                                            @NonNull Task<DocumentSnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            final DocumentSnapshot doc = task.getResult();
-                                                            final UserBean addBean = new UserBean();
-                                                            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
-                                                            StorageReference imageRef = storage.getReference().child(
-                                                                    "icon").child(doc.getId()).child(
-                                                                    doc.getString("icon"));
-
-                                                            System.out.println(imageRef);
-
-                                                            imageRef.getBytes(FIVE_MEGABYTE)
-                                                                    .addOnSuccessListener(
-                                                                            new OnSuccessListener<byte[]>() {
-                                                                                @Override
-                                                                                public void onSuccess(byte[] aByte) {
-                                                                                    Timber.i(MyDebugTree.SUCCESS_LOG);
-                                                                                    System.out.println(
-                                                                                            "icon/" + doc.getId() + "/"
-                                                                                                    + doc.getString(
-                                                                                                    "icon"));
-                                                                                    Bitmap bitmap =
-                                                                                            BitmapFactory.decodeByteArray(
-                                                                                                    aByte, 0,
-                                                                                                    aByte.length);
-                                                                                    addBean.setIcon(bitmap);
-                                                                                    addBean.setIconName(
-                                                                                            doc.getString("icon"));
-                                                                                    addBean.setMessage(
-                                                                                            doc.getString("message"));
-                                                                                    addBean.setName(
-                                                                                            doc.getString("name"));
-                                                                                    addBean.setUid(doc.getId());
-                                                                                    addBean.setCommentNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "comment_notice"));
-                                                                                    addBean.setFollowNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "follow_notice"));
-                                                                                    addBean.setGoodNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "good_notice"));
-                                                                                    addBean.setPublicationArea(
-                                                                                            doc.getString(
-                                                                                                    "publication_area"
-                                                                                            ));
-                                                                                    followingUserList.add(addBean);
-                                                                                    followList.setValue(
-                                                                                            followingUserList);
-                                                                                }
-                                                                            })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            Timber.i(MyDebugTree.FAILURE_LOG);
-                                                                            Timber.e(e.toString());
-                                                                        }
-                                                                    });
-                                                            Log.d(LogUtil.getClassName(),
-                                                                    "fetchApprovalPendingList:success");
-                                                        } else {
-                                                            Log.w(LogUtil.getClassName(),
-                                                                    "fetchApprovalPendingList:failure",
-                                                                    task.getException());
-                                                        }
-
-                                                    }
-                                                });
-                            }
-                        } else {
-                            Log.w(LogUtil.getClassName(), "getRefList:failure",
-                                    task.getException());
+                        Timber.i(MyDebugTree.START_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            followingRefList.add(document.getDocumentReference("path"));
                         }
+
+                        // フォロー承認待ちしているユーザー情報を取得
+                        for (DocumentReference ref : followingRefList) {
+                            ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    Timber.i(MyDebugTree.START_LOG);
+                                    Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
+                                    DocumentSnapshot document = task.getResult();
+                                    final UserBean userBean = new UserBean();
+                                    userBean.setIconName(document.getString("icon"));
+                                    userBean.setName(document.getString("name"));
+                                    userBean.setUid(document.getId());
+
+                                    // アイコン画像を取得
+                                    final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+                                    storage.getReference()
+                                            .child("icon")
+                                            .child(userBean.getUid())
+                                            .child(userBean.getIconName())
+                                            .getBytes(FIVE_MEGABYTE)
+                                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] aByte) {
+                                                    Timber.i(MyDebugTree.SUCCESS_LOG);
+                                                    Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                            userBean.getIconName()));
+                                                    Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0,
+                                                            aByte.length);
+                                                    userBean.setIcon(bitmap);
+                                                    followingUserList.add(userBean);
+
+                                                    // もし画像を全て取得したら
+                                                    if (followingUserList.size() >= followingRefList.size()) {
+                                                        Timber.i(String.valueOf(followingUserList));
+                                                        followList.setValue(followingUserList);
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Timber.i(MyDebugTree.FAILURE_LOG);
+                                                    Timber.e(e.toString());
+                                                }
+                                            });
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Timber.i(MyDebugTree.FAILURE_LOG);
+                                            Timber.e(e.toString());
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
                 });
     }
 
 
-    public void fetchApplicatedList(String userPath,
+    public void fetchApplicatedList(String uid, final MutableLiveData<List<UserBean>> followList) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "followList", followList));
 
-            final MutableLiveData<List<UserBean>> followList) {
         this.firestoreConnect();
         this.storageConnect();
 
-        final List<DocumentReference> refList = new ArrayList<>();
+        final List<DocumentReference> followingRefList = new ArrayList<>();
         final List<UserBean> followingUserList = new ArrayList<>();
 
+        // フォロー申請リストを取得
         firestore.collection("users")
-                .document(userPath)
+                .document(uid)
                 .collection("applicated_follows")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull final Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(LogUtil.getClassName(), "getRefList:success");
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                refList.add(document.getDocumentReference("path"));
-                            }
-                            for (DocumentReference ref : refList) {
-                                ref.get()
-                                        .addOnCompleteListener(
-                                                new OnCompleteListener<DocumentSnapshot>() {
-                                                    @Override
-                                                    public void onComplete(
-                                                            @NonNull Task<DocumentSnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            final DocumentSnapshot doc = task.getResult();
-                                                            final UserBean addBean = new UserBean();
-                                                            final long FIVE_MEGABYTE = 1024 * 1024 * 5;
-                                                            StorageReference imageRef = storage.getReference().child(
-                                                                    "icon").child(doc.getId()).child(
-                                                                    doc.getString("icon"));
-
-                                                            System.out.println(imageRef);
-
-                                                            imageRef.getBytes(FIVE_MEGABYTE)
-                                                                    .addOnSuccessListener(
-                                                                            new OnSuccessListener<byte[]>() {
-                                                                                @Override
-                                                                                public void onSuccess(byte[] aByte) {
-                                                                                    Timber.i(MyDebugTree.SUCCESS_LOG);
-                                                                                    System.out.println(
-                                                                                            "icon/" + doc.getId() + "/"
-                                                                                                    + doc.getString(
-                                                                                                    "icon"));
-                                                                                    Bitmap bitmap =
-                                                                                            BitmapFactory.decodeByteArray(
-                                                                                                    aByte, 0,
-                                                                                                    aByte.length);
-                                                                                    addBean.setIcon(bitmap);
-                                                                                    addBean.setIconName(
-                                                                                            doc.getString("icon"));
-                                                                                    addBean.setMessage(
-                                                                                            doc.getString("message"));
-                                                                                    addBean.setName(
-                                                                                            doc.getString("name"));
-                                                                                    addBean.setUid(doc.getId());
-                                                                                    addBean.setCommentNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "comment_notice"));
-                                                                                    addBean.setFollowNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "follow_notice"));
-                                                                                    addBean.setGoodNotice(
-                                                                                            doc.getBoolean(
-                                                                                                    "good_notice"));
-                                                                                    addBean.setPublicationArea(
-                                                                                            doc.getString(
-                                                                                                    "publication_area"
-                                                                                            ));
-                                                                                    followingUserList.add(addBean);
-                                                                                    followList.setValue(
-                                                                                            followingUserList);
-                                                                                }
-                                                                            })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            Timber.i(MyDebugTree.FAILURE_LOG);
-                                                                            Timber.e(e.toString());
-                                                                        }
-                                                                    });
-                                                            Log.d(LogUtil.getClassName(),
-                                                                    "fetchApplicatedList:success");
-                                                        } else {
-                                                            Log.w(LogUtil.getClassName(), "fetchApplicatedList:failure",
-                                                                    task.getException());
-                                                        }
-
-                                                    }
-                                                });
-                            }
-                        } else {
-                            Log.w(LogUtil.getClassName(), "getRefList:failure",
-                                    task.getException());
+                        Timber.i(MyDebugTree.START_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            followingRefList.add(document.getDocumentReference("path"));
                         }
+
+                        // フォロー申請しているユーザー情報を取得
+                        for (DocumentReference ref : followingRefList) {
+                            ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    Timber.i(MyDebugTree.START_LOG);
+                                    Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
+                                    DocumentSnapshot document = task.getResult();
+                                    final UserBean userBean = new UserBean();
+                                    userBean.setIconName(document.getString("icon"));
+                                    userBean.setName(document.getString("name"));
+                                    userBean.setUid(document.getId());
+
+                                    // アイコン画像を取得
+                                    final long FIVE_MEGABYTE = 1024 * 1024 * 5;
+                                    storage.getReference()
+                                            .child("icon")
+                                            .child(userBean.getUid())
+                                            .child(userBean.getIconName())
+                                            .getBytes(FIVE_MEGABYTE)
+                                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                @Override
+                                                public void onSuccess(byte[] aByte) {
+                                                    Timber.i(MyDebugTree.SUCCESS_LOG);
+                                                    Timber.i(String.format("path=/%s/%s/%s", "icon", userBean.getUid(),
+                                                            userBean.getIconName()));
+                                                    Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0,
+                                                            aByte.length);
+                                                    userBean.setIcon(bitmap);
+                                                    followingUserList.add(userBean);
+
+                                                    // もし画像を全て取得したら
+                                                    if (followingUserList.size() >= followingRefList.size()) {
+                                                        Timber.i(String.valueOf(followingUserList));
+                                                        followList.setValue(followingUserList);
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Timber.i(MyDebugTree.FAILURE_LOG);
+                                                    Timber.e(e.toString());
+                                                }
+                                            });
+                                }
+                            })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Timber.i(MyDebugTree.FAILURE_LOG);
+                                            Timber.e(e.toString());
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
                     }
                 });
     }

@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -22,42 +22,36 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/approvalPendingButton"
+                android:id="@+id/approvalPendingFolliwButton"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/cardview_shadow_start_color"
-                android:clickable="false"
-                android:text="@string/approvalPending" />
+                android:backgroundTint="@color/colorAccent"
+                android:text="@string/approvalPending"
+                android:textColor="@color/colorTextwhite" />
 
             <Button
                 android:id="@+id/applicatedFollowButton"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/followApplication" />
+                android:backgroundTint="@color/colorSecondly"
+                android:clickable="false"
+                android:text="@string/followApplication"
+                android:textColor="@color/colorTextwhite" />
 
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout3"
+        <ListView
+            android:id="@+id/approvalPendingFollowListView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintVertical_bias="0.0">
-
-            <ListView
-                android:id="@+id/approvalPendingList"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
@@ -90,6 +84,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/ic_baseline_account_circle_24"
+                android:tint="@color/colorPrimary"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 
