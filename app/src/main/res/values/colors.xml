@@ -8,4 +8,5 @@
     <color name="colorTextBlack">#000000</color>
     <color name="colorTextwhite">#FFFFFF</color>
     <color name="colorDanger">#CB444A</color>
+    <color name="colorDangeBackground">#F06060</color>
 </resources>

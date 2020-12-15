@@ -2,6 +2,7 @@ package com.example.snap_develop.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.activity.UserActivity;
@@ -39,6 +41,7 @@ public class TimelineAdapter extends BaseAdapter {
         TextView latLng;
         ImageView photo;
         ConstraintLayout userInfo;
+        ConstraintLayout background;
     }
 
     public TimelineAdapter(Context context, List<Map<String, Object>> timelineDataMapList, int rowLayout) {
@@ -83,6 +86,7 @@ public class TimelineAdapter extends BaseAdapter {
             holder.uid = convertView.findViewById(R.id.timelineUidTextView);
             holder.username = convertView.findViewById(R.id.timelineNameTextView);
             holder.userInfo = convertView.findViewById(R.id.userInfoConstraintLayout);
+            holder.background = convertView.findViewById(R.id.timelineConsstraintLayout);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -111,6 +115,18 @@ public class TimelineAdapter extends BaseAdapter {
                 mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra("uid", userBean.getUid()));
             }
         });
+
+        if (postBean.isAnonymous()) {
+            holder.icon.setImageBitmap(
+                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+            holder.username.setText("匿名");
+            holder.uid.setText("匿名");
+            holder.userInfo.setOnClickListener(null);
+        }
+
+        if (postBean.isDanger()) {
+            holder.background.setBackgroundColor(Color.rgb(240, 96, 96));
+        }
         return convertView;
     }
 }

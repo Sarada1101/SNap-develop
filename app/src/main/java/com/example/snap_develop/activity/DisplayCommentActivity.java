@@ -1,6 +1,7 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.adapter.DisplayCommentAdapter;
@@ -58,6 +60,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
 
         mBinding.favorite.setOnClickListener(this);
         mBinding.commentButton.setOnClickListener(this);
+        mBinding.postUserInfoConstraintLayout.setOnClickListener(this);
         mBinding.timelineImageButton.setOnClickListener(this);
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
@@ -69,7 +72,21 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s=%s", "postBean", postBean));
                 if (postBean.getPhotoName() != null) mBinding.photoImageView.setMaxHeight(300);
-                mUserViewModel.fetchUserInfo(postBean.getUid());
+
+                if (postBean.isAnonymous()) {
+                    mBinding.iconImageView.setImageBitmap(
+                            MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
+                                    R.drawable.ic_baseline_account_circle_24));
+                    mBinding.nameTextView.setText("匿名");
+                    mBinding.idTextView.setText("匿名");
+                    mBinding.postUserInfoConstraintLayout.setOnClickListener(null);
+                } else {
+                    mUserViewModel.fetchUserInfo(postBean.getUid());
+                }
+
+                if (postBean.isDanger()) {
+                    mBinding.parentPostConstraintLayout.setBackgroundColor(Color.rgb(240, 96, 96));
+                }
             }
         });
 
@@ -166,10 +183,10 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
-        } else if (i == R.id.iconImageView) {
-            startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", mUid));
         } else if (i == R.id.favorite) {
             addGood();
+        } else if (i == R.id.postUserInfoConstraintLayout) {
+            startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", mUid));
         }
     }
 
@@ -177,6 +194,9 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
-        startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
+        PostBean postBean = (PostBean) mCommentDataMapList.get(position).get("postBean");
+        if (!postBean.isAnonymous()) {
+            startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
+        }
     }
 }
