@@ -789,7 +789,7 @@ public class PostModel extends Firebase {
     }
 
 
-    public void addGood(String uid, final String postPath) {
+    public void addGood(final String uid, final String postPath) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "postPath", postPath));
 
@@ -811,6 +811,7 @@ public class PostModel extends Firebase {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         Timber.i(MyDebugTree.SUCCESS_LOG);
                                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+                                        callGoodNotification(uid, postPath);
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {

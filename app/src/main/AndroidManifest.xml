@@ -56,7 +56,6 @@
         <service
             android:name=".service.ReceiveMessagingService"
             android:exported="false">
-            <!-- android:name=".service.FollowMessagingService" -->
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
