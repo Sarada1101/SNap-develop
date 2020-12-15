@@ -14,6 +14,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.service.ConnectApiService;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,13 +31,10 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableResult;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.ByteArrayOutputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,8 +42,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 public class PostModel extends Firebase {
@@ -646,98 +647,145 @@ public class PostModel extends Firebase {
     }
 
 
-    public void fetchSearchPost(String searchWord, final MutableLiveData<List<PostBean>> postBeanList) {
-        final List<String> idList = new ArrayList<>();
-        final List<PostBean> setList = new ArrayList<>();
+    public void fetchSearchPost(String searchWord, final MutableLiveData<List<PostBean>> postList) {
+        Timber.i(START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", INPUT_LOG, "searchWord", searchWord, "postList", postList));
 
-        try {
-            //データベースに接続
-            Connection con = getConnection();
-            //ステートメントオブジェクトを作成
-            PreparedStatement stmt = null;
-            //SQL
-            stmt = con.prepareStatement("select * from posts where message like ?;");
-            stmt.setString(1, "%" + searchWord + "%");
-            ResultSet rs = stmt.executeQuery();
+        firestoreConnect();
+        storageConnect();
 
-            this.firestoreConnect();
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ConnectApiService.API_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        ConnectApiService connectApiService = retrofit.create(ConnectApiService.class);
 
-            while (rs.next()) {
-                idList.add(rs.getString("documentID"));
+        final List<PostBean> postBeanList = new ArrayList<>();
+        final List<String> documentIdList = new ArrayList<>();
+
+        // 検索条件に合う投稿をmysqlから取得
+        connectApiService.searchPost(searchWord).enqueue(new Callback<Map<String, Object>>() {
+            @Override
+            public void onResponse(Call<Map<String, Object>> call, Response<Map<String, Object>> response) {
+                Timber.i(START_LOG);
+                Timber.i(String.valueOf(response));
+                List<Map<String, String>> dataList = (List<Map<String, String>>) response.body().get("data");
+
+                // 投稿ごとの詳細を取得
+                for (int i = 0; i < dataList.size(); i++) {
+                    final int finalI = i;
+                    firestore.collection("posts")
+                            .document(dataList.get(i).get("id"))
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot document = task.getResult();
+                                    Timber.i(String.format("get post document ID: %s", document.getId()));
+                                    documentIdList.add(document.getId());
+                                    final PostBean postBean = new PostBean();
+                                    postBean.setDocumentId(document.getId());
+                                    postBean.setAnonymous(document.getBoolean("anonymous"));
+                                    postBean.setDatetime(document.getDate("datetime"));
+                                    postBean.setStrDatetime(
+                                            new SimpleDateFormat("yyyy/MM/dd HH:mm").format(
+                                                    document.getDate("datetime")));
+                                    postBean.setMessage(document.getString("message"));
+                                    postBean.setType(document.getString("type"));
+                                    postBean.setUid(document.getString("uid"));
+                                    postBean.setPostPath(document.getReference().getPath());
+
+                                    if (postBean.getType().equals("post")) {
+                                        postBean.setPhotoName(document.getString("picture"));
+                                        postBean.setDanger(document.getBoolean("danger"));
+                                        postBean.setGoodCount(
+                                                Integer.parseInt(document.getLong("good_count").toString()));
+                                        LatLng geopoint = new LatLng(
+                                                document.getGeoPoint("geopoint").getLatitude(),
+                                                document.getGeoPoint("geopoint").getLongitude());
+                                        postBean.setLatLng(geopoint);
+                                    } else if (postBean.getType().equals("comment")) {
+                                        postBean.setParentPost(document.getDocumentReference("parent_post").getPath());
+                                    }
+                                    postBeanList.add(postBean);
+
+                                    // 投稿リストを全て取得したら
+                                    if (finalI == postBeanList.size() - 1) {
+                                        final int[] count = {0};
+                                        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                                        for (int i = 0; i < postBeanList.size(); i++) {
+                                            final PostBean postDataBean = postBeanList.get(i);
+
+                                            if (postDataBean.getPhotoName() == null
+                                                    || postDataBean.getPhotoName().equals("")) {
+                                                postDataBean.setPhotoName(" ");
+                                            }
+
+                                            // posts/{uid}/{photoName}
+                                            final int finalI = i;
+                                            storage.getReference()
+                                                    .child("postPhoto")
+                                                    .child(documentIdList.get(i))
+                                                    .child(postDataBean.getPhotoName())
+                                                    .getBytes(ONE_MEGABYTE)
+                                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                                        @Override
+                                                        public void onSuccess(byte[] aByte) {
+                                                            Timber.i(SUCCESS_LOG);
+                                                            Timber.i(String.format("path=/%s/%s/%s", "postPhoto",
+                                                                    documentIdList.get(finalI),
+                                                                    postBeanList.get(finalI).getPhotoName()));
+                                                            Bitmap bitmap = BitmapFactory.decodeByteArray(aByte, 0,
+                                                                    aByte.length);
+                                                            postBeanList.get(finalI).setPhoto(bitmap);
+                                                            count[0]++;
+
+                                                            // もし画像を全て取得したら
+                                                            if (count[0] == postBeanList.size()) {
+                                                                postList.setValue(postBeanList);
+                                                            }
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Timber.i(FAILURE_LOG);
+                                                            Timber.i(String.format("path=/%s/%s/%s", "postPhoto",
+                                                                    documentIdList.get(finalI),
+                                                                    postDataBean.getPhotoName()));
+                                                            Timber.e(e.toString());
+                                                            count[0]++;
+
+                                                            // もし画像を全て取得したら
+                                                            if (count[0] == postBeanList.size()) {
+                                                                postList.setValue(postBeanList);
+                                                            }
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Timber.i(MyDebugTree.FAILURE_LOG);
+                                    Timber.e(e.toString());
+                                }
+                            });
+                }
             }
-            //オブジェクトを解放
-            rs.close();
-            stmt.close();
-            con.close();
-        } catch (Exception e) {
-        }
-        for (String docId : idList) {
-            firestore.collection("posts")
-                    .document(docId)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                System.out.println(
-                                        "------------------success--------------------");
-                                System.out.println(document.getData());
-                                PostBean addPost = new PostBean();
-                                addPost.setAnonymous(document.getBoolean("anonymous"));
-                                addPost.setDanger(document.getBoolean("danger"));
-                                addPost.setDatetime(document.getDate("datetime"));
-                                LatLng geopoint = new LatLng(
-                                        document.getGeoPoint("geopoint").getLatitude(),
-                                        document.getGeoPoint("geopoint").getLongitude());
-                                addPost.setLatLng(geopoint);
-                                addPost.setMessage(document.getString("message"));
-                                addPost.setPhotoName(document.getString("picture"));
-                                addPost.setType(document.getString("type"));
-                                addPost.setUid(document.getString("uid"));
-                                setList.add(addPost);
-                                postBeanList.setValue(setList);
-                            } else {
-                                System.out.println("------------------else" + task.getException()
-                                        + "--------------------");
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            System.out.println("--------err:" + e + "----------");
-                        }
-                    });
-        }
-    }
 
-
-    public Connection getConnection() throws Exception {
-        Connection con = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        int rsno = 0;
-        DataSource ds = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            String databaseName = "posts";
-            String instanceConnectionName = "intense-pointer-297407:us-central1:test-snap";
-            String jdbcUrl = String.format(
-                    "jdbc:mysql://google/%s?cloudSqlInstance=%s&"
-                            + "socketFactory=com.google.cloud.sql.mysql"
-                            + ".SocketFactory&serverTimezone=JST&useSSL=false",
-                    databaseName,
-                    instanceConnectionName);
-            con = DriverManager.getConnection(jdbcUrl,
-                    "root", "root");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return con;
+            @Override
+            public void onFailure(Call<Map<String, Object>> call, Throwable t) {
+                Timber.e(FAILURE_LOG);
+                Timber.e(String.valueOf(call));
+                Timber.e(String.valueOf(t));
+            }
+        });
     }
 
 

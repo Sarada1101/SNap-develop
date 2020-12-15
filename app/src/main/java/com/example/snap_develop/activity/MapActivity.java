@@ -61,6 +61,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         findViewById(R.id.mapImageButton).setOnClickListener(this);
         findViewById(R.id.userImageButton).setOnClickListener(this);
         findViewById(R.id.postMapFloatingActionButton).setOnClickListener(this);
+        findViewById(R.id.searchMapFloatingActionButton).setOnClickListener(this);
 
         // SupportMapFragmentを取得し、マップが使用可能になったら通知を受けることができる
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -222,6 +223,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             } else {
                 startActivity(new Intent(getApplication(), PostActivity.class));
             }
+        } else if (i == R.id.searchMapFloatingActionButton) {
+            startActivity(new Intent(getApplication(), PostSearchActivity.class));
         }
     }
 }
