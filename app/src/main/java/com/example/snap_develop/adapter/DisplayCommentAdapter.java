@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
@@ -23,6 +24,7 @@ public class DisplayCommentAdapter extends BaseAdapter {
     private List<Map<String, Object>> mCommentDataMapList;
     private LayoutInflater mInflater;
     private int mLayoutID;
+    private Context mContext;
 
     static class ViewHolder {
         ImageView icon;
@@ -38,6 +40,7 @@ public class DisplayCommentAdapter extends BaseAdapter {
         this.mCommentDataMapList = commentDataMapList;
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;
+        this.mContext = context;
     }
 
 
@@ -87,6 +90,13 @@ public class DisplayCommentAdapter extends BaseAdapter {
         holder.uid.setText(userBean.getUid());
         holder.comment.setText(postBean.getMessage());
         holder.datetime.setText(postBean.getStrDatetime());
+
+        if (postBean.isAnonymous()) {
+            holder.icon.setImageBitmap(
+                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+            holder.username.setText("匿名");
+            holder.uid.setText("匿名");
+        }
 
         return convertView;
     }
