@@ -102,6 +102,12 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (view.getId() == R.id.rejectButton) {
             cancelFollow(mFollowList.get(position).getUid(), mUid);
+
+            mFollowList.remove(position);
+            mApprovalPendingFollowListAdapter = new ApprovalPendingFollowListAdapter(
+                    ApprovalPendingFollowListActivity.this,
+                    mFollowList, R.layout.activity_approval_pending_follow_list_row);
+            mListView.setAdapter(mApprovalPendingFollowListAdapter);
         } else {
             UserBean userBean = mFollowList.get(position);
             startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
