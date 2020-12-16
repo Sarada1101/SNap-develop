@@ -61,9 +61,9 @@ public class ApprovalPendingFollowListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(mLayoutID, null);
             holder = new ViewHolder();
-            holder.username = convertView.findViewById(R.id.nameTextView);
-            holder.uid = convertView.findViewById(R.id.idTextView);
-            holder.icon = convertView.findViewById(R.id.iconImageView);
+            holder.username = convertView.findViewById(R.id.userNameTextView);
+            holder.uid = convertView.findViewById(R.id.userIdTextView);
+            holder.icon = convertView.findViewById(R.id.userImageView);
             holder.cancelButton = convertView.findViewById(R.id.rejectButton);
             convertView.setTag(holder);
         } else {
