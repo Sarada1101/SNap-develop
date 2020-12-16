@@ -120,8 +120,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         if (!mUserViewModel.getCurrentUser().getUid().equals(mUid)) {
             Timber.d("check");
-            mFollowViewModel.checkFollowing(mUserViewModel.getCurrentUser().getUid(), mUid);
-            mFollowViewModel.checkApprovalPendingFollow(mUserViewModel.getCurrentUser().getUid(), mUid);
+            mFollowViewModel.checkFollowing(mUid, mUserViewModel.getCurrentUser().getUid());
+            mFollowViewModel.checkApprovalPendingFollow(mUid, mUserViewModel.getCurrentUser().getUid());
         }
 
         mBinding.setUserViewModel(mUserViewModel);
