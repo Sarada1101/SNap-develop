@@ -127,7 +127,6 @@
                     android:id="@+id/iconImageView"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    app:imageBitmap="@{userViewModel.user.icon}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -135,7 +134,7 @@
                     android:id="@+id/idTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{userViewModel.user.uid}"
+                    android:text=""
                     android:textColor="@color/colorTextBlack"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -147,7 +146,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{userViewModel.user.name}"
+                    android:text=""
                     android:textColor="@color/colorTextBlack"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toEndOf="parent"

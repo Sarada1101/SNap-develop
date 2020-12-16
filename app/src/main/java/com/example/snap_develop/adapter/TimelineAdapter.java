@@ -124,6 +124,14 @@ public class TimelineAdapter extends BaseAdapter {
             holder.userInfo.setOnClickListener(null);
         }
 
+        if (userBean.getPublicationArea().equals("anonymous")) {
+            holder.icon.setImageBitmap(
+                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+            holder.username.setText("匿名");
+            holder.uid.setText("匿名");
+            holder.userInfo.setOnClickListener(null);
+        }
+
         if (postBean.isDanger()) {
             holder.background.setBackgroundColor(Color.rgb(240, 96, 96));
         }
