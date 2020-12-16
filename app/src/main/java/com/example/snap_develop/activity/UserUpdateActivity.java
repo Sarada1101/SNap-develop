@@ -62,6 +62,8 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
 
         mUid = mUserViewModel.getCurrentUser().getUid();
         mUserViewModel.fetchUserInfo(mUid);
+        mBinding.setUserViewModel(mUserViewModel);
+        mBinding.setLifecycleOwner(this);
     }
 
 
