@@ -318,9 +318,18 @@ public class FollowModel extends Firebase {
 
                                     DocumentSnapshot document = task.getResult();
                                     final UserBean userBean = new UserBean();
-                                    userBean.setIconName(document.getString("icon"));
                                     userBean.setName(document.getString("name"));
                                     userBean.setUid(document.getId());
+                                    userBean.setMessage(document.getString("message"));
+                                    userBean.setIconName(document.getString("icon"));
+                                    userBean.setFollowingCount(
+                                            Integer.parseInt(document.getLong("following_count").toString()));
+                                    userBean.setFollowerCount(
+                                            Integer.parseInt(document.getLong("follower_count").toString()));
+                                    userBean.setFollowNotice(document.getBoolean("follow_notice"));
+                                    userBean.setGoodNotice(document.getBoolean("good_notice"));
+                                    userBean.setCommentNotice(document.getBoolean("comment_notice"));
+                                    userBean.setPublicationArea(document.getString("publication_area"));
 
                                     // アイコン画像を取得
                                     final long FIVE_MEGABYTE = 1024 * 1024 * 5;
@@ -410,9 +419,18 @@ public class FollowModel extends Firebase {
 
                                     DocumentSnapshot document = task.getResult();
                                     final UserBean userBean = new UserBean();
-                                    userBean.setIconName(document.getString("icon"));
                                     userBean.setName(document.getString("name"));
                                     userBean.setUid(document.getId());
+                                    userBean.setMessage(document.getString("message"));
+                                    userBean.setIconName(document.getString("icon"));
+                                    userBean.setFollowingCount(
+                                            Integer.parseInt(document.getLong("following_count").toString()));
+                                    userBean.setFollowerCount(
+                                            Integer.parseInt(document.getLong("follower_count").toString()));
+                                    userBean.setFollowNotice(document.getBoolean("follow_notice"));
+                                    userBean.setGoodNotice(document.getBoolean("good_notice"));
+                                    userBean.setCommentNotice(document.getBoolean("comment_notice"));
+                                    userBean.setPublicationArea(document.getString("publication_area"));
 
                                     // アイコン画像を取得
                                     final long FIVE_MEGABYTE = 1024 * 1024 * 5;
@@ -502,9 +520,18 @@ public class FollowModel extends Firebase {
 
                                     DocumentSnapshot document = task.getResult();
                                     final UserBean userBean = new UserBean();
-                                    userBean.setIconName(document.getString("icon"));
                                     userBean.setName(document.getString("name"));
                                     userBean.setUid(document.getId());
+                                    userBean.setMessage(document.getString("message"));
+                                    userBean.setIconName(document.getString("icon"));
+                                    userBean.setFollowingCount(
+                                            Integer.parseInt(document.getLong("following_count").toString()));
+                                    userBean.setFollowerCount(
+                                            Integer.parseInt(document.getLong("follower_count").toString()));
+                                    userBean.setFollowNotice(document.getBoolean("follow_notice"));
+                                    userBean.setGoodNotice(document.getBoolean("good_notice"));
+                                    userBean.setCommentNotice(document.getBoolean("comment_notice"));
+                                    userBean.setPublicationArea(document.getString("publication_area"));
 
                                     // アイコン画像を取得
                                     final long FIVE_MEGABYTE = 1024 * 1024 * 5;
@@ -594,9 +621,18 @@ public class FollowModel extends Firebase {
 
                                     DocumentSnapshot document = task.getResult();
                                     final UserBean userBean = new UserBean();
-                                    userBean.setIconName(document.getString("icon"));
                                     userBean.setName(document.getString("name"));
                                     userBean.setUid(document.getId());
+                                    userBean.setMessage(document.getString("message"));
+                                    userBean.setIconName(document.getString("icon"));
+                                    userBean.setFollowingCount(
+                                            Integer.parseInt(document.getLong("following_count").toString()));
+                                    userBean.setFollowerCount(
+                                            Integer.parseInt(document.getLong("follower_count").toString()));
+                                    userBean.setFollowNotice(document.getBoolean("follow_notice"));
+                                    userBean.setGoodNotice(document.getBoolean("good_notice"));
+                                    userBean.setCommentNotice(document.getBoolean("comment_notice"));
+                                    userBean.setPublicationArea(document.getString("publication_area"));
 
                                     // アイコン画像を取得
                                     final long FIVE_MEGABYTE = 1024 * 1024 * 5;

@@ -98,7 +98,6 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
 
                 mUid = userBean.getUid();
-                mBinding.iconImageView.setOnClickListener(DisplayCommentActivity.this);
 
                 if (userBean.getPublicationArea().equals("anonymous")) {
                     Timber.i("anonymous user");
@@ -107,7 +106,11 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                                     R.drawable.ic_baseline_account_circle_24));
                     mBinding.nameTextView.setText("匿名");
                     mBinding.idTextView.setText("匿名");
-                    mBinding.iconImageView.setOnClickListener(null);
+                    mBinding.postUserInfoConstraintLayout.setOnClickListener(null);
+                } else if (userBean.getPublicationArea().equals("public")) {
+                    mBinding.iconImageView.setImageBitmap(userBean.getIcon());
+                    mBinding.nameTextView.setText(userBean.getName());
+                    mBinding.idTextView.setText(userBean.getUid());
                 }
             }
         });
