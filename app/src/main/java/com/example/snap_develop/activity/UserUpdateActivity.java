@@ -81,6 +81,10 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
         updateBean.setUid(mUid);
         updateBean.setName(name);
         updateBean.setMessage(profile);
+        if (mBitMap == null) {
+            mBitMap = mUserViewModel.getUser().getValue().getIcon();
+            mIconName = mUserViewModel.getUser().getValue().getIconName();
+        }
         updateBean.setIcon(mBitMap);
         updateBean.setIconName(mIconName);
 
