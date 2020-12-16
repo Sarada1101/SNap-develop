@@ -109,8 +109,18 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (view.getId() == R.id.approvalButton) {
             approvalFollow(mFollowList.get(position).getUid(), mUid);
+
+            mFollowList.remove(position);
+            mApplicatedFollowListAdapter = new ApplicatedFollowListAdapter(ApplicatedFollowListActivity.this,
+                    mFollowList, R.layout.activity_applicated_follow_list_row);
+            mListView.setAdapter(mApplicatedFollowListAdapter);
         } else if (view.getId() == R.id.rejectButton) {
             rejectFollow(mFollowList.get(position).getUid(), mUid);
+
+            mFollowList.remove(position);
+            mApplicatedFollowListAdapter = new ApplicatedFollowListAdapter(ApplicatedFollowListActivity.this,
+                    mFollowList, R.layout.activity_applicated_follow_list_row);
+            mListView.setAdapter(mApplicatedFollowListAdapter);
         } else {
             UserBean userBean = mFollowList.get(position);
             startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
