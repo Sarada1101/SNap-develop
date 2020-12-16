@@ -670,9 +670,12 @@ public class FollowModel extends Firebase {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         Timber.i(MyDebugTree.START_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
-                        if (task.isSuccessful()) {
+
+                        try {
+                            Timber.i("get document reference:" + task.getResult().getDocumentReference(
+                                    "path").getPath());
                             following.setValue(true);
-                        } else {
+                        } catch (NullPointerException e) {
                             following.setValue(false);
                         }
                     }
@@ -707,9 +710,12 @@ public class FollowModel extends Firebase {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         Timber.i(MyDebugTree.START_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
-                        if (task.isSuccessful()) {
+
+                        try {
+                            Timber.i("get document reference:" + task.getResult().getDocumentReference(
+                                    "path").getPath());
                             approvalPendingFollow.setValue(true);
-                        } else {
+                        } catch (NullPointerException e) {
                             approvalPendingFollow.setValue(false);
                         }
                     }

@@ -109,7 +109,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
         mUid = getIntent().getStringExtra("uid");
-        if (mUid == null) {
+        if (mUid == null || mUid.equals(mUserViewModel.getCurrentUser().getUid())) {
             // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
             mUid = mUserViewModel.getCurrentUser().getUid();
             mBinding.followRequestButton.setText("フォロー申請/承認");
@@ -120,8 +120,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         if (!mUserViewModel.getCurrentUser().getUid().equals(mUid)) {
             Timber.d("check");
-            mFollowViewModel.checkFollowing(mUid, mUserViewModel.getCurrentUser().getUid());
-            mFollowViewModel.checkApprovalPendingFollow(mUid, mUserViewModel.getCurrentUser().getUid());
+            mFollowViewModel.checkFollowing(mUserViewModel.getCurrentUser().getUid(), mUid);
+            mFollowViewModel.checkApprovalPendingFollow(mUserViewModel.getCurrentUser().getUid(), mUid);
         }
 
         mBinding.setUserViewModel(mUserViewModel);

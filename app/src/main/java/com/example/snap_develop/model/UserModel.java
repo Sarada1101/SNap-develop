@@ -283,7 +283,7 @@ public class UserModel extends Firebase {
                             userBean.setPublicationArea(document.getString("publication_area"));
                         }
 
-                        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                        final long ONE_MEGABYTE = 1024 * 1024 * 100;
                         // icon/{uid}/{iconName}
                         storage.getReference()
                                 .child("icon")
@@ -346,9 +346,17 @@ public class UserModel extends Firebase {
                             final UserBean userBean = new UserBean();
                             userBean.setName(document.getString("name"));
                             userBean.setUid(document.getId());
+                            userBean.setMessage(document.getString("message"));
                             userBean.setIconName(document.getString("icon"));
+                            userBean.setFollowingCount(
+                                    Integer.parseInt(document.getLong("following_count").toString()));
+                            userBean.setFollowerCount(Integer.parseInt(document.getLong("follower_count").toString()));
+                            userBean.setFollowNotice(document.getBoolean("follow_notice"));
+                            userBean.setGoodNotice(document.getBoolean("good_notice"));
+                            userBean.setCommentNotice(document.getBoolean("comment_notice"));
+                            userBean.setPublicationArea(document.getString("publication_area"));
 
-                            final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                            final long ONE_MEGABYTE = 1024 * 1024 * 100;
                             // icon/{uid}/{iconName}
                             storage.getReference()
                                     .child("icon")

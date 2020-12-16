@@ -98,6 +98,13 @@ public class DisplayCommentAdapter extends BaseAdapter {
             holder.uid.setText("匿名");
         }
 
+        if (userBean.getPublicationArea().equals("anonymous")) {
+            holder.icon.setImageBitmap(
+                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+            holder.username.setText("匿名");
+            holder.uid.setText("匿名");
+        }
+
         return convertView;
     }
 }

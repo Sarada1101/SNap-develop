@@ -94,16 +94,33 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
+
                 mUid = userBean.getUid();
                 mBinding.iconImageView.setOnClickListener(DisplayCommentActivity.this);
+
+                if (userBean.getPublicationArea().equals("anonymous")) {
+                    Timber.i("anonymous user");
+                    mBinding.iconImageView.setImageBitmap(
+                            MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
+                                    R.drawable.ic_baseline_account_circle_24));
+                    mBinding.nameTextView.setText("匿名");
+                    mBinding.idTextView.setText("匿名");
+                    mBinding.iconImageView.setOnClickListener(null);
+                }
             }
         });
 
         // コメントリストを取得したらコメントごとのユーザー情報を取得する
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
+
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onChanged(List<PostBean> postList) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postList", postList));
+
                 List<String> uidList = new ArrayList<>();
                 for (final PostBean postBean : postList) {
                     uidList.add(postBean.getUid());
@@ -128,6 +145,9 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mUserViewModel.getUserList().observe(this, new Observer<List<UserBean>>() {
             @Override
             public void onChanged(List<UserBean> userList) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userList", userList));
+
                 // コメントリストとユーザー情報を紐付ける
                 mCommentDataMapList = new ArrayList<>();
                 for (PostBean postBean : mPostBeanList) {
@@ -199,7 +219,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
         PostBean postBean = (PostBean) mCommentDataMapList.get(position).get("postBean");
-        if (!postBean.isAnonymous()) {
+        if (!postBean.isAnonymous() && !userBean.getPublicationArea().equals("anonymous")) {
             startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
         }
     }

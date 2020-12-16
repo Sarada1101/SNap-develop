@@ -257,7 +257,7 @@ public class PostModel extends Firebase {
                         postBean.setType(document.getString("type"));
                         postBean.setUid(document.getString("uid"));
 
-                        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                        final long ONE_MEGABYTE = 1024 * 1024 * 100;
                         // posts/{uid}/{photoName}
                         storage.getReference()
                                 .child("postPhoto")
@@ -346,7 +346,7 @@ public class PostModel extends Firebase {
                         }
 
                         final int[] count = {0};
-                        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                        final long ONE_MEGABYTE = 1024 * 1024 * 100;
                         for (int i = 0; i < postBeanList.size(); i++) {
                             final PostBean postBean = postBeanList.get(i);
 
@@ -584,7 +584,7 @@ public class PostModel extends Firebase {
                             // 投稿リストを全て取得したら
                             if (finalI == userBeanList.size() - 1) {
                                 final int[] count = {0};
-                                final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                                final long ONE_MEGABYTE = 1024 * 1024 * 100;
                                 for (int i = 0; i < postBeanList.size(); i++) {
                                     final PostBean postBean = postBeanList.get(i);
 
@@ -715,7 +715,7 @@ public class PostModel extends Firebase {
                                     // 投稿リストを全て取得したら
                                     if (finalI == postBeanList.size() - 1) {
                                         final int[] count = {0};
-                                        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                                        final long ONE_MEGABYTE = 1024 * 1024 * 100;
                                         for (int i = 0; i < postBeanList.size(); i++) {
                                             final PostBean postDataBean = postBeanList.get(i);
 
