@@ -175,8 +175,12 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.commentButton) {
-            startActivity(new Intent(getApplication(), CommentActivity.class)
-                    .putExtra("postPath", mParentPostPath));
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                startActivity(
+                        new Intent(getApplication(), CommentActivity.class).putExtra("postPath", mParentPostPath));
+            }
         } else if (i == R.id.timelineImageButton) {
             startActivity(new Intent(getApplication(), TimelineActivity.class));
         } else if (i == R.id.mapImageButton) {
