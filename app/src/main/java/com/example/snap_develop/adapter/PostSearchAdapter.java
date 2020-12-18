@@ -111,6 +111,22 @@ public class PostSearchAdapter extends BaseAdapter {
                 mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra("uid", userBean.getUid()));
             }
         });
+
+        if (postBean.isAnonymous()) {
+            holder.icon.setImageBitmap(
+                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+            holder.username.setText("匿名");
+            holder.uid.setText("匿名");
+            holder.userInfo.setOnClickListener(null);
+        }
+
+        if (userBean.getPublicationArea().equals("anonymous")) {
+            holder.icon.setImageBitmap(
+                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+            holder.username.setText("匿名");
+            holder.uid.setText("匿名");
+            holder.userInfo.setOnClickListener(null);
+        }
         return convertView;
     }
 }
