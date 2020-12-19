@@ -21,6 +21,7 @@ import com.example.snap_develop.adapter.DisplayCommentAdapter;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityDisplayCommentBinding;
+import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 
@@ -39,6 +40,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
 
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
+    private FollowViewModel mFollowViewModel;
     private ActivityDisplayCommentBinding mBinding;
     private DisplayCommentAdapter mDisplayCommentAdapter;
     private ListView mListView;
@@ -46,6 +48,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     private List<Map<String, Object>> mCommentDataMapList;
     private String mParentPostPath;
     private String mUid;
+    private UserBean mUserBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
 
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_display_comment);
 
         mBinding.favorite.setOnClickListener(this);
@@ -100,7 +104,6 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 mUid = userBean.getUid();
 
                 if (userBean.getPublicationArea().equals("anonymous")) {
-                    Timber.i("anonymous user");
                     mBinding.iconImageView.setImageBitmap(
                             MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
                                     R.drawable.ic_baseline_account_circle_24));
@@ -111,6 +114,10 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     mBinding.iconImageView.setImageBitmap(userBean.getIcon());
                     mBinding.nameTextView.setText(userBean.getName());
                     mBinding.idTextView.setText(userBean.getUid());
+                } else if (userBean.getPublicationArea().equals("followPublic")) {
+                    mUserBean = userBean;
+                    mFollowViewModel.checkFollower(mUid, mUserViewModel.getCurrentUser().getUid());
+                    mFollowViewModel.checkFollowing(mUid, mUserViewModel.getCurrentUser().getUid());
                 }
             }
         });
@@ -169,6 +176,26 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 mListView = mBinding.commentListView;
                 mListView.setAdapter(mDisplayCommentAdapter);
                 mListView.setOnItemClickListener(DisplayCommentActivity.this);
+            }
+        });
+
+        mFollowViewModel.getFollower().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                Timber.i(MyDebugTree.START_LOG);
+                Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "aBoolean", aBoolean));
+                if (aBoolean || mFollowViewModel.getFollowing().getValue()) {
+                    mBinding.iconImageView.setImageBitmap(mUserBean.getIcon());
+                    mBinding.nameTextView.setText(mUserBean.getName());
+                    mBinding.idTextView.setText(mUserBean.getUid());
+                } else {
+                    mBinding.iconImageView.setImageBitmap(
+                            MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
+                                    R.drawable.ic_baseline_account_circle_24));
+                    mBinding.nameTextView.setText("匿名");
+                    mBinding.idTextView.setText("匿名");
+                    mBinding.postUserInfoConstraintLayout.setOnClickListener(null);
+                }
             }
         });
 

@@ -727,6 +727,45 @@ public class FollowModel extends Firebase {
     }
 
 
+    public void checkFollower(String fromUid, String checkUid, final MutableLiveData<Boolean> follower) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(
+                String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "checkUid", checkUid,
+                        "following", follower));
+
+        this.firestoreConnect();
+
+        firestore.collection("users")
+                .document(fromUid)
+                .collection("follower")
+                .document(checkUid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        Timber.i(MyDebugTree.START_LOG);
+                        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
+
+                        try {
+                            Timber.i("get document reference:" + task.getResult().getDocumentReference(
+                                    "path").getPath());
+                            follower.setValue(true);
+                        } catch (NullPointerException e) {
+                            follower.setValue(false);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(MyDebugTree.FAILURE_LOG);
+                        Timber.e(e.toString());
+                        follower.setValue(false);
+                    }
+                });
+    }
+
+
     public void checkApprovalPendingFollow(String fromUid, String checkUid,
             final MutableLiveData<Boolean> approvalPendingFollow) {
         Timber.i(MyDebugTree.START_LOG);
