@@ -47,7 +47,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
                 if (userBean.getPublicationArea().equals("public")) {
                     mBinding.publicRadioButton.setChecked(true);
-                } else if (userBean.getPublicationArea().equals("followerPublic")) {
+                } else if (userBean.getPublicationArea().equals("followPublic")) {
                     mBinding.followerPublicRadioButton.setChecked(true);
                 } else if (userBean.getPublicationArea().equals("anonymous")) {
                     mBinding.anonymousRadioButton.setChecked(true);
