@@ -16,6 +16,7 @@ public class FollowViewModel extends ViewModel {
     private FollowModel mFollowModel = new FollowModel();
     private MutableLiveData<List<UserBean>> followList;
     private MutableLiveData<Boolean> following;
+    private MutableLiveData<Boolean> follower;
     private MutableLiveData<Boolean> approvalPendingFollow;
 
     public MutableLiveData<List<UserBean>> getFollowList() {
@@ -31,6 +32,14 @@ public class FollowViewModel extends ViewModel {
             following = new MutableLiveData<>();
         }
         return following;
+    }
+
+
+    public MutableLiveData<Boolean> getFollower() {
+        if (follower == null) {
+            follower = new MutableLiveData<>();
+        }
+        return follower;
     }
 
 
@@ -131,6 +140,16 @@ public class FollowViewModel extends ViewModel {
             following = new MutableLiveData<>();
         }
         mFollowModel.checkFollowing(fromUid, checkUid, following);
+    }
+
+
+    public void checkFollower(String fromUid, String checkUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "checkUid", checkUid));
+        if (follower == null) {
+            follower = new MutableLiveData<>();
+        }
+        mFollowModel.checkFollower(fromUid, checkUid, follower);
     }
 
 
