@@ -35,7 +35,7 @@
     <string name="DisclosureRange">公開範囲設定</string>
     <string name="theEntire">全体に公開</string>
     <string name="あ" />
-    <string name="follower">フォロワーのみに公開</string>
+    <string name="follower">フォロー、フォロワーのみに公開</string>
     <string name="anonymous">匿名投稿</string>
     <string name="notification">通知設定</string>
     <string name="followed">フォローされたとき通知</string>
