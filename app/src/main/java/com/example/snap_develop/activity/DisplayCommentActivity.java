@@ -116,7 +116,6 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     mBinding.idTextView.setText(userBean.getUid());
                 } else if (userBean.getPublicationArea().equals("followPublic")) {
                     mUserBean = userBean;
-                    mFollowViewModel.checkFollower(mUid, mUserViewModel.getCurrentUser().getUid());
                     mFollowViewModel.checkFollowing(mUid, mUserViewModel.getCurrentUser().getUid());
                 }
             }
@@ -179,12 +178,12 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             }
         });
 
-        mFollowViewModel.getFollower().observe(this, new Observer<Boolean>() {
+        mFollowViewModel.getFollowing().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "aBoolean", aBoolean));
-                if (aBoolean || mFollowViewModel.getFollowing().getValue()) {
+                if (aBoolean) {
                     mBinding.iconImageView.setImageBitmap(mUserBean.getIcon());
                     mBinding.nameTextView.setText(mUserBean.getName());
                     mBinding.idTextView.setText(mUserBean.getUid());
