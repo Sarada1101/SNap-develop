@@ -75,5 +75,6 @@
     <string name="cancel">取消</string>
     <string name="followRequestButtonText">フォロー申請</string>
     <string name="signoutButton">ログアウト</string>
+    <string name="iconContentDescription">icon</string>
 
 </resources>
