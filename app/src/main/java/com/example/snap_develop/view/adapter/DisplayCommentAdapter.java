@@ -1,110 +1,94 @@
 package com.example.snap_develop.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.activity.UserActivity;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.view.viewHolder.DisplayCommentViewHolder;
 
 import java.util.List;
 import java.util.Map;
 
 import timber.log.Timber;
 
-public class DisplayCommentAdapter extends BaseAdapter {
+public class DisplayCommentAdapter extends RecyclerView.Adapter<DisplayCommentViewHolder> {
+    Context mContext;
+    List<Map<String, Object>> mCommentDataMapList;
 
-    private List<Map<String, Object>> mCommentDataMapList;
-    private LayoutInflater mInflater;
-    private int mLayoutID;
-    private Context mContext;
-
-    static class ViewHolder {
-        ImageView icon;
-        TextView username;
-        TextView uid;
-        TextView comment;
-        TextView datetime;
-    }
-
-
-    public DisplayCommentAdapter(Context context, List<Map<String, Object>> commentDataMapList, int rowLayout) {
+    public DisplayCommentAdapter(Context context, List<Map<String, Object>> commentDataMapList) {
         Timber.i(MyDebugTree.START_LOG);
-        this.mCommentDataMapList = commentDataMapList;
-        this.mInflater = LayoutInflater.from(context);
-        this.mLayoutID = rowLayout;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "context", context, "commentDataMapList",
+                commentDataMapList));
+
         this.mContext = context;
+        this.mCommentDataMapList = commentDataMapList;
     }
 
 
+    @NonNull
     @Override
-    public int getCount() {
-        return this.mCommentDataMapList.size();
-    }
-
-
-    @Override
-    public Object getItem(int position) {
-        return position;
-    }
-
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public DisplayCommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "position", position, "convertView",
-                convertView, "parent", parent));
-        ViewHolder holder;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "parent", parent, "viewType", viewType));
 
-        if (convertView == null) {
-            convertView = mInflater.inflate(mLayoutID, null);
-            holder = new ViewHolder();
-            holder.icon = convertView.findViewById(R.id.listIconImageView);
-            holder.username = convertView.findViewById(R.id.listUserNameTextView);
-            holder.uid = convertView.findViewById(R.id.listUserIdTextView);
-            holder.comment = convertView.findViewById(R.id.listCommentTextView);
-            holder.datetime = convertView.findViewById(R.id.dateTextView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_display_comment_item, parent,
+                false);
+        return new DisplayCommentViewHolder(inflate);
+    }
 
-        UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
+
+    @Override
+    public void onBindViewHolder(@NonNull DisplayCommentViewHolder holder, int position) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "holder", holder, "position", position));
+
+        final UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
         PostBean postBean = (PostBean) mCommentDataMapList.get(position).get("postBean");
+        holder.mIconImageView.setImageBitmap(userBean.getIcon());
+        holder.mUserNameTextView.setText(userBean.getName());
+        holder.mUserIdTextView.setText(userBean.getUid());
+        holder.mCommentTextView.setText(postBean.getMessage());
+        holder.mDatetimeTextView.setText(postBean.getStrDatetime());
 
-        holder.icon.setImageBitmap(userBean.getIcon());
-        holder.username.setText(userBean.getName());
-        holder.uid.setText(userBean.getUid());
-        holder.comment.setText(postBean.getMessage());
-        holder.datetime.setText(postBean.getStrDatetime());
+        holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra("uid", userBean.getUid()));
+            }
+        });
 
         if (postBean.isAnonymous()) {
-            holder.icon.setImageBitmap(
+            holder.mIconImageView.setImageBitmap(
                     MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
-            holder.username.setText("匿名");
-            holder.uid.setText("匿名");
+            holder.mUserNameTextView.setText("匿名");
+            holder.mUserIdTextView.setText("匿名");
+            holder.mConstraintLayout.setOnClickListener(null);
         }
 
         if (userBean.getPublicationArea().equals("anonymous")) {
-            holder.icon.setImageBitmap(
+            holder.mIconImageView.setImageBitmap(
                     MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
-            holder.username.setText("匿名");
-            holder.uid.setText("匿名");
+            holder.mUserNameTextView.setText("匿名");
+            holder.mUserIdTextView.setText("匿名");
+            holder.mConstraintLayout.setOnClickListener(null);
         }
+    }
 
-        return convertView;
+
+    @Override
+    public int getItemCount() {
+        Timber.i(MyDebugTree.START_LOG);
+        return mCommentDataMapList.size();
     }
 }

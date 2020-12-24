@@ -5,14 +5,15 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
@@ -35,15 +36,14 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class DisplayCommentActivity extends AppCompatActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener {
+public class DisplayCommentActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityDisplayCommentBinding mBinding;
     private DisplayCommentAdapter mDisplayCommentAdapter;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private List<PostBean> mPostBeanList;
     private List<Map<String, Object>> mCommentDataMapList;
     private String mParentPostPath;
@@ -62,9 +62,9 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_display_comment);
 
-        mBinding.favorite.setOnClickListener(this);
+        mBinding.goodIcon.setOnClickListener(this);
         mBinding.commentButton.setOnClickListener(this);
-        mBinding.postUserInfoConstraintLayout.setOnClickListener(this);
+        mBinding.userInfoConstraintLayout.setOnClickListener(this);
         mBinding.timelineImageButton.setOnClickListener(this);
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
@@ -81,9 +81,9 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     mBinding.iconImageView.setImageBitmap(
                             MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
                                     R.drawable.ic_baseline_account_circle_24));
-                    mBinding.nameTextView.setText("匿名");
-                    mBinding.idTextView.setText("匿名");
-                    mBinding.postUserInfoConstraintLayout.setOnClickListener(null);
+                    mBinding.userNameTextView.setText("匿名");
+                    mBinding.userIdTextView.setText("匿名");
+                    mBinding.userInfoConstraintLayout.setOnClickListener(null);
                 } else {
                     mUserViewModel.fetchUserInfo(postBean.getUid());
                 }
@@ -107,16 +107,15 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     mBinding.iconImageView.setImageBitmap(
                             MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
                                     R.drawable.ic_baseline_account_circle_24));
-                    mBinding.nameTextView.setText("匿名");
-                    mBinding.idTextView.setText("匿名");
-                    mBinding.postUserInfoConstraintLayout.setOnClickListener(null);
+                    mBinding.userNameTextView.setText("匿名");
+                    mBinding.userIdTextView.setText("匿名");
+                    mBinding.userInfoConstraintLayout.setOnClickListener(null);
                 } else if (userBean.getPublicationArea().equals("public")) {
                     mBinding.iconImageView.setImageBitmap(userBean.getIcon());
-                    mBinding.nameTextView.setText(userBean.getName());
-                    mBinding.idTextView.setText(userBean.getUid());
+                    mBinding.userNameTextView.setText(userBean.getName());
+                    mBinding.userIdTextView.setText(userBean.getUid());
                 } else if (userBean.getPublicationArea().equals("followPublic")) {
                     mUserBean = userBean;
-                    mFollowViewModel.checkFollower(mUid, mUserViewModel.getCurrentUser().getUid());
                     mFollowViewModel.checkFollowing(mUid, mUserViewModel.getCurrentUser().getUid());
                 }
             }
@@ -171,30 +170,35 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     }
                     mCommentDataMapList.add(commentDataMap);
                 }
-                mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this,
-                        mCommentDataMapList, R.layout.activity_display_comment_list);
-                mListView = mBinding.commentListView;
-                mListView.setAdapter(mDisplayCommentAdapter);
-                mListView.setOnItemClickListener(DisplayCommentActivity.this);
+                mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this, mCommentDataMapList);
+                mRecyclerView = mBinding.commentListRecyclerView;
+                // setLayoutManager()に渡すLayoutManagerによって，RecyclerViewに1列表示なのか，Grid表示なのかなどを教える
+                LinearLayoutManager llm = new LinearLayoutManager(DisplayCommentActivity.this);
+                mRecyclerView.setLayoutManager(llm);
+                mRecyclerView.setHasFixedSize(true); // リストのコンテンツの大きさがデータによって変わらないならtrue
+                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(DisplayCommentActivity.this,
+                        DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(itemDecoration);
+                mRecyclerView.setAdapter(mDisplayCommentAdapter);
             }
         });
 
-        mFollowViewModel.getFollower().observe(this, new Observer<Boolean>() {
+        mFollowViewModel.getFollowing().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "aBoolean", aBoolean));
-                if (aBoolean || mFollowViewModel.getFollowing().getValue()) {
+                if (aBoolean) {
                     mBinding.iconImageView.setImageBitmap(mUserBean.getIcon());
-                    mBinding.nameTextView.setText(mUserBean.getName());
-                    mBinding.idTextView.setText(mUserBean.getUid());
+                    mBinding.userNameTextView.setText(mUserBean.getName());
+                    mBinding.userIdTextView.setText(mUserBean.getUid());
                 } else {
                     mBinding.iconImageView.setImageBitmap(
                             MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
                                     R.drawable.ic_baseline_account_circle_24));
-                    mBinding.nameTextView.setText("匿名");
-                    mBinding.idTextView.setText("匿名");
-                    mBinding.postUserInfoConstraintLayout.setOnClickListener(null);
+                    mBinding.userNameTextView.setText("匿名");
+                    mBinding.userIdTextView.setText("匿名");
+                    mBinding.userInfoConstraintLayout.setOnClickListener(null);
                 }
             }
         });
@@ -215,7 +219,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     private void addGood() {
         int goodCount = Integer.parseInt(mBinding.goodCountTextView.getText().toString());
         mBinding.goodCountTextView.setText(Integer.toString(goodCount + 1));
-        mPostViewModel.addGood(mUserViewModel.getCurrentUser().getUid(), mParentPostPath);
+        mPostViewModel.addGood(mUid, mParentPostPath);
     }
 
 
@@ -237,20 +241,10 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
             startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
-        } else if (i == R.id.favorite) {
+        } else if (i == R.id.goodIcon) {
             addGood();
-        } else if (i == R.id.postUserInfoConstraintLayout) {
+        } else if (i == R.id.userInfoConstraintLayout) {
             startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", mUid));
-        }
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
-        PostBean postBean = (PostBean) mCommentDataMapList.get(position).get("postBean");
-        if (!postBean.isAnonymous() && !userBean.getPublicationArea().equals("anonymous")) {
-            startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
         }
     }
 }
