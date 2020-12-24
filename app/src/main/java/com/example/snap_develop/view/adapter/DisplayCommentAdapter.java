@@ -1,4 +1,4 @@
-package com.example.snap_develop.adapter;
+package com.example.snap_develop.view.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,46 +8,45 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
-public class UserAdapter extends BaseAdapter {
+public class DisplayCommentAdapter extends BaseAdapter {
 
-    private List<PostBean> mPostList;
-    private UserBean mUserBean;
+    private List<Map<String, Object>> mCommentDataMapList;
     private LayoutInflater mInflater;
     private int mLayoutID;
+    private Context mContext;
 
     static class ViewHolder {
         ImageView icon;
         TextView username;
         TextView uid;
-        TextView post;
-        ImageView photo;
-        TextView goodCount;
-        TextView latLng;
+        TextView comment;
         TextView datetime;
     }
 
 
-    public UserAdapter(Context context, List<PostBean> postList, UserBean userBean, int rowLayout) {
+    public DisplayCommentAdapter(Context context, List<Map<String, Object>> commentDataMapList, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
-        this.mPostList = postList;
-        this.mUserBean = userBean;
+        this.mCommentDataMapList = commentDataMapList;
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;
+        this.mContext = context;
     }
 
 
     @Override
     public int getCount() {
-        return this.mPostList.size();
+        return this.mCommentDataMapList.size();
     }
 
 
@@ -76,29 +75,36 @@ public class UserAdapter extends BaseAdapter {
             holder.icon = convertView.findViewById(R.id.listIconImageView);
             holder.username = convertView.findViewById(R.id.listUserNameTextView);
             holder.uid = convertView.findViewById(R.id.listUserIdTextView);
-            holder.post = convertView.findViewById(R.id.listCommentTextView);
-            holder.photo = convertView.findViewById(R.id.photoImageView);
-            holder.goodCount = convertView.findViewById(R.id.goodCountTextView);
-            holder.latLng = convertView.findViewById(R.id.latLngTextView);
+            holder.comment = convertView.findViewById(R.id.listCommentTextView);
             holder.datetime = convertView.findViewById(R.id.dateTextView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.icon.setImageBitmap(mUserBean.getIcon());
-        holder.username.setText(mUserBean.getName());
-        holder.uid.setText(mUserBean.getUid());
-        holder.post.setText(mPostList.get(position).getMessage());
-        holder.datetime.setText(mPostList.get(position).getStrDatetime());
+        UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
+        PostBean postBean = (PostBean) mCommentDataMapList.get(position).get("postBean");
 
-        if (mPostList.get(position).getPhoto() != null) holder.photo.setImageBitmap(mPostList.get(position).getPhoto());
+        holder.icon.setImageBitmap(userBean.getIcon());
+        holder.username.setText(userBean.getName());
+        holder.uid.setText(userBean.getUid());
+        holder.comment.setText(postBean.getMessage());
+        holder.datetime.setText(postBean.getStrDatetime());
 
-        if (mPostList.get(position).getType().equals("post")) {
-            holder.goodCount.setText(Integer.toString(mPostList.get(position).getGoodCount()));
-            holder.latLng.setText(String.format("%d, %d", (int) mPostList.get(position).getLatLng().latitude,
-                    (int) mPostList.get(position).getLatLng().longitude));
+        if (postBean.isAnonymous()) {
+            holder.icon.setImageBitmap(
+                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+            holder.username.setText("匿名");
+            holder.uid.setText("匿名");
         }
+
+        if (userBean.getPublicationArea().equals("anonymous")) {
+            holder.icon.setImageBitmap(
+                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+            holder.username.setText("匿名");
+            holder.uid.setText("匿名");
+        }
+
         return convertView;
     }
 }

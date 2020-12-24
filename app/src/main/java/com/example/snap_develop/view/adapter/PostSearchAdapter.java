@@ -1,8 +1,7 @@
-package com.example.snap_develop.adapter;
+package com.example.snap_develop.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +23,12 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class TimelineAdapter extends BaseAdapter {
+public class PostSearchAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private Context mContext;
     private int mLayoutID;
-    List<Map<String, Object>> mTimelineDataMapList;
+    List<Map<String, Object>> mPostDataMapList;
 
     static class ViewHolder {
         ImageView icon;
@@ -41,25 +40,24 @@ public class TimelineAdapter extends BaseAdapter {
         TextView latLng;
         ImageView photo;
         ConstraintLayout userInfo;
-        ConstraintLayout background;
     }
 
-    public TimelineAdapter(Context context, List<Map<String, Object>> timelineDataMapList, int rowLayout) {
+    public PostSearchAdapter(Context context, List<Map<String, Object>> postDataMapList, int rowLayout) {
         Timber.i(MyDebugTree.START_LOG);
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.mLayoutID = rowLayout;
-        this.mTimelineDataMapList = timelineDataMapList;
+        this.mPostDataMapList = postDataMapList;
     }
 
     @Override
     public int getCount() {
-        return this.mTimelineDataMapList.size();
+        return this.mPostDataMapList.size();
     }
 
     @Override
     public Map<String, Object> getItem(int position) {
-        return this.mTimelineDataMapList.get(position);
+        return this.mPostDataMapList.get(position);
     }
 
     @Override
@@ -77,23 +75,22 @@ public class TimelineAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(mLayoutID, null);
             holder = new ViewHolder();
-            holder.icon = convertView.findViewById(R.id.timelineIconImageView);
-            holder.datetime = convertView.findViewById(R.id.timelineDatetimeTextView);
-            holder.goodCount = convertView.findViewById(R.id.timelineGoodCountTextView);
-            holder.latLng = convertView.findViewById(R.id.timelineLatLngTextView);
-            holder.message = convertView.findViewById(R.id.timeLineMessage);
-            holder.photo = convertView.findViewById(R.id.timelinePhotoImageView);
-            holder.uid = convertView.findViewById(R.id.timelineUidTextView);
-            holder.username = convertView.findViewById(R.id.timelineNameTextView);
+            holder.icon = convertView.findViewById(R.id.searchPostIconImageView);
+            holder.datetime = convertView.findViewById(R.id.searchPostDatetimeTextView);
+            holder.goodCount = convertView.findViewById(R.id.searchPostGoodCountTextView);
+            holder.latLng = convertView.findViewById(R.id.searchPostLatLngTextView);
+            holder.message = convertView.findViewById(R.id.searchPostMessage);
+            holder.photo = convertView.findViewById(R.id.searchPostPhotoImageView);
+            holder.uid = convertView.findViewById(R.id.searchPostUidTextView);
+            holder.username = convertView.findViewById(R.id.searchPostNameTextView);
             holder.userInfo = convertView.findViewById(R.id.userInfoConstraintLayout);
-            holder.background = convertView.findViewById(R.id.timelineConsstraintLayout);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        final UserBean userBean = (UserBean) mTimelineDataMapList.get(position).get("userBean");
-        PostBean postBean = (PostBean) mTimelineDataMapList.get(position).get("postBean");
+        final UserBean userBean = (UserBean) mPostDataMapList.get(position).get("userBean");
+        PostBean postBean = (PostBean) mPostDataMapList.get(position).get("postBean");
 
         holder.icon.setImageBitmap(userBean.getIcon());
         holder.username.setText(userBean.getName());
@@ -130,10 +127,6 @@ public class TimelineAdapter extends BaseAdapter {
             holder.username.setText("匿名");
             holder.uid.setText("匿名");
             holder.userInfo.setOnClickListener(null);
-        }
-
-        if (postBean.isDanger()) {
-            holder.background.setBackgroundColor(Color.rgb(240, 96, 96));
         }
         return convertView;
     }

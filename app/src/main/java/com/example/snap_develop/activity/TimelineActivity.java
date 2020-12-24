@@ -15,10 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
-import com.example.snap_develop.adapter.TimelineAdapter;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityTimelineBinding;
+import com.example.snap_develop.view.adapter.TimelineAdapter;
 import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
