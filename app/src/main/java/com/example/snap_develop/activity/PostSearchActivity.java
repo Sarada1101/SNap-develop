@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.SearchView;
 
 import androidx.annotation.RequiresApi;
@@ -15,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
@@ -43,7 +45,7 @@ public class PostSearchActivity extends AppCompatActivity implements View.OnClic
     private PostViewModel mPostViewModel;
     private ActivityPostSearchBinding mBinding;
     private PostSearchAdapter mPostSearchAdapter;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     List<Map<String, Object>> mPostDataMapList;
     private List<PostBean> mPostBeanList;
 
@@ -100,11 +102,15 @@ public class PostSearchActivity extends AppCompatActivity implements View.OnClic
                     }
                     mPostDataMapList.add(postDataMap);
                 }
-                mPostSearchAdapter = new PostSearchAdapter(PostSearchActivity.this,
-                        mPostDataMapList, R.layout.activity_post_search_item);
-                mListView = mBinding.searchPostListView;
-                mListView.setAdapter(mPostSearchAdapter);
-                mListView.setOnItemClickListener(PostSearchActivity.this);
+
+                mPostSearchAdapter = new PostSearchAdapter(PostSearchActivity.this, mPostDataMapList);
+                mRecyclerView = mBinding.searchPostRecyclerView;
+                LinearLayoutManager llm = new LinearLayoutManager(PostSearchActivity.this);
+                mRecyclerView.setLayoutManager(llm);
+                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(PostSearchActivity.this,
+                        DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(itemDecoration);
+                mRecyclerView.setAdapter(mPostSearchAdapter);
             }
         });
     }
