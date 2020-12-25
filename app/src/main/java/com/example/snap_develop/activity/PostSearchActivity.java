@@ -101,7 +101,7 @@ public class PostSearchActivity extends AppCompatActivity implements View.OnClic
                     mPostDataMapList.add(postDataMap);
                 }
                 mPostSearchAdapter = new PostSearchAdapter(PostSearchActivity.this,
-                        mPostDataMapList, R.layout.activity_post_search_list_row);
+                        mPostDataMapList, R.layout.activity_post_search_item);
                 mListView = mBinding.searchPostListView;
                 mListView.setAdapter(mPostSearchAdapter);
                 mListView.setOnItemClickListener(PostSearchActivity.this);

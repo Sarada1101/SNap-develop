@@ -14,12 +14,12 @@
         tools:context=".activity.PostSearchActivity">
 
         <ImageView
-            android:id="@+id/locationimage"
+            android:id="@+id/locationIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/favoriteimage"
+            app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
             app:layout_constraintStart_toEndOf="@+id/searchPostGoodCountTextView"
-            app:layout_constraintTop_toTopOf="@+id/favoriteimage"
+            app:layout_constraintTop_toTopOf="@+id/goodIcon"
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ic_baseline_location_on_24" />
 
@@ -34,7 +34,7 @@
             app:layout_constraintTop_toBottomOf="@+id/searchPostMessage" />
 
         <ImageView
-            android:id="@+id/favoriteimage"
+            android:id="@+id/goodIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/userInfoConstraintLayout"
@@ -45,17 +45,17 @@
             android:id="@+id/searchPostGoodCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/favoriteimage"
-            app:layout_constraintStart_toEndOf="@+id/favoriteimage"
-            app:layout_constraintTop_toTopOf="@+id/favoriteimage" />
+            app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+            app:layout_constraintStart_toEndOf="@+id/goodIcon"
+            app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
         <TextView
             android:id="@+id/searchPostLatLngTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/favoriteimage"
-            app:layout_constraintStart_toEndOf="@+id/locationimage"
-            app:layout_constraintTop_toTopOf="@+id/favoriteimage"
+            app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+            app:layout_constraintStart_toEndOf="@+id/locationIcon"
+            app:layout_constraintTop_toTopOf="@+id/goodIcon"
             app:layout_constraintVertical_bias="0.4" />
 
         <TextView
@@ -78,9 +78,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/favoriteimage"
+            app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/favoriteimage" />
+            app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/userInfoConstraintLayout"
