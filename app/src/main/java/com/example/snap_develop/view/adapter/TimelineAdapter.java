@@ -6,110 +6,73 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.activity.DisplayCommentActivity;
 import com.example.snap_develop.activity.UserActivity;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.view.viewHolder.TimelineViewHolder;
 
 import java.util.List;
 import java.util.Map;
 
 import timber.log.Timber;
 
-public class TimelineAdapter extends BaseAdapter {
+public class TimelineAdapter extends RecyclerView.Adapter<TimelineViewHolder> {
 
-    private LayoutInflater mInflater;
     private Context mContext;
-    private int mLayoutID;
-    List<Map<String, Object>> mTimelineDataMapList;
+    private List<Map<String, Object>> mTimelineDataMapList;
 
-    static class ViewHolder {
-        ImageView icon;
-        TextView username;
-        TextView uid;
-        TextView message;
-        TextView datetime;
-        TextView goodCount;
-        TextView latLng;
-        ImageView photo;
-        ConstraintLayout userInfo;
-        ConstraintLayout background;
-    }
-
-    public TimelineAdapter(Context context, List<Map<String, Object>> timelineDataMapList, int rowLayout) {
+    public TimelineAdapter(Context context, List<Map<String, Object>> timelineDataMapList) {
         Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "context", context, "timelineDataMapList",
+                timelineDataMapList));
+
         this.mContext = context;
-        this.mInflater = LayoutInflater.from(context);
-        this.mLayoutID = rowLayout;
         this.mTimelineDataMapList = timelineDataMapList;
     }
 
-    @Override
-    public int getCount() {
-        return this.mTimelineDataMapList.size();
-    }
 
+    @NonNull
     @Override
-    public Map<String, Object> getItem(int position) {
-        return this.mTimelineDataMapList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public TimelineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "position", position, "convertView",
-                convertView, "parent", parent));
-        ViewHolder holder;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "parent", parent, "viewType", viewType));
 
-        if (convertView == null) {
-            convertView = mInflater.inflate(mLayoutID, null);
-            holder = new ViewHolder();
-            holder.icon = convertView.findViewById(R.id.timelineIconImageView);
-            holder.datetime = convertView.findViewById(R.id.timelineDatetimeTextView);
-            holder.goodCount = convertView.findViewById(R.id.timelineGoodCountTextView);
-            holder.latLng = convertView.findViewById(R.id.timelineLatLngTextView);
-            holder.message = convertView.findViewById(R.id.timeLineMessage);
-            holder.photo = convertView.findViewById(R.id.timelinePhotoImageView);
-            holder.uid = convertView.findViewById(R.id.timelineUidTextView);
-            holder.username = convertView.findViewById(R.id.timelineNameTextView);
-            holder.userInfo = convertView.findViewById(R.id.userInfoConstraintLayout);
-            holder.background = convertView.findViewById(R.id.timelineConsstraintLayout);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_timeline_item, parent,
+                false);
+        return new TimelineViewHolder(inflate);
+    }
+
+
+    @Override
+    public void onBindViewHolder(@NonNull TimelineViewHolder holder, int position) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "holder", holder, "position", position));
 
         final UserBean userBean = (UserBean) mTimelineDataMapList.get(position).get("userBean");
-        PostBean postBean = (PostBean) mTimelineDataMapList.get(position).get("postBean");
+        final PostBean postBean = (PostBean) mTimelineDataMapList.get(position).get("postBean");
+        holder.mIconImageView.setImageBitmap(userBean.getIcon());
+        holder.mUserNameTextView.setText(userBean.getName());
+        holder.mUserIdTextView.setText(userBean.getUid());
+        holder.mTimelineTextView.setText(postBean.getMessage());
+        holder.mDatetimeTextView.setText(postBean.getStrDatetime());
 
-        holder.icon.setImageBitmap(userBean.getIcon());
-        holder.username.setText(userBean.getName());
-        holder.uid.setText(userBean.getUid());
-        holder.message.setText(postBean.getMessage());
-        holder.datetime.setText(postBean.getStrDatetime());
-
-        if (postBean.getPhoto() != null) holder.photo.setImageBitmap(postBean.getPhoto());
+        if (postBean.getPhoto() != null) holder.mPhotoImageView.setImageBitmap(postBean.getPhoto());
 
         if (postBean.getType().equals("post")) {
-            holder.goodCount.setText(Integer.toString(postBean.getGoodCount()));
-            holder.latLng.setText(String.format("%d, %d", (int) postBean.getLatLng().latitude,
-                    (int) postBean.getLatLng().longitude));
+            holder.mGoodCountTextView.setText(Integer.toString(postBean.getGoodCount()));
+            holder.mLatLngTextView.setText(
+                    String.format("%d, %d", (int) postBean.getLatLng().latitude, (int) postBean.getLatLng().longitude));
         }
 
-        holder.userInfo.setOnClickListener(new View.OnClickListener() {
+        holder.mUserInfoConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra("uid", userBean.getUid()));
@@ -117,24 +80,43 @@ public class TimelineAdapter extends BaseAdapter {
         });
 
         if (postBean.isAnonymous()) {
-            holder.icon.setImageBitmap(
+            holder.mIconImageView.setImageBitmap(
                     MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
-            holder.username.setText("匿名");
-            holder.uid.setText("匿名");
-            holder.userInfo.setOnClickListener(null);
+            holder.mUserNameTextView.setText("匿名");
+            holder.mUserIdTextView.setText("匿名");
+            holder.mUserInfoConstraintLayout.setOnClickListener(null);
         }
 
         if (userBean.getPublicationArea().equals("anonymous")) {
-            holder.icon.setImageBitmap(
+            holder.mIconImageView.setImageBitmap(
                     MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
-            holder.username.setText("匿名");
-            holder.uid.setText("匿名");
-            holder.userInfo.setOnClickListener(null);
+            holder.mUserNameTextView.setText("匿名");
+            holder.mUserIdTextView.setText("匿名");
+            holder.mUserInfoConstraintLayout.setOnClickListener(null);
         }
 
         if (postBean.isDanger()) {
-            holder.background.setBackgroundColor(Color.rgb(240, 96, 96));
+            holder.mConstraintLayout.setBackgroundColor(Color.rgb(240, 96, 96));
         }
-        return convertView;
+
+        holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (postBean.getType().equals("post")) {
+                    mContext.startActivity(new Intent(mContext, DisplayCommentActivity.class).putExtra("postPath",
+                            postBean.getPostPath()));
+                } else if (postBean.getType().equals("comment")) {
+                    mContext.startActivity(new Intent(mContext, DisplayCommentActivity.class).putExtra("postPath",
+                            postBean.getParentPost()));
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public int getItemCount() {
+        Timber.i(MyDebugTree.START_LOG);
+        return mTimelineDataMapList.size();
     }
 }
