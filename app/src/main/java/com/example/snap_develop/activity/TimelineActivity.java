@@ -33,15 +33,14 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class TimelineActivity extends AppCompatActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener {
+public class TimelineActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityTimelineBinding mBinding;
     private TimelineAdapter mTimelineAdapter;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private List<Map<String, Object>> mTimelineDataMapList;
     private List<UserBean> mUserBeanList;
     private String mUid;
@@ -105,11 +104,15 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                     }
                     mTimelineDataMapList.add(timelineDataMap);
                 }
-                mTimelineAdapter = new TimelineAdapter(TimelineActivity.this, mTimelineDataMapList,
-                        R.layout.activity_timeline_list);
-                mListView = mBinding.timeLineListView;
-                mListView.setAdapter(mTimelineAdapter);
-                mListView.setOnItemClickListener(TimelineActivity.this);
+
+                mTimelineAdapter = new TimelineAdapter(TimelineActivity.this, mTimelineDataMapList);
+                mRecyclerView = mBinding.timelineRecyclerView;
+                LinearLayoutManager llm = new LinearLayoutManager(TimelineActivity.this);
+                mRecyclerView.setLayoutManager(llm);
+                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(TimelineActivity.this,
+                        DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(itemDecoration);
+                mRecyclerView.setAdapter(mTimelineAdapter);
             }
         });
 
