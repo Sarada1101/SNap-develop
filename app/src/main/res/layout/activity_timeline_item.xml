@@ -8,63 +8,65 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/timelineConsstraintLayout"
+        android:id="@+id/ConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".activity.TimelineActivity">
 
         <ImageView
-            android:id="@+id/locationimage"
+            android:id="@+id/locationIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/favoriteimage"
-            app:layout_constraintStart_toEndOf="@+id/timelineGoodCountTextView"
-            app:layout_constraintTop_toTopOf="@+id/favoriteimage"
+            app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+            app:layout_constraintStart_toEndOf="@+id/goodCountTextView"
+            app:layout_constraintTop_toTopOf="@+id/goodIcon"
             app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@drawable/ic_baseline_location_on_24" />
+            app:srcCompat="@drawable/ic_baseline_location_on_24"
+            tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/timelinePhotoImageView"
+            android:id="@+id/photoImageView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:maxHeight="100dp"
             app:layout_constraintEnd_toEndOf="@+id/userInfoConstraintLayout"
             app:layout_constraintStart_toStartOf="@+id/userInfoConstraintLayout"
-            app:layout_constraintTop_toBottomOf="@+id/timeLineMessage" />
+            app:layout_constraintTop_toBottomOf="@+id/timelineTextView"
+            tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/favoriteimage"
+            android:id="@+id/goodIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/userInfoConstraintLayout"
-            app:layout_constraintTop_toBottomOf="@+id/timelinePhotoImageView"
-            app:srcCompat="@drawable/ic_baseline_favorite_24" />
+            app:layout_constraintTop_toBottomOf="@+id/photoImageView"
+            app:srcCompat="@drawable/ic_baseline_favorite_24"
+            tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/timelineGoodCountTextView"
+            android:id="@+id/goodCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/favoriteimage"
-            app:layout_constraintStart_toEndOf="@+id/favoriteimage"
-            app:layout_constraintTop_toTopOf="@+id/favoriteimage" />
+            app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+            app:layout_constraintStart_toEndOf="@+id/goodIcon"
+            app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
         <TextView
-            android:id="@+id/timelineLatLngTextView"
+            android:id="@+id/latLngTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/favoriteimage"
-            app:layout_constraintStart_toEndOf="@+id/locationimage"
-            app:layout_constraintTop_toTopOf="@+id/favoriteimage"
+            app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+            app:layout_constraintStart_toEndOf="@+id/locationIcon"
+            app:layout_constraintTop_toTopOf="@+id/goodIcon"
             app:layout_constraintVertical_bias="0.4" />
 
         <TextView
-            android:id="@+id/timeLineMessage"
+            android:id="@+id/timelineTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
-            android:inputType="textPersonName"
             android:singleLine="true"
             android:textColor="@color/colorTextBlack"
             android:textSize="14sp"
@@ -74,13 +76,13 @@
             app:layout_constraintTop_toBottomOf="@+id/userInfoConstraintLayout" />
 
         <TextView
-            android:id="@+id/timelineDatetimeTextView"
+            android:id="@+id/datetimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/favoriteimage"
+            app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/favoriteimage" />
+            app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/userInfoConstraintLayout"
@@ -92,31 +94,32 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/timelineIconImageView"
+                android:id="@+id/iconImageView"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/iconContentDescription" />
 
             <TextView
-                android:id="@+id/timelineNameTextView"
+                android:id="@+id/userNameTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textColor="@color/colorTextBlack"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/timelineIconImageView"
+                app:layout_constraintStart_toEndOf="@+id/iconImageView"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/timelineUidTextView"
+                android:id="@+id/userIdTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorTextBlack"
                 android:textSize="10sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/timelineNameTextView"
-                app:layout_constraintTop_toBottomOf="@+id/timelineNameTextView" />
+                app:layout_constraintStart_toStartOf="@+id/userNameTextView"
+                app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
-import com.example.snap_develop.adapter.FollowListAdapter;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityFollowingListBinding;
+import com.example.snap_develop.view.adapter.FollowListAdapter;
 import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 

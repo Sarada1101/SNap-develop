@@ -4,21 +4,22 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
-import com.example.snap_develop.adapter.TimelineAdapter;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityTimelineBinding;
+import com.example.snap_develop.view.adapter.TimelineAdapter;
 import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
@@ -33,15 +34,14 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class TimelineActivity extends AppCompatActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener {
+public class TimelineActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityTimelineBinding mBinding;
     private TimelineAdapter mTimelineAdapter;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private List<Map<String, Object>> mTimelineDataMapList;
     private List<UserBean> mUserBeanList;
     private String mUid;
@@ -105,11 +105,15 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
                     }
                     mTimelineDataMapList.add(timelineDataMap);
                 }
-                mTimelineAdapter = new TimelineAdapter(TimelineActivity.this, mTimelineDataMapList,
-                        R.layout.activity_timeline_list);
-                mListView = mBinding.timeLineListView;
-                mListView.setAdapter(mTimelineAdapter);
-                mListView.setOnItemClickListener(TimelineActivity.this);
+
+                mTimelineAdapter = new TimelineAdapter(TimelineActivity.this, mTimelineDataMapList);
+                mRecyclerView = mBinding.timelineRecyclerView;
+                LinearLayoutManager llm = new LinearLayoutManager(TimelineActivity.this);
+                mRecyclerView.setLayoutManager(llm);
+                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(TimelineActivity.this,
+                        DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(itemDecoration);
+                mRecyclerView.setAdapter(mTimelineAdapter);
             }
         });
 
@@ -130,19 +134,6 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
             startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
-        }
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        PostBean postBean = (PostBean) mTimelineDataMapList.get(position).get("postBean");
-        if (postBean.getType().equals("post")) {
-            startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath",
-                    postBean.getPostPath()));
-        } else if (postBean.getType().equals("comment")) {
-            startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath",
-                    postBean.getParentPost()));
         }
     }
 }
