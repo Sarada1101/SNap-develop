@@ -23,8 +23,9 @@ import java.util.Map;
 import timber.log.Timber;
 
 public class DisplayCommentAdapter extends RecyclerView.Adapter<DisplayCommentViewHolder> {
-    Context mContext;
-    List<Map<String, Object>> mCommentDataMapList;
+
+    private Context mContext;
+    private List<Map<String, Object>> mCommentDataMapList;
 
     public DisplayCommentAdapter(Context context, List<Map<String, Object>> commentDataMapList) {
         Timber.i(MyDebugTree.START_LOG);
