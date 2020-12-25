@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.snap_develop.R;
 
 public class DisplayCommentViewHolder extends RecyclerView.ViewHolder {
+
     public ImageView mIconImageView;
     public TextView mUserNameTextView;
     public TextView mUserIdTextView;
