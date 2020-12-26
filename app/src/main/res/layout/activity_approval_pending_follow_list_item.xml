@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/rejectButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="@color/colorDanger"
+        android:text="@string/cancel"
+        android:textColor="@color/colorTextWhite"
+        app:layout_constraintBottom_toBottomOf="@+id/iconImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iconImageView" />
 
     <ImageView
         android:id="@+id/iconImageView"
@@ -14,7 +25,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
         android:id="@+id/userIdTextView"
         android:layout_width="0dp"
@@ -23,8 +33,7 @@
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
         app:layout_constraintStart_toStartOf="@+id/userNameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
-        tools:ignore="SmallSp" />
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 
     <TextView
         android:id="@+id/userNameTextView"
@@ -32,27 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textColor="@color/colorTextBlack"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rejectButton"
         app:layout_constraintStart_toEndOf="@+id/iconImageView"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/datetimeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messageTextView" />
-
-    <TextView
-        android:id="@+id/messageTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/colorTextBlack"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userIdTextView" />
+        app:layout_constraintTop_toTopOf="@+id/iconImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

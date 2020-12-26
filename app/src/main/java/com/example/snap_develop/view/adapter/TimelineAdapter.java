@@ -61,7 +61,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineViewHolder> {
         holder.mIconImageView.setImageBitmap(userBean.getIcon());
         holder.mUserNameTextView.setText(userBean.getName());
         holder.mUserIdTextView.setText(userBean.getUid());
-        holder.mTimelineTextView.setText(postBean.getMessage());
+        holder.mMessageTextView.setText(postBean.getMessage());
         holder.mDatetimeTextView.setText(postBean.getStrDatetime());
 
         if (postBean.getPhoto() != null) holder.mPhotoImageView.setImageBitmap(postBean.getPhoto());

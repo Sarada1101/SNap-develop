@@ -1,87 +1,87 @@
 package com.example.snap_develop.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.activity.UserActivity;
 import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.view.viewHolder.ApprovalPendingFollowListViewHolder;
 
 import java.util.List;
 
 import timber.log.Timber;
 
-public class ApprovalPendingFollowListAdapter extends BaseAdapter {
+public class ApprovalPendingFollowListAdapter extends RecyclerView.Adapter<ApprovalPendingFollowListViewHolder> {
 
-    private LayoutInflater mInflater;
-    private int mLayoutID;
+    private Context mContext;
     private List<UserBean> mFollowList;
+    private View.OnClickListener m_listener;
+    public int mPosition;
 
-    static class ViewHolder {
-        ImageView icon;
-        TextView username;
-        TextView uid;
-        Button cancelButton;
-    }
-
-    public ApprovalPendingFollowListAdapter(Context context, List<UserBean> followList, int rowLayout) {
+    public ApprovalPendingFollowListAdapter(Context context, List<UserBean> followList) {
         Timber.i(MyDebugTree.START_LOG);
-        this.mInflater = LayoutInflater.from(context);
-        this.mLayoutID = rowLayout;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "context", context, "followList",
+                followList));
+
+        this.mContext = context;
         this.mFollowList = followList;
     }
 
-    @Override
-    public int getCount() {
-        return this.mFollowList.size();
-    }
 
+    @NonNull
     @Override
-    public UserBean getItem(int position) {
-        return this.mFollowList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(final int position, View convertView, final ViewGroup parent) {
+    public ApprovalPendingFollowListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Timber.i(MyDebugTree.START_LOG);
-        ViewHolder holder;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "parent", parent, "viewType", viewType));
 
-        if (convertView == null) {
-            convertView = mInflater.inflate(mLayoutID, null);
-            holder = new ViewHolder();
-            holder.username = convertView.findViewById(R.id.userNameTextView);
-            holder.uid = convertView.findViewById(R.id.userIdTextView);
-            holder.icon = convertView.findViewById(R.id.userImageView);
-            holder.cancelButton = convertView.findViewById(R.id.rejectButton);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.activity_approval_pending_follow_list_item, parent, false);
+        return new ApprovalPendingFollowListViewHolder(inflate);
+    }
 
-        UserBean userBean = mFollowList.get(position);
-        holder.username.setText(userBean.getName());
-        holder.uid.setText(userBean.getUid());
-        holder.icon.setImageBitmap(userBean.getIcon());
 
-        holder.cancelButton.setOnClickListener(new View.OnClickListener() {
+    public void setOnItemClickListener(View.OnClickListener listener) {
+        m_listener = listener;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ApprovalPendingFollowListViewHolder holder, final int position) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "holder", holder, "position", position));
+
+        final UserBean userBean = mFollowList.get(position);
+        holder.mIconImageView.setImageBitmap(userBean.getIcon());
+        holder.mUserNameTextView.setText(userBean.getName());
+        holder.mUserIdTextView.setText(userBean.getUid());
+
+        holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ListView) parent).performItemClick(v, position, R.id.rejectButton);
+                mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra("uid", userBean.getUid()));
             }
         });
 
-        return convertView;
+        holder.mRejectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPosition = position;
+                m_listener.onClick(v);
+            }
+        });
+    }
+
+
+    @Override
+    public int getItemCount() {
+        Timber.i(MyDebugTree.START_LOG);
+        return mFollowList.size();
     }
 }

@@ -3,13 +3,14 @@ package com.example.snap_develop.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
@@ -23,15 +24,13 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class FollowingListActivity extends AppCompatActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener {
+public class FollowingListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityFollowingListBinding mBinding;
     private FollowListAdapter mFollowListAdapter;
-    private ListView mListView;
-    private List<UserBean> mFollowList;
+    private RecyclerView mRecyclerView;
     private String mUid;
 
     @Override
@@ -56,16 +55,25 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "followList", followList));
 
-                mFollowList = followList;
-                mFollowListAdapter = new FollowListAdapter(FollowingListActivity.this, followList,
-                        R.layout.activity_follow_list_row);
-                mListView = mBinding.followingListView;
-                mListView.setAdapter(mFollowListAdapter);
-                mListView.setOnItemClickListener(FollowingListActivity.this);
+                mFollowListAdapter = new FollowListAdapter(FollowingListActivity.this, followList);
+                mRecyclerView = mBinding.followingRecyclerView;
+                LinearLayoutManager llm = new LinearLayoutManager(FollowingListActivity.this);
+                mRecyclerView.setLayoutManager(llm);
+                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(FollowingListActivity.this,
+                        DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(itemDecoration);
+                mRecyclerView.setAdapter(mFollowListAdapter);
             }
         });
 
-        mUid = mUserViewModel.getCurrentUser().getUid();
+        // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
+        mUid = getIntent().getStringExtra("uid");
+        if (mUid == null || mUid.equals(mUserViewModel.getCurrentUser().getUid())) {
+            // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
+            mUid = mUserViewModel.getCurrentUser().getUid();
+        }
+        Timber.i(String.format("%s=%s", "mUid", mUid));
+
         mFollowViewModel.fetchFollowingList(mUid);
     }
 
@@ -82,12 +90,5 @@ public class FollowingListActivity extends AppCompatActivity implements View.OnC
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
         }
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        UserBean userBean = mFollowList.get(position);
-        startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
     }
 }

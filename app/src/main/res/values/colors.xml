@@ -6,7 +6,7 @@
     <color name="colorLink">#54A2F8</color>
     <color name="colorSecondly">#4AA0B5</color>
     <color name="colorTextBlack">#000000</color>
-    <color name="colorTextwhite">#FFFFFF</color>
+    <color name="colorTextWhite">#FFFFFF</color>
     <color name="colorDanger">#CB444A</color>
-    <color name="colorDangeBackground">#F06060</color>
+    <color name="colorDangerBackground">#F06060</color>
 </resources>

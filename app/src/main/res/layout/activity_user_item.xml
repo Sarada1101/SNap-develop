@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/listIconImageView"
+        android:id="@+id/iconImageView"
         android:layout_width="35dp"
         android:layout_height="35dp"
+        android:contentDescription="@string/iconContentDescription"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -23,79 +26,82 @@
         android:maxHeight="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listCommentTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/messageTextView"
+        tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/favorite"
+        android:id="@+id/goodIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/photoImageView"
-        app:srcCompat="@drawable/ic_baseline_favorite_24" />
+        app:srcCompat="@drawable/ic_baseline_favorite_24"
+        tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/location"
+        android:id="@+id/locationIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/favorite"
+        app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
         app:layout_constraintStart_toEndOf="@+id/goodCountTextView"
-        app:layout_constraintTop_toTopOf="@+id/favorite"
-        app:srcCompat="@drawable/ic_baseline_location_on_24" />
+        app:layout_constraintTop_toTopOf="@+id/goodIcon"
+        app:srcCompat="@drawable/ic_baseline_location_on_24"
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/listUserIdTextView"
+        android:id="@+id/userIdTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="@color/colorTextBlack"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/listUserNameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/listUserNameTextView" />
+        app:layout_constraintStart_toStartOf="@+id/userNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 
     <TextView
-        android:id="@+id/listUserNameTextView"
+        android:id="@+id/userNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textColor="@color/colorTextBlack"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/listIconImageView"
+        app:layout_constraintStart_toEndOf="@+id/iconImageView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/dateTextView"
+        android:id="@+id/datetimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/favorite"
+        app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/favorite" />
+        app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
     <TextView
-        android:id="@+id/listCommentTextView"
+        android:id="@+id/messageTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textColor="@color/colorTextBlack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listUserIdTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/userIdTextView" />
 
     <TextView
         android:id="@+id/goodCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/favorite"
-        app:layout_constraintStart_toEndOf="@+id/favorite"
-        app:layout_constraintTop_toTopOf="@+id/favorite" />
+        app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+        app:layout_constraintStart_toEndOf="@+id/goodIcon"
+        app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
     <TextView
         android:id="@+id/latLngTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/favorite"
-        app:layout_constraintStart_toEndOf="@+id/location"
-        app:layout_constraintTop_toTopOf="@+id/favorite" />
+        app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+        app:layout_constraintStart_toEndOf="@+id/locationIcon"
+        app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.R;
 
-public class PostSearchViewHolder extends RecyclerView.ViewHolder {
+public class UserViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView mIconImageView;
     public ImageView mPhotoImageView;
@@ -21,9 +21,8 @@ public class PostSearchViewHolder extends RecyclerView.ViewHolder {
     public TextView mLatLngTextView;
     public TextView mDatetimeTextView;
     public ConstraintLayout mConstraintLayout;
-    public ConstraintLayout mUserInfoConstraintLayout;
 
-    public PostSearchViewHolder(@NonNull View itemView) {
+    public UserViewHolder(@NonNull View itemView) {
         super(itemView);
         mIconImageView = itemView.findViewById(R.id.iconImageView);
         mPhotoImageView = itemView.findViewById(R.id.photoImageView);
@@ -34,6 +33,5 @@ public class PostSearchViewHolder extends RecyclerView.ViewHolder {
         mLatLngTextView = itemView.findViewById(R.id.latLngTextView);
         mDatetimeTextView = itemView.findViewById(R.id.datetimeTextView);
         mConstraintLayout = itemView.findViewById(R.id.ConstraintLayout);
-        mUserInfoConstraintLayout = itemView.findViewById(R.id.userInfoConstraintLayout);
     }
 }

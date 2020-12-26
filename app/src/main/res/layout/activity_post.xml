@@ -99,7 +99,7 @@
             android:layout_marginTop="48dp"
             android:backgroundTint="@color/colorAccent"
             android:text="@string/postButtonText"
-            android:textColor="@color/colorTextwhite"
+            android:textColor="@color/colorTextWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/anonymousSwitch" />
 

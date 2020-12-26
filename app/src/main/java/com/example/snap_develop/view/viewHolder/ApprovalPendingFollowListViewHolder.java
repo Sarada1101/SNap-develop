@@ -1,6 +1,7 @@
 package com.example.snap_develop.view.viewHolder;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,22 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.R;
 
-public class DisplayCommentViewHolder extends RecyclerView.ViewHolder {
+public class ApprovalPendingFollowListViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView mIconImageView;
     public TextView mUserNameTextView;
     public TextView mUserIdTextView;
-    public TextView mMessageTextView;
-    public TextView mDatetimeTextView;
+    public Button mRejectButton;
     public ConstraintLayout mConstraintLayout;
 
-    public DisplayCommentViewHolder(@NonNull View itemView) {
+    public ApprovalPendingFollowListViewHolder(@NonNull View itemView) {
         super(itemView);
         mIconImageView = itemView.findViewById(R.id.iconImageView);
         mUserNameTextView = itemView.findViewById(R.id.userNameTextView);
         mUserIdTextView = itemView.findViewById(R.id.userIdTextView);
-        mMessageTextView = itemView.findViewById(R.id.messageTextView);
-        mDatetimeTextView = itemView.findViewById(R.id.datetimeTextView);
+        mRejectButton = itemView.findViewById(R.id.rejectButton);
         mConstraintLayout = itemView.findViewById(R.id.ConstraintLayout);
     }
 }

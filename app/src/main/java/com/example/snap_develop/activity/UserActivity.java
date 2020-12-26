@@ -5,14 +5,15 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
@@ -28,15 +29,14 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class UserActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class UserActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityUserBinding mBinding;
     private UserAdapter mUserAdapter;
-    private ListView mListView;
-    private List<PostBean> mPostBeanList;
+    private RecyclerView mRecyclerView;
     private String mUid;
 
     @Override
@@ -74,12 +74,15 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             public void onChanged(List<PostBean> postList) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postList", postList));
-                mPostBeanList = postList;
-                mUserAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue(),
-                        R.layout.activity_user_list_row);
-                mListView = mBinding.postListView;
-                mListView.setAdapter(mUserAdapter);
-                mListView.setOnItemClickListener(UserActivity.this);
+
+                mUserAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue());
+                mRecyclerView = mBinding.userRecyclerView;
+                LinearLayoutManager llm = new LinearLayoutManager(UserActivity.this);
+                mRecyclerView.setLayoutManager(llm);
+                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(UserActivity.this,
+                        DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(itemDecoration);
+                mRecyclerView.setAdapter(mUserAdapter);
             }
         });
 
@@ -185,19 +188,5 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 followRequest(mUid, mUserViewModel.getCurrentUser().getUid());
             }
         }
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        PostBean postBean = mPostBeanList.get(position);
-        Intent intent = new Intent(getApplication(), DisplayCommentActivity.class);
-
-        if (postBean.getType().equals("post")) {
-            intent.putExtra("postPath", postBean.getPostPath());
-        } else if (postBean.getType().equals("comment")) {
-            intent.putExtra("postPath", postBean.getParentPost());
-        }
-        startActivity(intent);
     }
 }
