@@ -28,7 +28,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorSecondly"
                 android:text="@string/approvalPending"
-                android:textColor="@color/colorTextwhite" />
+                android:textColor="@color/colorTextWhite" />
 
             <Button
                 android:id="@+id/applicatedFollowButton"
@@ -38,7 +38,7 @@
                 android:backgroundTint="@color/colorAccent"
                 android:clickable="false"
                 android:text="@string/followApplication"
-                android:textColor="@color/colorTextwhite" />
+                android:textColor="@color/colorTextWhite" />
 
         </LinearLayout>
 

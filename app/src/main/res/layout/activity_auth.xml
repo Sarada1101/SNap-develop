@@ -90,7 +90,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorAccent"
                 android:text="@string/login"
-                android:textColor="@color/colorTextwhite" />
+                android:textColor="@color/colorTextWhite" />
 
             <Button
                 android:id="@+id/createAccountButton"
@@ -99,7 +99,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorSecondly"
                 android:text="@string/createacount"
-                android:textColor="@color/colorTextwhite" />
+                android:textColor="@color/colorTextWhite" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

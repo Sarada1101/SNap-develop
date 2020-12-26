@@ -38,7 +38,7 @@
         android:layout_weight="1"
         android:backgroundTint="@color/colorDanger"
         android:text="@string/cancel"
-        android:textColor="@color/colorTextwhite"
+        android:textColor="@color/colorTextWhite"
         app:layout_constraintBottom_toBottomOf="@+id/userImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/userImageView" />
