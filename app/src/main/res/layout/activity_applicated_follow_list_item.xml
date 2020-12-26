@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/userImageView"
+        android:id="@+id/iconImageView"
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/iconContentDescription" />
 
-    <TextView
-        android:id="@+id/userNameTextView"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:textColor="@color/colorTextBlack"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/userImageView"
-        app:layout_constraintTop_toTopOf="@+id/userImageView" />
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
+        app:layout_constraintStart_toStartOf="@+id/iconImageView"
+        app:layout_constraintTop_toBottomOf="@+id/userIdTextView">
+
+        <Button
+            android:id="@+id/approvalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/applicatedButton"
+            android:textColor="@color/colorTextWhite"
+            tools:ignore="ButtonStyle" />
+
+        <Button
+            android:id="@+id/rejectButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorDanger"
+            android:text="@string/reject"
+            android:textColor="@color/colorTextWhite"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/userIdTextView"
@@ -31,30 +53,13 @@
         app:layout_constraintStart_toStartOf="@+id/userNameTextView"
         app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/userNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
-        app:layout_constraintStart_toStartOf="@+id/userImageView"
-        app:layout_constraintTop_toBottomOf="@+id/userIdTextView">
-
-        <Button
-            android:id="@+id/approvalButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorAccent"
-            android:text="@string/applicatedButton"
-            android:textColor="@color/colorTextWhite" />
-
-        <Button
-            android:id="@+id/rejectButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="@color/colorDanger"
-            android:text="@string/reject"
-            android:textColor="@color/colorTextWhite" />
-    </LinearLayout>
+        android:layout_marginStart="8dp"
+        android:textColor="@color/colorTextBlack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iconImageView"
+        app:layout_constraintTop_toTopOf="@+id/iconImageView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
