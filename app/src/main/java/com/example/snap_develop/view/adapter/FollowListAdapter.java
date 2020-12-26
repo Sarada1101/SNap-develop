@@ -1,76 +1,72 @@
 package com.example.snap_develop.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
+import com.example.snap_develop.activity.UserActivity;
 import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.view.viewHolder.FollowListViewHolder;
 
 import java.util.List;
 
 import timber.log.Timber;
 
-public class FollowListAdapter extends BaseAdapter {
+public class FollowListAdapter extends RecyclerView.Adapter<FollowListViewHolder> {
 
-    private LayoutInflater mInflater;
-    private int mLayoutID;
+    private Context mContext;
     private List<UserBean> mFollowList;
 
-    static class ViewHolder {
-        ImageView icon;
-        TextView username;
-        TextView uid;
-    }
-
-    public FollowListAdapter(Context context, List<UserBean> followList, int rowLayout) {
+    public FollowListAdapter(Context context, List<UserBean> followList) {
         Timber.i(MyDebugTree.START_LOG);
-        this.mInflater = LayoutInflater.from(context);
-        this.mLayoutID = rowLayout;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "context", context, "followList", followList));
+
+        this.mContext = context;
         this.mFollowList = followList;
     }
 
-    @Override
-    public int getCount() {
-        return this.mFollowList.size();
-    }
 
+    @NonNull
     @Override
-    public UserBean getItem(int position) {
-        return this.mFollowList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public FollowListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Timber.i(MyDebugTree.START_LOG);
-        ViewHolder holder;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "parent", parent, "viewType", viewType));
 
-        if (convertView == null) {
-            convertView = mInflater.inflate(mLayoutID, null);
-            holder = new ViewHolder();
-            holder.username = convertView.findViewById(R.id.userNameTextView);
-            holder.uid = convertView.findViewById(R.id.userIdTextView);
-            holder.icon = convertView.findViewById(R.id.iconImageView);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_follow_list_item, parent,
+                false);
+        return new FollowListViewHolder(inflate);
+    }
 
-        UserBean userBean = mFollowList.get(position);
-        holder.username.setText(userBean.getName());
-        holder.uid.setText(userBean.getUid());
-        holder.icon.setImageBitmap(userBean.getIcon());
 
-        return convertView;
+    @Override
+    public void onBindViewHolder(@NonNull FollowListViewHolder holder, int position) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "holder", holder, "position", position));
+
+        final UserBean userBean = mFollowList.get(position);
+        holder.mIconImageView.setImageBitmap(userBean.getIcon());
+        holder.mUserNameTextView.setText(userBean.getName());
+        holder.mUserIdTextView.setText(userBean.getUid());
+
+        holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra("uid", userBean.getUid()));
+            }
+        });
+    }
+
+
+    @Override
+    public int getItemCount() {
+        Timber.i(MyDebugTree.START_LOG);
+        return mFollowList.size();
     }
 }
