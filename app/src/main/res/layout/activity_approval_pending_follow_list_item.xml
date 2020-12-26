@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/userImageView"
+        android:id="@+id/iconImageView"
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,8 +18,8 @@
         android:layout_marginStart="8dp"
         android:textColor="@color/colorTextBlack"
         app:layout_constraintEnd_toStartOf="@+id/rejectButton"
-        app:layout_constraintStart_toEndOf="@+id/userImageView"
-        app:layout_constraintTop_toTopOf="@+id/userImageView" />
+        app:layout_constraintStart_toEndOf="@+id/iconImageView"
+        app:layout_constraintTop_toTopOf="@+id/iconImageView" />
 
     <TextView
         android:id="@+id/userIdTextView"
@@ -39,8 +39,8 @@
         android:backgroundTint="@color/colorDanger"
         android:text="@string/cancel"
         android:textColor="@color/colorTextWhite"
-        app:layout_constraintBottom_toBottomOf="@+id/userImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/iconImageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/userImageView" />
+        app:layout_constraintTop_toTopOf="@+id/iconImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
