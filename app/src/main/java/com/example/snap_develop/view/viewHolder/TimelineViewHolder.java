@@ -16,7 +16,7 @@ public class TimelineViewHolder extends RecyclerView.ViewHolder {
     public ImageView mPhotoImageView;
     public TextView mUserNameTextView;
     public TextView mUserIdTextView;
-    public TextView mTimelineTextView;
+    public TextView mMessageTextView;
     public TextView mGoodCountTextView;
     public TextView mLatLngTextView;
     public TextView mDatetimeTextView;
@@ -29,7 +29,7 @@ public class TimelineViewHolder extends RecyclerView.ViewHolder {
         mPhotoImageView = itemView.findViewById(R.id.photoImageView);
         mUserNameTextView = itemView.findViewById(R.id.userNameTextView);
         mUserIdTextView = itemView.findViewById(R.id.userIdTextView);
-        mTimelineTextView = itemView.findViewById(R.id.timelineTextView);
+        mMessageTextView = itemView.findViewById(R.id.messageTextView);
         mGoodCountTextView = itemView.findViewById(R.id.goodCountTextView);
         mLatLngTextView = itemView.findViewById(R.id.latLngTextView);
         mDatetimeTextView = itemView.findViewById(R.id.datetimeTextView);

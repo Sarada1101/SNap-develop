@@ -58,8 +58,8 @@ public class FollowListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(mLayoutID, null);
             holder = new ViewHolder();
-            holder.username = convertView.findViewById(R.id.nameTextView);
-            holder.uid = convertView.findViewById(R.id.idTextView);
+            holder.username = convertView.findViewById(R.id.userNameTextView);
+            holder.uid = convertView.findViewById(R.id.userIdTextView);
             holder.icon = convertView.findViewById(R.id.iconImageView);
             convertView.setTag(holder);
         } else {

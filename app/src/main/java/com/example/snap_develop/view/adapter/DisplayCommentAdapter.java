@@ -59,7 +59,7 @@ public class DisplayCommentAdapter extends RecyclerView.Adapter<DisplayCommentVi
         holder.mIconImageView.setImageBitmap(userBean.getIcon());
         holder.mUserNameTextView.setText(userBean.getName());
         holder.mUserIdTextView.setText(userBean.getUid());
-        holder.mCommentTextView.setText(postBean.getMessage());
+        holder.mMessageTextView.setText(postBean.getMessage());
         holder.mDatetimeTextView.setText(postBean.getStrDatetime());
 
         holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {

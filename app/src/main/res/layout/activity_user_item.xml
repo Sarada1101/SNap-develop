@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iconImageView"
         android:layout_width="35dp"
         android:layout_height="35dp"
+        android:contentDescription="@string/iconContentDescription"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -23,7 +26,8 @@
         android:maxHeight="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/commentTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/messageTextView"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/goodIcon"
@@ -31,7 +35,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/photoImageView"
-        app:srcCompat="@drawable/ic_baseline_favorite_24" />
+        app:srcCompat="@drawable/ic_baseline_favorite_24"
+        tools:ignore="ContentDescription" />
 
     <ImageView
         android:id="@+id/locationIcon"
@@ -41,7 +46,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
         app:layout_constraintStart_toEndOf="@+id/goodCountTextView"
         app:layout_constraintTop_toTopOf="@+id/goodIcon"
-        app:srcCompat="@drawable/ic_baseline_location_on_24" />
+        app:srcCompat="@drawable/ic_baseline_location_on_24"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/userIdTextView"
@@ -74,7 +80,7 @@
         app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
     <TextView
-        android:id="@+id/commentTextView"
+        android:id="@+id/messageTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"

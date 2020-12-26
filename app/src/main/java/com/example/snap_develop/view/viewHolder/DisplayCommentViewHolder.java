@@ -15,7 +15,7 @@ public class DisplayCommentViewHolder extends RecyclerView.ViewHolder {
     public ImageView mIconImageView;
     public TextView mUserNameTextView;
     public TextView mUserIdTextView;
-    public TextView mCommentTextView;
+    public TextView mMessageTextView;
     public TextView mDatetimeTextView;
     public ConstraintLayout mConstraintLayout;
 
@@ -24,7 +24,7 @@ public class DisplayCommentViewHolder extends RecyclerView.ViewHolder {
         mIconImageView = itemView.findViewById(R.id.iconImageView);
         mUserNameTextView = itemView.findViewById(R.id.userNameTextView);
         mUserIdTextView = itemView.findViewById(R.id.userIdTextView);
-        mCommentTextView = itemView.findViewById(R.id.commentTextView);
+        mMessageTextView = itemView.findViewById(R.id.messageTextView);
         mDatetimeTextView = itemView.findViewById(R.id.datetimeTextView);
         mConstraintLayout = itemView.findViewById(R.id.ConstraintLayout);
     }

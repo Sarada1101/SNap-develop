@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/userNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -23,12 +23,12 @@
         app:layout_constraintTop_toTopOf="@+id/iconImageView" />
 
     <TextView
-        android:id="@+id/idTextView"
+        android:id="@+id/userIdTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="@color/colorTextBlack"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/nameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+        app:layout_constraintStart_toStartOf="@+id/userNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>
