@@ -22,13 +22,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/approvalPendingFolliwButton"
+                android:id="@+id/approvalPendingFollowButton"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorAccent"
                 android:text="@string/approvalPending"
-                android:textColor="@color/colorTextWhite" />
+                android:textColor="@color/colorTextWhite"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/applicatedFollowButton"
@@ -38,7 +39,8 @@
                 android:backgroundTint="@color/colorSecondly"
                 android:clickable="false"
                 android:text="@string/followApplication"
-                android:textColor="@color/colorTextWhite" />
+                android:textColor="@color/colorTextWhite"
+                tools:ignore="ButtonStyle" />
 
         </LinearLayout>
 
