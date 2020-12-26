@@ -103,17 +103,6 @@
                 tools:ignore="ContentDescription" />
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/postListView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/followButtonLinerLayout" />
-
         <TextView
             android:id="@+id/nameTextView"
             android:layout_width="0dp"
@@ -147,6 +136,17 @@
             app:layout_constraintEnd_toEndOf="@+id/nameTextView"
             app:layout_constraintStart_toStartOf="@+id/nameTextView"
             app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/buttonLinearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/followButtonLinerLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
