@@ -23,7 +23,6 @@ public class ApplicatedFollowListAdapter extends RecyclerView.Adapter<Applicated
 
     private Context mContext;
     private List<UserBean> mFollowList;
-    private ViewGroup mParent;
     private View.OnClickListener m_listener;
     public int mPosition;
 
@@ -42,8 +41,6 @@ public class ApplicatedFollowListAdapter extends RecyclerView.Adapter<Applicated
     public ApplicatedFollowListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "parent", parent, "viewType", viewType));
-
-        this.mParent = parent;
 
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_applicated_follow_list_item,
                 parent, false);
