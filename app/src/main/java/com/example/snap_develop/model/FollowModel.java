@@ -26,6 +26,8 @@ import timber.log.Timber;
 
 public class FollowModel extends Firebase {
 
+    private final long IMAGE_SIZE = 1024 * 1024 * 100;
+
     // toUid へ insetUid を追加する
     public void insertFollowing(final String toUid, String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
@@ -332,12 +334,11 @@ public class FollowModel extends Firebase {
                                     userBean.setPublicationArea(document.getString("publication_area"));
 
                                     // アイコン画像を取得
-                                    final long FIVE_MEGABYTE = 1024 * 1024 * 5;
                                     storage.getReference()
                                             .child("icon")
                                             .child(userBean.getUid())
                                             .child(userBean.getIconName())
-                                            .getBytes(FIVE_MEGABYTE)
+                                            .getBytes(IMAGE_SIZE)
                                             .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                                 @Override
                                                 public void onSuccess(byte[] aByte) {
@@ -433,12 +434,11 @@ public class FollowModel extends Firebase {
                                     userBean.setPublicationArea(document.getString("publication_area"));
 
                                     // アイコン画像を取得
-                                    final long FIVE_MEGABYTE = 1024 * 1024 * 5;
                                     storage.getReference()
                                             .child("icon")
                                             .child(userBean.getUid())
                                             .child(userBean.getIconName())
-                                            .getBytes(FIVE_MEGABYTE)
+                                            .getBytes(IMAGE_SIZE)
                                             .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                                 @Override
                                                 public void onSuccess(byte[] aByte) {
@@ -534,12 +534,11 @@ public class FollowModel extends Firebase {
                                     userBean.setPublicationArea(document.getString("publication_area"));
 
                                     // アイコン画像を取得
-                                    final long FIVE_MEGABYTE = 1024 * 1024 * 5;
                                     storage.getReference()
                                             .child("icon")
                                             .child(userBean.getUid())
                                             .child(userBean.getIconName())
-                                            .getBytes(FIVE_MEGABYTE)
+                                            .getBytes(IMAGE_SIZE)
                                             .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                                 @Override
                                                 public void onSuccess(byte[] aByte) {
@@ -635,12 +634,11 @@ public class FollowModel extends Firebase {
                                     userBean.setPublicationArea(document.getString("publication_area"));
 
                                     // アイコン画像を取得
-                                    final long FIVE_MEGABYTE = 1024 * 1024 * 5;
                                     storage.getReference()
                                             .child("icon")
                                             .child(userBean.getUid())
                                             .child(userBean.getIconName())
-                                            .getBytes(FIVE_MEGABYTE)
+                                            .getBytes(IMAGE_SIZE)
                                             .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                                 @Override
                                                 public void onSuccess(byte[] aByte) {

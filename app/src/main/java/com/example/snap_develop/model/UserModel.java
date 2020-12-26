@@ -34,6 +34,8 @@ import timber.log.Timber;
 
 public class UserModel extends Firebase {
 
+    private final long IMAGE_SIZE = 1024 * 1024 * 100;
+
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private final static String SUCCESS = "success";
 
@@ -283,13 +285,12 @@ public class UserModel extends Firebase {
                             userBean.setPublicationArea(document.getString("publication_area"));
                         }
 
-                        final long ONE_MEGABYTE = 1024 * 1024 * 100;
                         // icon/{uid}/{iconName}
                         storage.getReference()
                                 .child("icon")
                                 .child(userBean.getUid())
                                 .child(userBean.getIconName())
-                                .getBytes(ONE_MEGABYTE)
+                                .getBytes(IMAGE_SIZE)
                                 .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                     @Override
                                     public void onSuccess(byte[] aByte) {
@@ -356,13 +357,12 @@ public class UserModel extends Firebase {
                             userBean.setCommentNotice(document.getBoolean("comment_notice"));
                             userBean.setPublicationArea(document.getString("publication_area"));
 
-                            final long ONE_MEGABYTE = 1024 * 1024 * 100;
                             // icon/{uid}/{iconName}
                             storage.getReference()
                                     .child("icon")
                                     .child(userBean.getUid())
                                     .child(userBean.getIconName())
-                                    .getBytes(ONE_MEGABYTE)
+                                    .getBytes(IMAGE_SIZE)
                                     .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                         @Override
                                         public void onSuccess(byte[] aByte) {
