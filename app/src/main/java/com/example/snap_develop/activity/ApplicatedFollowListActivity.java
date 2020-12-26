@@ -3,13 +3,14 @@ package com.example.snap_develop.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
@@ -23,14 +24,13 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class ApplicatedFollowListActivity extends AppCompatActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener {
+public class ApplicatedFollowListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityApplicatedFollowListBinding mBinding;
     private ApplicatedFollowListAdapter mApplicatedFollowListAdapter;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private List<UserBean> mFollowList;
     private String mUid;
 
@@ -46,7 +46,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_applicated_follow_list);
 
         mBinding.applicatedFollowButton.setOnClickListener(this);
-        mBinding.approvalPendingFolliwButton.setOnClickListener(this);
+        mBinding.approvalPendingFollowButton.setOnClickListener(this);
         mBinding.timelineImageButton.setOnClickListener(this);
         mBinding.mapImageButton.setOnClickListener(this);
         mBinding.userImageButton.setOnClickListener(this);
@@ -54,16 +54,22 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
         // フォロー申請リストを取得したら
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
             @Override
-            public void onChanged(List<UserBean> followList) {
+            public void onChanged(final List<UserBean> followList) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "followList", followList));
 
-                mFollowList = followList;
                 mApplicatedFollowListAdapter = new ApplicatedFollowListAdapter(ApplicatedFollowListActivity.this,
-                        followList, R.layout.activity_applicated_follow_list_row);
-                mListView = mBinding.applicatedFollowListView;
-                mListView.setAdapter(mApplicatedFollowListAdapter);
-                mListView.setOnItemClickListener(ApplicatedFollowListActivity.this);
+                        followList);
+                mRecyclerView = mBinding.applicatedFollowRecyclerView;
+                LinearLayoutManager llm = new LinearLayoutManager(ApplicatedFollowListActivity.this);
+                mRecyclerView.setLayoutManager(llm);
+                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(
+                        ApplicatedFollowListActivity.this, DividerItemDecoration.VERTICAL);
+                mRecyclerView.addItemDecoration(itemDecoration);
+                mRecyclerView.setAdapter(mApplicatedFollowListAdapter);
+
+                mFollowList = followList;
+                mApplicatedFollowListAdapter.setOnItemClickListener(ApplicatedFollowListActivity.this);
             }
         });
 
@@ -86,6 +92,13 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
     }
 
 
+    private void listRemove(int position) {
+        mFollowList.remove(position);
+        mBinding.applicatedFollowRecyclerView.getAdapter().notifyItemRemoved(position);
+        mBinding.applicatedFollowRecyclerView.getAdapter().notifyItemRangeRemoved(position, mFollowList.size());
+    }
+
+
     @Override
     public void onClick(View view) {
         Timber.i(MyDebugTree.START_LOG);
@@ -99,31 +112,16 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
             startActivity(new Intent(getApplication(), UserActivity.class));
         } else if (i == R.id.applicatedFollowButton) {
             startActivity(new Intent(getApplication(), ApplicatedFollowListActivity.class));
-        } else if (i == R.id.approvalPendingFolliwButton) {
+        } else if (i == R.id.approvalPendingFollowButton) {
             startActivity(new Intent(getApplication(), ApprovalPendingFollowListActivity.class));
-        }
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (view.getId() == R.id.approvalButton) {
+        } else if (i == R.id.approvalButton) {
+            int position = mApplicatedFollowListAdapter.mPosition;
             approvalFollow(mFollowList.get(position).getUid(), mUid);
-
-            mFollowList.remove(position);
-            mApplicatedFollowListAdapter = new ApplicatedFollowListAdapter(ApplicatedFollowListActivity.this,
-                    mFollowList, R.layout.activity_applicated_follow_list_row);
-            mListView.setAdapter(mApplicatedFollowListAdapter);
-        } else if (view.getId() == R.id.rejectButton) {
+            listRemove(position);
+        } else if (i == R.id.rejectButton) {
+            int position = mApplicatedFollowListAdapter.mPosition;
             rejectFollow(mFollowList.get(position).getUid(), mUid);
-
-            mFollowList.remove(position);
-            mApplicatedFollowListAdapter = new ApplicatedFollowListAdapter(ApplicatedFollowListActivity.this,
-                    mFollowList, R.layout.activity_applicated_follow_list_row);
-            mListView.setAdapter(mApplicatedFollowListAdapter);
-        } else {
-            UserBean userBean = mFollowList.get(position);
-            startActivity(new Intent(getApplication(), UserActivity.class).putExtra("uid", userBean.getUid()));
+            listRemove(position);
         }
     }
 }
