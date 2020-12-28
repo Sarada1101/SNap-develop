@@ -6,7 +6,7 @@
     <string name="emailCreateAccountButtonText">新規登録</string>
     <string name="SNap">snap</string>
     <string name="メールアドレス">mailaddress</string>
-    <string name="mailaddress">メールアドレス</string>
+    <string name="mailAddress">メールアドレス</string>
     <string name="password">パスワード</string>
     <string name="login">ログイン</string>
     <string name="createaccount">新規登録</string>
@@ -42,7 +42,7 @@
     <string name="gooded">いいねされたとき通知</string>
     <string name="commented">コメントされたとき通知</string>
     <string name="touristSpot">近くの観光地を通知</string>
-    <string name="createacount">新規登録</string>
+    <string name="createAccount">新規登録</string>
     <string name="nameTextEdit">ユーザー名</string>
     <string name="idTextEdit">ユーザーID</string>
     <string name="dateTextEdit">年月日</string>
@@ -62,7 +62,7 @@
     <string name="followButtonText"> フォロー</string>
     <string name="followerButtonText"> フォロワー</string>
     <string name="nameUpdate">名前</string>
-    <string name="profireUpdate">プロフィール</string>
+    <string name="profileUpdate">プロフィール</string>
     <string name="saveText">保存</string>
     <string name="anoymous">匿名投稿</string>
     <string name="comma">, </string>
@@ -74,7 +74,7 @@
     <string name="postButtonText">投稿する</string>
     <string name="cancel">取消</string>
     <string name="followRequestButtonText">フォロー申請</string>
-    <string name="signoutButton">ログアウト</string>
+    <string name="signOutButton">ログアウト</string>
     <string name="iconContentDescription">icon</string>
 
 </resources>

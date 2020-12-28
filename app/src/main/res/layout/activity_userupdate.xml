@@ -117,14 +117,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{userViewModel.user.message}"
-                android:hint="@string/profireUpdate" />
+                android:hint="@string/profileUpdate" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/signoutButton"
+            android:id="@+id/signOutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signoutButton"
+            android:text="@string/signOutButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
