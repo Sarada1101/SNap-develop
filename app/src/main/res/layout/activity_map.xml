@@ -40,7 +40,9 @@
             map:layout_constraintStart_toStartOf="parent"
             map:layout_constraintTop_toTopOf="parent"
             map:layout_constraintVertical_bias="0.878"
-            map:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
+            map:srcCompat="@drawable/ic_baseline_add_circle_outline_24"
+            tools:ignore="ContentDescription"
+            android:focusable="true" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
@@ -94,7 +96,9 @@
             map:layout_constraintBottom_toTopOf="@+id/postMapFloatingActionButton"
             map:layout_constraintEnd_toEndOf="@+id/postMapFloatingActionButton"
             map:layout_constraintStart_toStartOf="@+id/postMapFloatingActionButton"
-            map:srcCompat="@drawable/baseline_search_black_24dp" />
+            map:srcCompat="@drawable/baseline_search_black_24dp"
+            tools:ignore="ContentDescription"
+            android:focusable="true" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

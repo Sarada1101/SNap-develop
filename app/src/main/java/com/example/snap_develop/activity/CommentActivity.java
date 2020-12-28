@@ -49,7 +49,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     private void insertComment() {
         Timber.i(MyDebugTree.START_LOG);
-        String comment = mBinding.commentTextInputEeditText.getText().toString();
+        String comment = mBinding.commentTextInputEditText.getText().toString();
 
         if (!validateForm(comment)) {
             return;

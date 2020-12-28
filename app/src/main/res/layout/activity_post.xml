@@ -16,7 +16,8 @@
             android:scaleType="fitCenter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/postTextInputLayout"
-            app:srcCompat="@android:drawable/ic_menu_gallery" />
+            app:srcCompat="@android:drawable/ic_menu_gallery"
+            tools:ignore="ContentDescription" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/anonymousSwitch"

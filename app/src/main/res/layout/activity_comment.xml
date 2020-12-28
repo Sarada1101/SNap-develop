@@ -20,7 +20,8 @@
             android:text="@string/anonymousSwitch"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/commentTextInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/commentTextInputLayout"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"
@@ -84,7 +85,7 @@
             app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/commentTextInputEeditText"
+                android:id="@+id/commentTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/Comment" />

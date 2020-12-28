@@ -28,7 +28,8 @@
             android:textColor="@color/colorTextWhite"
             android:textSize="8sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iconImageView" />
+            app:layout_constraintTop_toTopOf="@+id/iconImageView"
+            tools:ignore="SmallSp" />
 
         <ImageView
             android:id="@+id/iconImageView"
