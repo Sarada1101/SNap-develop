@@ -20,7 +20,8 @@
             android:text="@string/anonymousSwitch"
             android:textColor="@color/colorTextBlack"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/commentTextInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/commentTextInputLayout"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <LinearLayout
             android:id="@+id/buttonLinearLayout"

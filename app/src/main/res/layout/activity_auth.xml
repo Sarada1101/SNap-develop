@@ -90,7 +90,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorAccent"
                 android:text="@string/login"
-                android:textColor="@color/colorTextWhite" />
+                android:textColor="@color/colorTextWhite"
+                tools:ignore="ButtonStyle" />
 
             <Button
                 android:id="@+id/createAccountButton"
@@ -98,8 +99,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorSecondly"
-                android:text="@string/createacount"
-                android:textColor="@color/colorTextWhite" />
+                android:text="@string/createAccount"
+                android:textColor="@color/colorTextWhite"
+                tools:ignore="ButtonStyle" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
