@@ -39,7 +39,10 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.loginButton.setOnClickListener(this);
         mBinding.notRegisterTextView.setOnClickListener(this);
 
-        if (mUserViewModel.getCurrentUser() != null) {
+        if (mUserViewModel.getCurrentUser() != null
+                && !mUserViewModel.getCurrentUser().isEmailVerified()) { // メール認証がされてないなら
+            mUserViewModel.signOut();
+        } else if (mUserViewModel.getCurrentUser() != null && mUserViewModel.getCurrentUser().isEmailVerified()) {
             startActivity(new Intent(getApplication(), MapActivity.class));
         }
 
@@ -52,6 +55,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
                 //上記の値が変更されたときにonChangedメソッドが発生し、中に記述されている処理が実行される
                 if (TextUtils.equals(authResult, "success")) {
+                if (TextUtils.equals(authResult, "createAccountSuccess")) {
                     //FCMトークンを登録する
                     mUserViewModel.fcmTokenInsert(mUserViewModel.getCurrentUser().getUid());
                     Toast.makeText(AuthActivity.this, "成功しました", Toast.LENGTH_SHORT).show();
@@ -75,6 +79,17 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
                 } else if (authResult.contains("The given password is invalid.")) {
                     mBinding.passwordTextInputLayout.setError("パスワード6文字以上入力してください");
+                    mUserViewModel.sendEmailVerification();
+                    startActivity(new Intent(getApplication(), EmailCheckActivity.class).putExtra("activity",
+                            "createAccount"));
+                } else if (TextUtils.equals(authResult, "signInSuccess")) {
+                    if (mUserViewModel.getCurrentUser().isEmailVerified()) { // メール認証済みなら
+                        Toast.makeText(AuthActivity.this, "ログインに成功しました", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplication(), MapActivity.class));
+                    } else {
+                        startActivity(
+                                new Intent(getApplication(), EmailCheckActivity.class).putExtra("activity", "signIn"));
+                    }
                 }
             }
         });

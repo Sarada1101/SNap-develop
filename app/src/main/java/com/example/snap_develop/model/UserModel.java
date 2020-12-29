@@ -37,7 +37,6 @@ public class UserModel extends Firebase {
     private final long IMAGE_SIZE = 1024 * 1024 * 100;
 
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private final static String SUCCESS = "success";
 
     public FirebaseUser getCurrentUser() {
         Timber.i(MyDebugTree.START_LOG);
@@ -58,7 +57,7 @@ public class UserModel extends Firebase {
 
                         if (task.isSuccessful()) {
                             Timber.i(MyDebugTree.SUCCESS_LOG);
-                            authResult.setValue(SUCCESS);
+                            authResult.setValue("createAccountSuccess");
                             String uid = getCurrentUser().getUid();
                             userBean.setUid(uid);
                             userBean.setName(uid);
@@ -127,7 +126,7 @@ public class UserModel extends Firebase {
 
                         if (task.isSuccessful()) {
                             Timber.i(MyDebugTree.SUCCESS_LOG);
-                            authResult.setValue(SUCCESS);
+                            authResult.setValue("signInSuccess");
                         } else {
                             Timber.i(MyDebugTree.FAILURE_LOG);
                             Timber.e(task.getException().toString());
@@ -177,7 +176,7 @@ public class UserModel extends Firebase {
                             public void onComplete(@NonNull Task<Void> task) {
                                 Timber.i(SUCCESS_LOG);
                                 Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
-                                updateResult.setValue(SUCCESS);
+                                updateResult.setValue("success");
 
                             }
                         })
