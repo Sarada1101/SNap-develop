@@ -30,6 +30,7 @@
         </activity>
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".activity.DisplayCommentActivity" />
+        <activity android:name=".activity.EmailCheckActivity" />
         <activity android:name=".activity.FollowerListActivity" />
         <activity android:name=".activity.FollowingListActivity" />
         <activity
