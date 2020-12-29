@@ -54,31 +54,9 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "authResult", authResult));
 
                 //上記の値が変更されたときにonChangedメソッドが発生し、中に記述されている処理が実行される
-                if (TextUtils.equals(authResult, "success")) {
                 if (TextUtils.equals(authResult, "createAccountSuccess")) {
                     //FCMトークンを登録する
                     mUserViewModel.fcmTokenInsert(mUserViewModel.getCurrentUser().getUid());
-                    Toast.makeText(AuthActivity.this, "成功しました", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(AuthActivity.this, MapActivity.class));
-
-                } else if (authResult.contains("The email address is badly formatted")) {
-                    mBinding.emailTextInputLayout.setError("メールアドレスを入力してください");
-
-                } else if (authResult.contains(
-                        "The email address is already in use by another account.")) {
-                    mBinding.emailTextInputLayout.setError("メールアドレスが既に登録済みです");
-
-                } else if (authResult.contains(
-                        "There is no user record corresponding to this identifier. The user may "
-                                + "have been deleted.")) {
-                    mBinding.emailTextInputLayout.setError("登録されていないメールアドレスです");
-
-                } else if (authResult.contains(
-                        "The password is invalid or the user does not have a password.")) {
-                    mBinding.passwordTextInputLayout.setError("パスワードが異なります");
-
-                } else if (authResult.contains("The given password is invalid.")) {
-                    mBinding.passwordTextInputLayout.setError("パスワード6文字以上入力してください");
                     mUserViewModel.sendEmailVerification();
                     startActivity(new Intent(getApplication(), EmailCheckActivity.class).putExtra("activity",
                             "createAccount"));
@@ -90,6 +68,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                         startActivity(
                                 new Intent(getApplication(), EmailCheckActivity.class).putExtra("activity", "signIn"));
                     }
+                } else {
+                    setAuthError(authResult);
                 }
             }
         });
@@ -152,6 +132,22 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
         Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
         return isValidSuccess;
+    }
+
+
+    private void setAuthError(String authResult) {
+        if (authResult.contains("The email address is badly formatted")) {
+            mBinding.emailTextInputLayout.setError("メールアドレスを入力してください");
+        } else if (authResult.contains("The email address is already in use by another account.")) {
+            mBinding.emailTextInputLayout.setError("メールアドレスが既に登録済みです");
+        } else if (authResult.contains(
+                "There is no user record corresponding to this identifier. The user may have been deleted.")) {
+            mBinding.emailTextInputLayout.setError("登録されていないメールアドレスです");
+        } else if (authResult.contains("The password is invalid or the user does not have a password.")) {
+            mBinding.passwordTextInputLayout.setError("パスワードが異なります");
+        } else if (authResult.contains("The given password is invalid.")) {
+            mBinding.passwordTextInputLayout.setError("パスワード6文字以上入力してください");
+        }
     }
 
 
