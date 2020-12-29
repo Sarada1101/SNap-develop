@@ -82,6 +82,12 @@ public class UserViewModel extends ViewModel {
     }
 
 
+    public void sendEmailVerification() {
+        Timber.i(MyDebugTree.START_LOG);
+        userModel.sendEmailVerification();
+    }
+
+
     public void signOut() {
         Timber.i(MyDebugTree.START_LOG);
         userModel.signOut();
