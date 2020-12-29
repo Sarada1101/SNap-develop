@@ -76,5 +76,7 @@
     <string name="followRequestButtonText">フォロー申請</string>
     <string name="signOutButton">ログアウト</string>
     <string name="iconContentDescription">icon</string>
+    <string name="sendEmailVerifiedButtonText">認証メールを再送信</string>
+    <string name="backLoginButtonText">ログイン画面に戻る</string>
 
 </resources>
