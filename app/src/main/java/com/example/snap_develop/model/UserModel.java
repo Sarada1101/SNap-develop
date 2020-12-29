@@ -138,6 +138,19 @@ public class UserModel extends Firebase {
     }
 
 
+    public void sendEmailVerification() {
+        Timber.i(MyDebugTree.START_LOG);
+        getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Timber.i("Email sent.");
+                }
+            }
+        });
+    }
+
+
     public void signOut() {
         Timber.i(MyDebugTree.START_LOG);
         firebaseAuth.signOut();
