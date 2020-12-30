@@ -47,7 +47,6 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
 
         mBinding.updateIconImageButton.setOnClickListener(this);
         mBinding.updateButton.setOnClickListener(this);
-        mBinding.signOutButton.setOnClickListener(this);
 
         //ユーザー情報の変化が完了した後の処理
         mUserViewModel.getUpdateResult().observe(this, new Observer<String>() {
@@ -174,9 +173,6 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
             startActivity(new Intent(getApplication(), MapActivity.class));
         } else if (i == R.id.userImageButton) {
             startActivity(new Intent(getApplication(), UserActivity.class));
-        } else if (i == R.id.signOutButton) {
-            mUserViewModel.signOut();
-            startActivity(new Intent(getApplication(), AuthActivity.class));
         }
     }
 }

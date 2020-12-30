@@ -2,17 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/update_user"
-        android:icon="@drawable/ic_baseline_account_circle_24"
-        android:iconTint="@color/colorTextWhite"
-        app:showAsAction="ifRoom"
-        android:title="" />
+        android:id="@+id/updateUser"
+        android:title="@string/updateUserText"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/setting"
-        android:icon="@drawable/baseline_settings_applications_black_24dp"
-        android:iconTint="@color/colorTextWhite"
-        app:showAsAction="ifRoom"
-        android:title="" />
+        android:title="@string/settingText"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/signOut"
+        android:title="@string/signOutButton"
+        app:showAsAction="never" />
 
 </menu>
