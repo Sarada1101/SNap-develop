@@ -1,12 +1,13 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
@@ -23,6 +25,7 @@ import com.example.snap_develop.view.adapter.TimelineAdapter;
 import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +37,7 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class TimelineActivity extends AppCompatActivity implements View.OnClickListener {
+public class TimelineActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
@@ -58,9 +61,8 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
 
-        mBinding.timelineImageButton.setOnClickListener(this);
-        mBinding.mapImageButton.setOnClickListener(this);
-        mBinding.userImageButton.setOnClickListener(this);
+
+        mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         // フォローリストを取得したらタイムラインを取得
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
@@ -124,16 +126,39 @@ public class TimelineActivity extends AppCompatActivity implements View.OnClickL
 
 
     @Override
-    public void onClick(View view) {
+    public void onTabSelected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
-        int i = view.getId();
-        Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(getApplication(), TimelineActivity.class));
-        } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(getApplication(), MapActivity.class));
-        } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(getApplication(), UserActivity.class));
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
         }
     }
 }

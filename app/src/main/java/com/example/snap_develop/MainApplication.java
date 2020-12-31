@@ -14,6 +14,10 @@ import timber.log.Timber;
 
 public class MainApplication extends Application {
 
+    public final static int TIMELINE_POS = 0;
+    public final static int MAP_POS = 1;
+    public final static int USER_POS = 2;
+
     @Override
     public void onCreate() {
         super.onCreate();

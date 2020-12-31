@@ -3,6 +3,7 @@ package com.example.snap_develop.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,21 +13,25 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityUserupdateBinding;
 import com.example.snap_develop.viewModel.UserViewModel;
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 
 import timber.log.Timber;
 
-public class UserUpdateActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserUpdateActivity extends AppCompatActivity implements View.OnClickListener,
+        TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private ActivityUserupdateBinding mBinding;
@@ -47,7 +52,7 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
 
         mBinding.updateIconImageButton.setOnClickListener(this);
         mBinding.updateButton.setOnClickListener(this);
-        mBinding.signOutButton.setOnClickListener(this);
+        mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         //ユーザー情報の変化が完了した後の処理
         mUserViewModel.getUpdateResult().observe(this, new Observer<String>() {
@@ -168,15 +173,44 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
             pickPhoto();
         } else if (i == R.id.updateButton) {
             updateUser();
-        } else if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(getApplication(), TimelineActivity.class));
-        } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(getApplication(), MapActivity.class));
-        } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(getApplication(), UserActivity.class));
-        } else if (i == R.id.signOutButton) {
-            mUserViewModel.signOut();
-            startActivity(new Intent(getApplication(), AuthActivity.class));
+        }
+    }
+
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
         }
     }
 }
