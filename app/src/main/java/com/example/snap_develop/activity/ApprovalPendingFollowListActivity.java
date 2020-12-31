@@ -1,10 +1,12 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
@@ -19,12 +22,14 @@ import com.example.snap_develop.databinding.ActivityApprovalPendingFollowListBin
 import com.example.snap_develop.view.adapter.ApprovalPendingFollowListAdapter;
 import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
 
 import timber.log.Timber;
 
-public class ApprovalPendingFollowListActivity extends AppCompatActivity implements View.OnClickListener {
+public class ApprovalPendingFollowListActivity extends AppCompatActivity implements View.OnClickListener,
+        TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
@@ -45,11 +50,13 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_approval_pending_follow_list);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         mBinding.applicatedFollowButton.setOnClickListener(this);
         mBinding.approvalPendingFollowButton.setOnClickListener(this);
-        mBinding.timelineImageButton.setOnClickListener(this);
-        mBinding.mapImageButton.setOnClickListener(this);
-        mBinding.userImageButton.setOnClickListener(this);
+        mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         // フォロー承認待ちリストを取得したら
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
@@ -96,13 +103,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(getApplication(), TimelineActivity.class));
-        } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(getApplication(), MapActivity.class));
-        } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(getApplication(), UserActivity.class));
-        } else if (i == R.id.applicatedFollowButton) {
+        if (i == R.id.applicatedFollowButton) {
             startActivity(new Intent(getApplication(), ApplicatedFollowListActivity.class));
         } else if (i == R.id.approvalPendingFollowButton) {
             startActivity(new Intent(getApplication(), ApprovalPendingFollowListActivity.class));
@@ -110,6 +111,44 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
             int position = mApprovalPendingFollowListAdapter.mPosition;
             cancelFollow(mFollowList.get(position).getUid(), mUid);
             listRemove(position);
+        }
+    }
+
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
         }
     }
 }

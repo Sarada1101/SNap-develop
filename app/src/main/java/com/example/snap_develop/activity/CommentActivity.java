@@ -1,26 +1,31 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.databinding.ActivityCommentBinding;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Date;
 
 import timber.log.Timber;
 
-public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
+public class CommentActivity extends AppCompatActivity implements View.OnClickListener,
+        TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
@@ -38,10 +43,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_comment);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         mBinding.postCommentButton.setOnClickListener(this);
-        mBinding.timelineImageButton.setOnClickListener(this);
-        mBinding.mapImageButton.setOnClickListener(this);
-        mBinding.userImageButton.setOnClickListener(this);
+        mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         mParentPostPath = getIntent().getStringExtra("postPath");
     }
@@ -96,12 +103,44 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.postCommentButton) {
             insertComment();
-        } else if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(getApplication(), TimelineActivity.class));
-        } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(getApplication(), MapActivity.class));
-        } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(getApplication(), UserActivity.class));
+        }
+    }
+
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
         }
     }
 }
