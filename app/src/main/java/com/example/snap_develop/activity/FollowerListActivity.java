@@ -47,6 +47,9 @@ public class FollowerListActivity extends AppCompatActivity implements TabLayout
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_following_list);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 

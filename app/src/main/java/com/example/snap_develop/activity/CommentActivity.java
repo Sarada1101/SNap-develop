@@ -43,6 +43,10 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_comment);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         mBinding.postCommentButton.setOnClickListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 

@@ -66,6 +66,10 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_display_comment);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         mBinding.goodIcon.setOnClickListener(this);
         mBinding.commentButton.setOnClickListener(this);
         mBinding.userInfoConstraintLayout.setOnClickListener(this);

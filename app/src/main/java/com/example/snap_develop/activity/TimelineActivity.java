@@ -61,6 +61,9 @@ public class TimelineActivity extends AppCompatActivity implements TabLayout.OnT
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.TIMELINE_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.TIMELINE_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 

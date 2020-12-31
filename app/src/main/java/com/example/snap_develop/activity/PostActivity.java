@@ -59,6 +59,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         mBinding.postButton.setOnClickListener(this);
         mBinding.photoImageButton.setOnClickListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);

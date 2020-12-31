@@ -56,6 +56,10 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         mBinding.followingButton.setOnClickListener(this);
         mBinding.followerButton.setOnClickListener(this);
         mBinding.followRequestButton.setOnClickListener(this);

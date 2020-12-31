@@ -50,6 +50,10 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_approval_pending_follow_list);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         mBinding.applicatedFollowButton.setOnClickListener(this);
         mBinding.approvalPendingFollowButton.setOnClickListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);

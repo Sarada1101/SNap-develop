@@ -64,6 +64,9 @@ public class PostSearchActivity extends AppCompatActivity implements AdapterView
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post_search);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 

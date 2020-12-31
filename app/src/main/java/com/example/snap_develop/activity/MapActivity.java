@@ -63,6 +63,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
 
+        ((TabLayout) findViewById(R.id.buttonTabLayout)).getTabAt(MainApplication.MAP_POS).select();
+        ((TabLayout) findViewById(R.id.buttonTabLayout)).getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         findViewById(R.id.postMapFloatingActionButton).setOnClickListener(this);
         findViewById(R.id.searchMapFloatingActionButton).setOnClickListener(this);
         ((TabLayout) findViewById(R.id.buttonTabLayout)).addOnTabSelectedListener(this);
