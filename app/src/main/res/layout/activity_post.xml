@@ -41,41 +41,6 @@
             app:layout_constraintTop_toBottomOf="@+id/anonymousSwitch"
             tools:ignore="MissingConstraints" />
 
-        <LinearLayout
-            android:id="@+id/buttonLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <ImageButton
-                android:id="@+id/timelineImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@android:drawable/ic_menu_recent_history"
-                tools:ignore="ContentDescription" />
-
-            <ImageButton
-                android:id="@+id/mapImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/ic_baseline_location_on_24"
-                android:tint="@color/colorPrimary"
-                tools:ignore="ContentDescription" />
-
-            <ImageButton
-                android:id="@+id/userImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:src="@drawable/ic_baseline_account_circle_24"
-                tools:ignore="ContentDescription" />
-        </LinearLayout>
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/postTextInputLayout"
             android:layout_width="match_parent"
@@ -103,6 +68,45 @@
             android:textColor="@color/colorTextWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/anonymousSwitch" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/buttonTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tabGravity="fill"
+            app:tabIconTint="@color/colorTextBlack"
+            app:tabIndicatorColor="@color/colorPrimary"
+            app:tabIndicatorGravity="bottom"
+            app:tabMode="fixed">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/timelineTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@android:drawable/ic_menu_recent_history" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/mapTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/baseline_room_black_24dp" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/userTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:icon="@drawable/ic_baseline_account_circle_24" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
