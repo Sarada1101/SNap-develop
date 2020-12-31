@@ -1,24 +1,29 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivitySettingBinding;
 import com.example.snap_develop.viewModel.UserViewModel;
+import com.google.android.material.tabs.TabLayout;
 
 import timber.log.Timber;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener,
+        TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private ActivitySettingBinding mBinding;
@@ -34,10 +39,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_setting);
 
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
         mBinding.settingUpdateButton.setOnClickListener(this);
-        mBinding.timelineImageButton.setOnClickListener(this);
-        mBinding.mapImageButton.setOnClickListener(this);
-        mBinding.userImageButton.setOnClickListener(this);
+        mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
@@ -95,14 +102,46 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(getApplication(), TimelineActivity.class));
-        } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(getApplication(), MapActivity.class));
-        } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(getApplication(), UserActivity.class));
-        } else if (i == R.id.settingUpdateButton) {
+        if (i == R.id.settingUpdateButton) {
             updateSetting();
+        }
+    }
+
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
         }
     }
 }

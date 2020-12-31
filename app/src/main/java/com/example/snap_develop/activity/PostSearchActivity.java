@@ -1,6 +1,7 @@
 package com.example.snap_develop.activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.SearchView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
@@ -26,6 +29,7 @@ import com.example.snap_develop.databinding.ActivityPostSearchBinding;
 import com.example.snap_develop.view.adapter.PostSearchAdapter;
 import com.example.snap_develop.viewModel.PostViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,9 +41,9 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-public class PostSearchActivity extends AppCompatActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener,
-        SearchView.OnQueryTextListener {
+public class PostSearchActivity extends AppCompatActivity implements AdapterView.OnItemClickListener,
+        SearchView.OnQueryTextListener,
+        TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
@@ -59,6 +63,12 @@ public class PostSearchActivity extends AppCompatActivity implements View.OnClic
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post_search);
+
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
+        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
+                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
+        mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         // 検索リストを取得したら投稿ごとのユーザー情報を取得する
         mPostViewModel.getPostList().observe(this, new Observer<List<PostBean>>() {
@@ -143,21 +153,6 @@ public class PostSearchActivity extends AppCompatActivity implements View.OnClic
 
 
     @Override
-    public void onClick(View view) {
-        Timber.i(MyDebugTree.START_LOG);
-        int i = view.getId();
-        Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.timelineImageButton) {
-            startActivity(new Intent(getApplication(), TimelineActivity.class));
-        } else if (i == R.id.mapImageButton) {
-            startActivity(new Intent(getApplication(), MapActivity.class));
-        } else if (i == R.id.userImageButton) {
-            startActivity(new Intent(getApplication(), UserActivity.class));
-        }
-    }
-
-
-    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         PostBean postBean = (PostBean) mPostDataMapList.get(position).get("postBean");
         if (postBean.getType().equals("post")) {
@@ -166,6 +161,44 @@ public class PostSearchActivity extends AppCompatActivity implements View.OnClic
         } else if (postBean.getType().equals("comment")) {
             startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath",
                     postBean.getParentPost()));
+        }
+    }
+
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        Timber.i(MyDebugTree.START_LOG);
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
         }
     }
 }
