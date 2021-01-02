@@ -80,5 +80,7 @@
     <string name="backLoginButtonText">ログイン画面に戻る</string>
     <string name="settingText">設定</string>
     <string name="updateUserText">ユーザー情報変更</string>
+    <string name="申請">applicatedFollow</string>
+    <string name="applicatedFollow">申請</string>
 
 </resources>

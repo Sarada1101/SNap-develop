@@ -12,37 +12,27 @@
         android:layout_height="match_parent"
         tools:context=".activity.ApplicatedFollowListActivity">
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="0dp"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/listTabLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/approvalPendingFollowButton"
-                android:layout_width="0dip"
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/approvalTabItem"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorSecondly"
-                android:text="@string/approvalPending"
-                android:textColor="@color/colorTextWhite"
-                tools:ignore="ButtonStyle" />
+                android:text="@string/approvalPending" />
 
-            <Button
-                android:id="@+id/applicatedFollowButton"
-                android:layout_width="0dip"
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/applicatedTabItem"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorAccent"
-                android:clickable="false"
-                android:text="@string/followApplication"
-                android:textColor="@color/colorTextWhite"
-                tools:ignore="ButtonStyle" />
+                android:text="@string/applicatedFollow" />
 
-        </LinearLayout>
+        </com.google.android.material.tabs.TabLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
@@ -92,7 +82,7 @@
             app:layout_constraintBottom_toTopOf="@+id/divider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/listTabLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
