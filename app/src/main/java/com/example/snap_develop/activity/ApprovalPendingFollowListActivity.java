@@ -28,8 +28,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class ApprovalPendingFollowListActivity extends AppCompatActivity implements View.OnClickListener,
-        TabLayout.OnTabSelectedListener {
+public class ApprovalPendingFollowListActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
@@ -77,7 +76,6 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
                 mRecyclerView.setAdapter(mApprovalPendingFollowListAdapter);
 
                 mFollowList = followList;
-                mApprovalPendingFollowListAdapter.setOnItemClickListener(ApprovalPendingFollowListActivity.this);
             }
         });
 
@@ -100,24 +98,10 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
 
 
     @Override
-    public void onClick(View view) {
-        Timber.i(MyDebugTree.START_LOG);
-        int i = view.getId();
-        Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.rejectButton) {
-            int position = mApprovalPendingFollowListAdapter.mPosition;
-            cancelFollow(mFollowList.get(position).getUid(), mUid);
-            listRemove(position);
-        }
-    }
-
-
-    @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
         int i = tab.parent.getId();
         Timber.i("parent = " + tab.parent + " pos = " + tab.getPosition());
-
 
         if (i == R.id.listTabLayout) {
             switch (tab.getPosition()) {

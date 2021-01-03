@@ -23,8 +23,6 @@ public class ApprovalPendingFollowListAdapter extends RecyclerView.Adapter<Appro
 
     private Context mContext;
     private List<UserBean> mFollowList;
-    private View.OnClickListener m_listener;
-    public int mPosition;
 
     public ApprovalPendingFollowListAdapter(Context context, List<UserBean> followList) {
         Timber.i(MyDebugTree.START_LOG);
@@ -48,10 +46,6 @@ public class ApprovalPendingFollowListAdapter extends RecyclerView.Adapter<Appro
     }
 
 
-    public void setOnItemClickListener(View.OnClickListener listener) {
-        m_listener = listener;
-    }
-
     @Override
     public void onBindViewHolder(@NonNull ApprovalPendingFollowListViewHolder holder, final int position) {
         Timber.i(MyDebugTree.START_LOG);
@@ -66,14 +60,6 @@ public class ApprovalPendingFollowListAdapter extends RecyclerView.Adapter<Appro
             @Override
             public void onClick(View v) {
                 mContext.startActivity(new Intent(mContext, UserActivity.class).putExtra("uid", userBean.getUid()));
-            }
-        });
-
-        holder.mRejectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPosition = position;
-                m_listener.onClick(v);
             }
         });
     }
