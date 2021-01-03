@@ -5,18 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/rejectButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:backgroundTint="@color/colorDanger"
-        android:text="@string/cancel"
-        android:textColor="@color/colorTextWhite"
-        app:layout_constraintBottom_toBottomOf="@+id/iconImageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iconImageView" />
-
     <ImageView
         android:id="@+id/iconImageView"
         android:layout_width="35dp"
@@ -41,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textColor="@color/colorTextBlack"
-        app:layout_constraintEnd_toStartOf="@+id/rejectButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iconImageView"
         app:layout_constraintTop_toTopOf="@+id/iconImageView" />
 
