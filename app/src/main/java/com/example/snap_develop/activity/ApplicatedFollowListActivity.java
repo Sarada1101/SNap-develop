@@ -28,8 +28,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class ApplicatedFollowListActivity extends AppCompatActivity implements View.OnClickListener,
-        TabLayout.OnTabSelectedListener {
+public class ApplicatedFollowListActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
@@ -77,7 +76,6 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
                 mRecyclerView.setAdapter(mApplicatedFollowListAdapter);
 
                 mFollowList = followList;
-                mApplicatedFollowListAdapter.setOnItemClickListener(ApplicatedFollowListActivity.this);
             }
         });
 
@@ -104,23 +102,6 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements V
         mFollowList.remove(position);
         mBinding.applicatedFollowRecyclerView.getAdapter().notifyItemRemoved(position);
         mBinding.applicatedFollowRecyclerView.getAdapter().notifyItemRangeRemoved(position, mFollowList.size());
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        Timber.i(MyDebugTree.START_LOG);
-        int i = view.getId();
-        Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.approvalButton) {
-            int position = mApplicatedFollowListAdapter.mPosition;
-            approvalFollow(mFollowList.get(position).getUid(), mUid);
-            listRemove(position);
-        } else if (i == R.id.rejectButton) {
-            int position = mApplicatedFollowListAdapter.mPosition;
-            rejectFollow(mFollowList.get(position).getUid(), mUid);
-            listRemove(position);
-        }
     }
 
 
