@@ -1,7 +1,6 @@
 package com.example.snap_develop.view.viewHolder;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,8 +15,6 @@ public class ApplicatedFollowListViewHolder extends RecyclerView.ViewHolder {
     public ImageView mIconImageView;
     public TextView mUserNameTextView;
     public TextView mUserIdTextView;
-    public Button mApprovalButton;
-    public Button mRejectButton;
     public ConstraintLayout mConstraintLayout;
 
     public ApplicatedFollowListViewHolder(@NonNull View itemView) {
@@ -25,8 +22,6 @@ public class ApplicatedFollowListViewHolder extends RecyclerView.ViewHolder {
         mIconImageView = itemView.findViewById(R.id.iconImageView);
         mUserNameTextView = itemView.findViewById(R.id.userNameTextView);
         mUserIdTextView = itemView.findViewById(R.id.userIdTextView);
-        mApprovalButton = itemView.findViewById(R.id.approvalButton);
-        mRejectButton = itemView.findViewById(R.id.rejectButton);
         mConstraintLayout = itemView.findViewById(R.id.ConstraintLayout);
     }
 }
