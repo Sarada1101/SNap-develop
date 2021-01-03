@@ -9,6 +9,7 @@
         android:id="@+id/iconImageView"
         android:layout_width="35dp"
         android:layout_height="35dp"
+        android:layout_marginStart="8dp"
         android:contentDescription="@string/iconContentDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
