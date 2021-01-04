@@ -83,6 +83,12 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
     }
 
 
+    private void cancelFollowing(String uid, String myUid) {
+        mFollowViewModel.deleteFollower(/*from*/uid, /*delete*/myUid);
+        mFollowViewModel.deleteFollowing(myUid, uid);
+    }
+
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
