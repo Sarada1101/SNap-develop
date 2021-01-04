@@ -79,6 +79,20 @@ public class FollowViewModel extends ViewModel {
     }
 
 
+    public void deleteFollowing(String fromUid, String deleteUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
+        mFollowModel.deleteFollowing(fromUid, deleteUid);
+    }
+
+
+    public void deleteFollower(String fromUid, String deleteUid) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", fromUid, "insertUid", deleteUid));
+        mFollowModel.deleteFollower(fromUid, deleteUid);
+    }
+
+
     public void deleteApprovalPendingFollow(String fromUid, String deleteUid) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "deleteUid", deleteUid));
