@@ -1,5 +1,7 @@
 package com.example.snap_develop.view.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -93,11 +95,27 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
                     }
 
                     @Override
-                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                        int swipedPosition = viewHolder.getAdapterPosition();
-                        cancelFollowing(mFollowList.get(swipedPosition).getUid(), mUid);
-                        listRemove(swipedPosition);
-                        Toast.makeText(getApplication(), "フォローを解除しました", Toast.LENGTH_SHORT);
+                    public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+                        final int swipedPosition = viewHolder.getAdapterPosition();
+
+                        new AlertDialog.Builder(viewHolder.itemView.getContext())
+                                .setMessage(R.string.dialogMessage)
+                                .setPositiveButton(R.string.yesMessage, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        cancelFollowing(mFollowList.get(swipedPosition).getUid(), mUid);
+                                        listRemove(swipedPosition);
+                                        Toast.makeText(getApplication(), "フォローを解除しました", Toast.LENGTH_SHORT);
+                                    }
+                                })
+                                .setNegativeButton(R.string.noMessage, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mBinding.followingRecyclerView.getAdapter().notifyItemChanged(swipedPosition);
+                                    }
+                                })
+                                .create()
+                                .show();
                     }
 
                     @Override
