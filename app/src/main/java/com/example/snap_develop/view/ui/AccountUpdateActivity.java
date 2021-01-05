@@ -45,6 +45,7 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
                 ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         mBinding.updateEmailButton.setOnClickListener(this);
+        mBinding.updatePasswordButton.setOnClickListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         //アカウント情報の変化が完了した後の処理
@@ -57,6 +58,8 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
                 if (TextUtils.equals(updateResult, "updateEmail")) {
                     Toast.makeText(getApplication(), "メールアドレスを更新しました", Toast.LENGTH_SHORT).show();
                     mUserViewModel.sendEmailVerification();
+                } else if (TextUtils.equals(updateResult, "updatePassword")) {
+                    Toast.makeText(getApplication(), "パスワードを更新しました", Toast.LENGTH_SHORT).show();
                 } else {
                     setUpdateError(updateResult);
                 }
@@ -90,6 +93,43 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
             mBinding.updateEmailTextInputLayout.setError("メールアドレスを入力してください");
         } else {
             mBinding.updateEmailTextInputLayout.setError(null);
+            isValidSuccess = true;
+        }
+
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
+        return isValidSuccess;
+    }
+
+
+    private void updatePassword() {
+        Timber.i(MyDebugTree.START_LOG);
+        String password = mBinding.updatePasswordTextInputEditText.getText().toString();
+        String checkPassword = mBinding.checkPasswordTextInputEditText.getText().toString();
+        if (!validatePassword(password, checkPassword)) {
+            return;
+        }
+        mUserViewModel.updatePassword(password);
+    }
+
+
+    private boolean validatePassword(String password, String checkPassword) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(
+                String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "password", password, "checkPassword", checkPassword));
+        boolean isValidSuccess = false;
+
+        if (TextUtils.isEmpty(password)) {
+            mBinding.updatePasswordTextInputLayout.setError("パスワードを入力してください");
+            mBinding.checkPasswordTextInputLayout.setError(null);
+        } else if (TextUtils.isEmpty(checkPassword)) {
+            mBinding.checkPasswordTextInputLayout.setError("もう一度パスワードを入力してください");
+            mBinding.updatePasswordTextInputLayout.setError(null);
+        } else if (!TextUtils.equals(password, checkPassword)) {
+            mBinding.checkPasswordTextInputLayout.setError("パスワードが間違っています");
+            mBinding.updatePasswordTextInputLayout.setError(null);
+        } else {
+            mBinding.updatePasswordTextInputLayout.setError(null);
+            mBinding.checkPasswordTextInputLayout.setError(null);
             isValidSuccess = true;
         }
 
