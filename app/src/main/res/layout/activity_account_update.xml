@@ -12,6 +12,16 @@
         android:layout_height="match_parent"
         tools:context=".view.ui.AccountUpdateActivity">
 
+        <TextView
+            android:id="@+id/passwordTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/changePasswordText"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintStart_toStartOf="@+id/updateEmailTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/updateEmailButton" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
             android:layout_width="match_parent"
@@ -73,6 +83,24 @@
                 android:hint="@string/emailFormHint" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/updatePasswordTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/updateEmailTextInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/updateEmailTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/passwordTextView">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/updatePasswordTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/passwordFormHint" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <Button
             android:id="@+id/updateEmailButton"
             android:layout_width="wrap_content"
@@ -83,6 +111,33 @@
             app:layout_constraintEnd_toEndOf="@+id/updateEmailTextInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/updateEmailTextInputLayout" />
 
+        <Button
+            android:id="@+id/updatePasswordButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/updateButtonText"
+            android:textColor="@color/colorTextWhite"
+            app:layout_constraintEnd_toEndOf="@+id/updatePasswordTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/checkPasswordTextInputLayout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/checkPasswordTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/updatePasswordTextInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/updatePasswordTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/updatePasswordTextInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/checkPasswordTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/checkPasswordHint" />
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -87,5 +87,7 @@
     <string name="noMessage">いいえ</string>
     <string name="updateAccountText">アカウント情報変更</string>
     <string name="changeEmailText">メールアドレス変更</string>
+    <string name="changePasswordText">パスワード変更</string>
+    <string name="checkPasswordHint">パスワード確認</string>
 
 </resources>

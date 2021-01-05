@@ -104,6 +104,16 @@ public class UserViewModel extends ViewModel {
     }
 
 
+    public void updatePassword(String password) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "password", password));
+        if (updateResult == null) {
+            updateResult = new MutableLiveData<>();
+        }
+        userModel.updatePassword(password, updateResult);
+    }
+
+
     public void updateUser(UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
