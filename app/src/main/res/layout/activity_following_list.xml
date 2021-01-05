@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:minWidth="3dp"
-        tools:context=".activity.FollowingListActivity">
+        tools:context=".view.ui.FollowingListActivity">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"

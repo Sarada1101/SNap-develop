@@ -13,9 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.snap_develop.R;
-import com.example.snap_develop.activity.ApplicatedFollowListActivity;
-import com.example.snap_develop.activity.DisplayCommentActivity;
-import com.example.snap_develop.activity.MapActivity;
+import com.example.snap_develop.view.ui.ApplicatedFollowListActivity;
+import com.example.snap_develop.view.ui.DisplayCommentActivity;
+import com.example.snap_develop.view.ui.MapActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.UserUpdateActivity">
+        tools:context=".view.ui.UserUpdateActivity">
 
         <Button
             android:id="@+id/updateButton"

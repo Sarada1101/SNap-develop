@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
-import com.example.snap_develop.activity.UserActivity;
 import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.view.ui.UserActivity;
 import com.example.snap_develop.view.viewHolder.ApplicatedFollowListViewHolder;
 
 import java.util.List;
