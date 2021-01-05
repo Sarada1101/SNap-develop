@@ -38,7 +38,7 @@
                 android:id="@+id/updateEmailTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/emailFormHint" />
+                android:hint="@string/emailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -76,7 +76,7 @@
                 android:id="@+id/updatePasswordTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/passwordFormHint" />
+                android:hint="@string/password" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

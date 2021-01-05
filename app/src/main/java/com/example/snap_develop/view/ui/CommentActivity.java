@@ -103,7 +103,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.postCommentButton) {
+        if (i == R.id.commentButton) {
             if (mUserViewModel.getCurrentUser() == null) {
                 startActivity(new Intent(getApplication(), AuthActivity.class));
             } else {

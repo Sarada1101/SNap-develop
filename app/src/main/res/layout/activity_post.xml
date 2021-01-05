@@ -25,7 +25,7 @@
                 android:id="@+id/postTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/post" />
+                android:hint="@string/postMessage" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/anonymousSwitch"
+            android:text="@string/anonymousSwitchText"
             app:layout_constraintStart_toEndOf="@+id/photoImageButton"
             app:layout_constraintTop_toBottomOf="@+id/postTextInputLayout"
             tools:ignore="MissingConstraints"
@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/dangerSwitch"
+            android:text="@string/dangerSwitchText"
             app:layout_constraintEnd_toEndOf="@+id/anonymousSwitch"
             app:layout_constraintStart_toStartOf="@+id/anonymousSwitch"
             app:layout_constraintTop_toBottomOf="@+id/anonymousSwitch"
