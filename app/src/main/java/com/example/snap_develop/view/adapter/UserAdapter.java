@@ -70,7 +70,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
         if (TextUtils.equals(postBean.getType(), "post")) {
             holder.mGoodCountTextView.setText(Integer.toString(postBean.getGoodCount()));
             holder.mLatLngTextView.setText(
-                    String.format("%s, %s", postBean.getLatLng().latitude, postBean.getLatLng().longitude));
+                    String.format("%s, %s", (int) postBean.getLatLng().latitude, (int) postBean.getLatLng().longitude));
         }
 
         if (postBean.isDanger()) {

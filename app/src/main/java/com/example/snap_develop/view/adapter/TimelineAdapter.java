@@ -71,7 +71,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineViewHolder> {
         if (TextUtils.equals(postBean.getType(), "post")) {
             holder.mGoodCountTextView.setText(postBean.getGoodCount());
             holder.mLatLngTextView.setText(
-                    String.format("%s, %s", postBean.getLatLng().latitude, postBean.getLatLng().longitude));
+                    String.format("%s, %s", (int) postBean.getLatLng().latitude, (int) postBean.getLatLng().longitude));
         }
 
         holder.mUserInfoConstraintLayout.setOnClickListener(new View.OnClickListener() {
