@@ -93,8 +93,9 @@
        「MyLocation」機能を利用する際には、
         粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
     -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        tools:ignore="ManifestOrder" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 </manifest>
