@@ -1,4 +1,4 @@
-package com.example.snap_develop.activity;
+package com.example.snap_develop.view.ui;
 
 import android.content.Intent;
 import android.graphics.PorterDuff;

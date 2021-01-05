@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
-import com.example.snap_develop.activity.DisplayCommentActivity;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
+import com.example.snap_develop.view.ui.DisplayCommentActivity;
 import com.example.snap_develop.view.viewHolder.UserViewHolder;
 
 import java.util.List;

@@ -82,5 +82,8 @@
     <string name="updateUserText">ユーザー情報変更</string>
     <string name="申請">applicatedFollow</string>
     <string name="applicatedFollow">申請</string>
+    <string name="dialogMessage">フォローを解除しますか？</string>
+    <string name="yesMessage">はい</string>
+    <string name="noMessage">いいえ</string>
 
 </resources>

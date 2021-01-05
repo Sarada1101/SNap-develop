@@ -20,7 +20,7 @@
         android:id="@+id/ConstraintLayout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        tools:context=".activity.DisplayCommentActivity">
+        tools:context=".view.ui.DisplayCommentActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/parentPostConstraintLayout"

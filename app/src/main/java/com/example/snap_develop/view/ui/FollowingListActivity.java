@@ -1,5 +1,7 @@
-package com.example.snap_develop.activity;
+package com.example.snap_develop.view.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -26,8 +28,8 @@ import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
-import com.example.snap_develop.databinding.ActivityApprovalPendingFollowListBinding;
-import com.example.snap_develop.view.adapter.ApprovalPendingFollowListAdapter;
+import com.example.snap_develop.databinding.ActivityFollowingListBinding;
+import com.example.snap_develop.view.adapter.FollowListAdapter;
 import com.example.snap_develop.viewModel.FollowViewModel;
 import com.example.snap_develop.viewModel.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
@@ -36,12 +38,12 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class ApprovalPendingFollowListActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
+public class FollowingListActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
-    private ActivityApprovalPendingFollowListBinding mBinding;
-    private ApprovalPendingFollowListAdapter mApprovalPendingFollowListAdapter;
+    private ActivityFollowingListBinding mBinding;
+    private FollowListAdapter mFollowListAdapter;
     private RecyclerView mRecyclerView;
     private List<UserBean> mFollowList;
     private String mUid;
@@ -50,40 +52,40 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
     protected void onCreate(Bundle savedInstanceState) {
         Timber.i(MyDebugTree.START_LOG);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_approval_pending_follow_list);
-        setTitle("フォロー承認待ち");
+        setContentView(R.layout.activity_following_list);
+        setTitle("フォロー");
 
         mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_approval_pending_follow_list);
-
-        mBinding.listTabLayout.getTabAt(0).select();
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_following_list);
 
         mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
         mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
                 ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
-        mBinding.listTabLayout.addOnTabSelectedListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
-        // フォロー承認待ちリストを取得したら
+        // フォローリストを取得したら
         mFollowViewModel.getFollowList().observe(this, new Observer<List<UserBean>>() {
             @Override
             public void onChanged(List<UserBean> followList) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "followList", followList));
 
-                mApprovalPendingFollowListAdapter = new ApprovalPendingFollowListAdapter(
-                        ApprovalPendingFollowListActivity.this, followList);
-                mRecyclerView = mBinding.approvalPendingFollowRecyclerView;
-                LinearLayoutManager llm = new LinearLayoutManager(ApprovalPendingFollowListActivity.this);
+                mFollowListAdapter = new FollowListAdapter(FollowingListActivity.this, followList);
+                mRecyclerView = mBinding.followingRecyclerView;
+                LinearLayoutManager llm = new LinearLayoutManager(FollowingListActivity.this);
                 mRecyclerView.setLayoutManager(llm);
-                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(
-                        ApprovalPendingFollowListActivity.this, DividerItemDecoration.VERTICAL);
+                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(FollowingListActivity.this,
+                        DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mApprovalPendingFollowListAdapter);
+                mRecyclerView.setAdapter(mFollowListAdapter);
 
                 mFollowList = followList;
+
+                if (!mUid.equals(mUserViewModel.getCurrentUser().getUid())) {
+                    return;
+                }
 
                 ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                     @Override
@@ -93,11 +95,27 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
                     }
 
                     @Override
-                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                        int swipedPosition = viewHolder.getAdapterPosition();
-                        cancelFollow(mFollowList.get(swipedPosition).getUid(), mUid);
-                        listRemove(swipedPosition);
-                        Toast.makeText(getApplication(), "フォロー申請をキャンセルしました", Toast.LENGTH_SHORT);
+                    public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+                        final int swipedPosition = viewHolder.getAdapterPosition();
+
+                        new AlertDialog.Builder(viewHolder.itemView.getContext())
+                                .setMessage(R.string.dialogMessage)
+                                .setPositiveButton(R.string.yesMessage, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        cancelFollowing(mFollowList.get(swipedPosition).getUid(), mUid);
+                                        listRemove(swipedPosition);
+                                        Toast.makeText(getApplication(), "フォローを解除しました", Toast.LENGTH_SHORT);
+                                    }
+                                })
+                                .setNegativeButton(R.string.noMessage, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mBinding.followingRecyclerView.getAdapter().notifyItemChanged(swipedPosition);
+                                    }
+                                })
+                                .create()
+                                .show();
                     }
 
                     @Override
@@ -137,8 +155,15 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
             }
         });
 
-        mUid = mUserViewModel.getCurrentUser().getUid();
-        mFollowViewModel.fetchApprovalPendingList(mUid);
+        // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
+        mUid = getIntent().getStringExtra("uid");
+        if (mUid == null || mUid.equals(mUserViewModel.getCurrentUser().getUid())) {
+            // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
+            mUid = mUserViewModel.getCurrentUser().getUid();
+        }
+        Timber.i(String.format("%s=%s", "mUid", mUid));
+
+        mFollowViewModel.fetchFollowingList(mUid);
     }
 
 
@@ -149,46 +174,32 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
     }
 
 
-    private void cancelFollow(String uid, String myUid) {
-        mFollowViewModel.deleteApplicatedFollow(/*from*/uid, /*delete*/myUid);
-        mFollowViewModel.deleteApprovalPendingFollow(myUid, uid);
+    private void cancelFollowing(String uid, String myUid) {
+        mFollowViewModel.deleteFollower(/*from*/uid, /*delete*/myUid);
+        mFollowViewModel.deleteFollowing(myUid, uid);
     }
 
 
     private void listRemove(int position) {
         mFollowList.remove(position);
-        mBinding.approvalPendingFollowRecyclerView.getAdapter().notifyItemRemoved(position);
-        mBinding.approvalPendingFollowRecyclerView.getAdapter().notifyItemRangeRemoved(position, mFollowList.size());
+        mBinding.followingRecyclerView.getAdapter().notifyItemRemoved(position);
+        mBinding.followingRecyclerView.getAdapter().notifyItemRangeRemoved(position, mFollowList.size());
     }
 
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
-        int i = tab.parent.getId();
-        Timber.i("parent = " + tab.parent + " pos = " + tab.getPosition());
-
-        if (i == R.id.listTabLayout) {
-            switch (tab.getPosition()) {
-                case 0:
-                    startActivity(new Intent(getApplication(), ApprovalPendingFollowListActivity.class));
-                    break;
-                case 1:
-                    startActivity(new Intent(getApplication(), ApplicatedFollowListActivity.class));
-                    break;
-            }
-        } else if (i == R.id.buttonTabLayout) {
-            switch (tab.getPosition()) {
-                case MainApplication.TIMELINE_POS:
-                    startActivity(new Intent(getApplication(), TimelineActivity.class));
-                    break;
-                case MainApplication.MAP_POS:
-                    startActivity(new Intent(getApplication(), MapActivity.class));
-                    break;
-                case MainApplication.USER_POS:
-                    startActivity(new Intent(getApplication(), UserActivity.class));
-                    break;
-            }
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
         }
     }
 
@@ -200,31 +211,16 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
-        int i = tab.parent.getId();
-
-        Timber.i("parent = " + tab.parent + " pos = " + tab.getPosition());
-
-        if (i == R.id.listTabLayout) {
-            switch (tab.getPosition()) {
-                case 0:
-                    startActivity(new Intent(getApplication(), ApprovalPendingFollowListActivity.class));
-                    break;
-                case 1:
-                    startActivity(new Intent(getApplication(), ApplicatedFollowListActivity.class));
-                    break;
-            }
-        } else if (i == R.id.buttonTabLayout) {
-            switch (tab.getPosition()) {
-                case MainApplication.TIMELINE_POS:
-                    startActivity(new Intent(getApplication(), TimelineActivity.class));
-                    break;
-                case MainApplication.MAP_POS:
-                    startActivity(new Intent(getApplication(), MapActivity.class));
-                    break;
-                case MainApplication.USER_POS:
-                    startActivity(new Intent(getApplication(), UserActivity.class));
-                    break;
-            }
+        switch (tab.getPosition()) {
+            case MainApplication.TIMELINE_POS:
+                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                break;
+            case MainApplication.MAP_POS:
+                startActivity(new Intent(getApplication(), MapActivity.class));
+                break;
+            case MainApplication.USER_POS:
+                startActivity(new Intent(getApplication(), UserActivity.class));
+                break;
         }
     }
 }

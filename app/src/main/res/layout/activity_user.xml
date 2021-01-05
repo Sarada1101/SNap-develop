@@ -16,7 +16,7 @@
         android:id="@+id/ConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.UserActivity">
+        tools:context=".view.ui.UserActivity">
 
         <Button
             android:id="@+id/followRequestButton"
