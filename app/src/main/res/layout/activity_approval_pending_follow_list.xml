@@ -13,6 +13,45 @@
         tools:context=".view.ui.ApprovalPendingFollowListActivity">
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/listTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/approvalTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/approvalPending" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/applicatedTabItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/applicatedFollow" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/approvalPendingFollowRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/listTabLayout" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
+
+        <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,45 +81,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:icon="@drawable/ic_baseline_account_circle_24" />
-        </com.google.android.material.tabs.TabLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/approvalPendingFollowRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/divider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listTabLayout" />
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/listTabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/approvalTabItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/approvalPending" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/applicatedTabItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/applicatedFollow" />
-
         </com.google.android.material.tabs.TabLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

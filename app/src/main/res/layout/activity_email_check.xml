@@ -52,5 +52,6 @@
                 android:textColor="@color/colorTextWhite"
                 tools:ignore="ButtonStyle" />
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

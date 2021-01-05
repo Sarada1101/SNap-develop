@@ -5,28 +5,17 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="userViewModel"
             type="com.example.snap_develop.view_model.UserViewModel" />
-
-        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.ui.UserUpdateActivity">
-
-        <Button
-            android:id="@+id/updateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorAccent"
-            android:text="@string/updateButtonText"
-            android:textColor="@color/colorTextWhite"
-            app:layout_constraintEnd_toEndOf="@+id/updateProfileTextInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/updateProfileTextInputLayout" />
 
         <ImageButton
             android:id="@+id/updateIconImageButton"
@@ -40,6 +29,65 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_baseline_account_circle_24"
             tools:ignore="ContentDescription" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/updateNameTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/updateIconImageButton"
+            app:layout_constraintVertical_bias="0.0">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/updateNameTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/username"
+                android:text="@{userViewModel.user.name}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/updateProfileTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="@+id/updateNameTextInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/updateNameTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/updateNameTextInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/updateProfileTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/profileUpdate"
+                android:text="@{userViewModel.user.message}" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/updateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/updateButtonText"
+            android:textColor="@color/colorTextWhite"
+            app:layout_constraintEnd_toEndOf="@+id/updateProfileTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/updateProfileTextInputLayout" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
@@ -72,54 +120,6 @@
                 android:layout_height="wrap_content"
                 android:icon="@drawable/ic_baseline_account_circle_24" />
         </com.google.android.material.tabs.TabLayout>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/updateNameTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/updateIconImageButton"
-            app:layout_constraintVertical_bias="0.0">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/updateNameTextInputEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{userViewModel.user.name}"
-                android:hint="@string/username" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/updateProfileTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="@+id/updateNameTextInputLayout"
-            app:layout_constraintStart_toStartOf="@+id/updateNameTextInputLayout"
-            app:layout_constraintTop_toBottomOf="@+id/updateNameTextInputLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/updateProfileTextInputEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{userViewModel.user.message}"
-                android:hint="@string/profileUpdate" />
-        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

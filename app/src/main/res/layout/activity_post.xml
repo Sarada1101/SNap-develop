@@ -3,10 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.ui.PostActivity">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/postTextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/postTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/post" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
             android:id="@+id/photoImageButton"
@@ -41,22 +61,6 @@
             app:layout_constraintTop_toBottomOf="@+id/anonymousSwitch"
             tools:ignore="MissingConstraints" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/postTextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/postTextInputEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/post" />
-        </com.google.android.material.textfield.TextInputLayout>
-
         <Button
             android:id="@+id/postButton"
             android:layout_width="wrap_content"
@@ -68,6 +72,13 @@
             android:textColor="@color/colorTextWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/anonymousSwitch" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
@@ -101,17 +112,6 @@
                 android:icon="@drawable/ic_baseline_account_circle_24" />
         </com.google.android.material.tabs.TabLayout>
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <data>
-
-    </data>
 </layout>
 
