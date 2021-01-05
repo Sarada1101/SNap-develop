@@ -342,7 +342,8 @@ public class UserModel extends Firebase {
                             userBean.setIconName(document.getString("icon"));
                             userBean.setFollowingCount(
                                     Integer.parseInt(document.getLong("following_count").toString()));
-                            userBean.setFollowerCount(Integer.parseInt(document.getLong("follower_count").toString()));
+                            userBean.setFollowerCount(
+                                    Integer.parseInt(document.getLong("follower_count").toString()));
                             userBean.setFollowNotice(document.getBoolean("follow_notice"));
                             userBean.setGoodNotice(document.getBoolean("good_notice"));
                             userBean.setCommentNotice(document.getBoolean("comment_notice"));
@@ -415,7 +416,8 @@ public class UserModel extends Firebase {
                             userBean.setIconName(document.getString("icon"));
                             userBean.setFollowingCount(
                                     Integer.parseInt(document.getLong("following_count").toString()));
-                            userBean.setFollowerCount(Integer.parseInt(document.getLong("follower_count").toString()));
+                            userBean.setFollowerCount(
+                                    Integer.parseInt(document.getLong("follower_count").toString()));
                             userBean.setFollowNotice(document.getBoolean("follow_notice"));
                             userBean.setGoodNotice(document.getBoolean("good_notice"));
                             userBean.setCommentNotice(document.getBoolean("comment_notice"));
