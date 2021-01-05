@@ -156,6 +156,29 @@ public class UserModel extends Firebase {
     }
 
 
+    public void updateEmail(String email, final MutableLiveData<String> updateResult) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "updateResult",
+                updateResult));
+        getCurrentUser().updateEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.i("Email address update");
+                        updateResult.setValue("updateEmail");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(FAILURE_LOG);
+                        Timber.e(e.toString());
+                        updateResult.setValue(e.toString());
+                    }
+                });
+    }
+
+
     public void updateUser(UserBean userBean, final MutableLiveData<String> updateResult) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean, "updateResult",

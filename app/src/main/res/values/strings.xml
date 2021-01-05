@@ -86,5 +86,6 @@
     <string name="yesMessage">はい</string>
     <string name="noMessage">いいえ</string>
     <string name="updateAccountText">アカウント情報変更</string>
+    <string name="changeEmailText">メールアドレス変更</string>
 
 </resources>

@@ -94,6 +94,16 @@ public class UserViewModel extends ViewModel {
     }
 
 
+    public void updateEmail(String email) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        if (updateResult == null) {
+            updateResult = new MutableLiveData<>();
+        }
+        userModel.updateEmail(email, updateResult);
+    }
+
+
     public void updateUser(UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
