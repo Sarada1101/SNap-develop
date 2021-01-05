@@ -102,7 +102,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
         if (i == R.id.postCommentButton) {
-            insertComment();
+            if (mUserViewModel.getCurrentUser() == null) {
+                startActivity(new Intent(getApplication(), AuthActivity.class));
+            } else {
+                insertComment();
+            }
         }
     }
 
@@ -112,13 +116,25 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(MyDebugTree.START_LOG);
         switch (tab.getPosition()) {
             case MainApplication.TIMELINE_POS:
-                startActivity(new Intent(getApplication(), TimelineActivity.class));
+                if (mUserViewModel.getCurrentUser() == null) {
+                    startActivity(new Intent(getApplication(), AuthActivity.class));
+                } else {
+                    startActivity(new Intent(getApplication(), TimelineActivity.class));
+                }
                 break;
             case MainApplication.MAP_POS:
-                startActivity(new Intent(getApplication(), MapActivity.class));
+                if (mUserViewModel.getCurrentUser() == null) {
+                    startActivity(new Intent(getApplication(), AuthActivity.class));
+                } else {
+                    startActivity(new Intent(getApplication(), MapActivity.class));
+                }
                 break;
             case MainApplication.USER_POS:
-                startActivity(new Intent(getApplication(), UserActivity.class));
+                if (mUserViewModel.getCurrentUser() == null) {
+                    startActivity(new Intent(getApplication(), AuthActivity.class));
+                } else {
+                    startActivity(new Intent(getApplication(), UserActivity.class));
+                }
                 break;
         }
     }
