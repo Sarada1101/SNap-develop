@@ -13,13 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.databinding.ActivityEmailCheckBinding;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 
 import timber.log.Timber;
 
 public class EmailCheckActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserViewModel mUserViewModel;
+    @SuppressWarnings("FieldCanBeLocal")
     private ActivityEmailCheckBinding mBinding;
 
     @Override
@@ -51,7 +52,7 @@ public class EmailCheckActivity extends AppCompatActivity implements View.OnClic
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         if (i == R.id.sendEmailVerifiedButton) {
-            Toast.makeText(getApplication(), "認証メールを送信しました。", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplication(), "認証メールを送信しました", Toast.LENGTH_SHORT).show();
             mUserViewModel.sendEmailVerification();
         } else if (i == R.id.backLoginButton) {
             startActivity(new Intent(getApplication(), AuthActivity.class));

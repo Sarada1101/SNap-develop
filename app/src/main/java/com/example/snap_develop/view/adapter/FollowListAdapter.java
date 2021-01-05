@@ -13,7 +13,7 @@ import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.view.ui.UserActivity;
-import com.example.snap_develop.view.viewHolder.FollowListViewHolder;
+import com.example.snap_develop.view.view_holder.FollowListViewHolder;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ import timber.log.Timber;
 
 public class FollowListAdapter extends RecyclerView.Adapter<FollowListViewHolder> {
 
-    private Context mContext;
-    private List<UserBean> mFollowList;
+    private final Context mContext;
+    private final List<UserBean> mFollowList;
 
     public FollowListAdapter(Context context, List<UserBean> followList) {
         Timber.i(MyDebugTree.START_LOG);

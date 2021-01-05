@@ -1,5 +1,8 @@
 package com.example.snap_develop.view.ui;
 
+import static androidx.recyclerview.widget.RecyclerView.ItemDecoration;
+import static androidx.recyclerview.widget.RecyclerView.ViewHolder;
+
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -28,16 +31,18 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityApplicatedFollowListBinding;
 import com.example.snap_develop.view.adapter.ApplicatedFollowListAdapter;
-import com.example.snap_develop.viewModel.FollowViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.FollowViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
 public class ApplicatedFollowListActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityApplicatedFollowListBinding mBinding;
@@ -57,11 +62,12 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_applicated_follow_list);
 
-        mBinding.listTabLayout.getTabAt(1).select();
+        Objects.requireNonNull(mBinding.listTabLayout.getTabAt(1)).select();
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.listTabLayout.addOnTabSelectedListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
@@ -78,7 +84,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
                 mRecyclerView = mBinding.applicatedFollowRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(ApplicatedFollowListActivity.this);
                 mRecyclerView.setLayoutManager(llm);
-                RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(
+                ItemDecoration itemDecoration = new DividerItemDecoration(
                         ApplicatedFollowListActivity.this, DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
                 mRecyclerView.setAdapter(mApplicatedFollowListAdapter);
@@ -89,12 +95,12 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
                         (ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT)) {
                     @Override
                     public boolean onMove(@NonNull RecyclerView recyclerView,
-                            @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                            @NonNull ViewHolder viewHolder, @NonNull ViewHolder target) {
                         return false;
                     }
 
                     @Override
-                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                    public void onSwiped(@NonNull ViewHolder viewHolder, int direction) {
                         int swipedPosition = viewHolder.getAdapterPosition();
                         if (direction == ItemTouchHelper.LEFT) {
                             rejectFollow(mFollowList.get(swipedPosition).getUid(), mUid);
@@ -109,7 +115,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
 
                     @Override
                     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
-                            @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState,
+                            @NonNull ViewHolder viewHolder, float dX, float dY, int actionState,
                             boolean isCurrentlyActive) {
                         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                         View itemView = viewHolder.itemView;
@@ -122,12 +128,13 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
                             return;
                         }
 
+                        Drawable deleteIcon;
+                        ColorDrawable background = new ColorDrawable();
                         if (dX < 0) {
                             // 左スワイプのとき
-                            Drawable deleteIcon = ContextCompat.getDrawable(ApplicatedFollowListActivity.this,
-                                    R.drawable.ic_close);
-                            ColorDrawable background = new ColorDrawable();
-                            background.setColor(getResources().getColor(R.color.colorDanger));
+                            deleteIcon = Objects.requireNonNull(
+                                    ContextCompat.getDrawable(getApplication(), R.drawable.ic_close));
+                            background.setColor(ContextCompat.getColor(getApplication(), R.color.colorDanger));
                             background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(),
                                     itemView.getBottom());
                             background.draw(c);
@@ -140,13 +147,11 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
                             int deleteIconBottom = deleteIconTop + deleteIcon.getIntrinsicHeight();
 
                             deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
-                            deleteIcon.draw(c);
                         } else {
                             // 右スワイプのとき
-                            Drawable deleteIcon = ContextCompat.getDrawable(ApplicatedFollowListActivity.this,
-                                    R.drawable.ic_check);
-                            ColorDrawable background = new ColorDrawable();
-                            background.setColor(getResources().getColor(R.color.colorAccent));
+                            deleteIcon = Objects.requireNonNull(
+                                    ContextCompat.getDrawable(getApplication(), R.drawable.ic_check));
+                            background.setColor(ContextCompat.getColor(getApplication(), R.color.colorAccent));
                             background.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + (int) dX,
                                     itemView.getBottom());
                             background.draw(c);
@@ -160,8 +165,8 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
                             int deleteIconBottom = deleteIconTop + deleteIcon.getIntrinsicHeight();
 
                             deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
-                            deleteIcon.draw(c);
                         }
+                        deleteIcon.draw(c);
                     }
                 };
                 new ItemTouchHelper(callback).attachToRecyclerView(mRecyclerView);
@@ -196,7 +201,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
 
     private void listRemove(int position) {
         mFollowList.remove(position);
-        mBinding.applicatedFollowRecyclerView.getAdapter().notifyItemRemoved(position);
+        Objects.requireNonNull(mBinding.applicatedFollowRecyclerView.getAdapter()).notifyItemRemoved(position);
         mBinding.applicatedFollowRecyclerView.getAdapter().notifyItemRangeRemoved(position, mFollowList.size());
     }
 
@@ -204,9 +209,8 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
-        int i = tab.parent.getId();
+        int i = Objects.requireNonNull(tab.parent).getId();
         Timber.i("parent = " + tab.parent + " pos = " + tab.getPosition());
-
 
         if (i == R.id.listTabLayout) {
             switch (tab.getPosition()) {
@@ -240,7 +244,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
-        int i = tab.parent.getId();
+        int i = Objects.requireNonNull(tab.parent).getId();
         Timber.i("parent = " + tab.parent + " pos = " + tab.getPosition());
 
         if (i == R.id.listTabLayout) {

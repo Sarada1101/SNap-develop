@@ -12,6 +12,18 @@
         android:layout_height="match_parent"
         tools:context=".view.ui.SettingActivity">
 
+        <TextView
+            android:id="@+id/publicationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/settingPublicationText"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <RadioGroup
             android:id="@+id/publicationRadioGroup"
             android:layout_width="match_parent"
@@ -34,7 +46,7 @@
                 android:id="@+id/followerPublicRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/follower"
+                android:text="@string/following"
                 android:textSize="14sp" />
 
             <RadioButton
@@ -44,6 +56,18 @@
                 android:text="@string/anonymous"
                 android:textSize="14sp" />
         </RadioGroup>
+
+        <TextView
+            android:id="@+id/notificationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/settingNotificationText"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/publicationRadioGroup" />
 
         <Switch
             android:id="@+id/followSwitch"
@@ -97,6 +121,25 @@
             app:layout_constraintTop_toBottomOf="@+id/commentSwitch"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
+        <Button
+            android:id="@+id/settingUpdateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/updateButtonText"
+            android:textColor="@color/colorTextWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/touristSpotSwitch" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
             android:layout_width="match_parent"
@@ -128,48 +171,5 @@
                 android:layout_height="wrap_content"
                 android:icon="@drawable/ic_baseline_account_circle_24" />
         </com.google.android.material.tabs.TabLayout>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
-
-        <TextView
-            android:id="@+id/publicationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/DisclosureRange"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/notificationTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/notification"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/publicationRadioGroup" />
-
-        <Button
-            android:id="@+id/settingUpdateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="@color/colorAccent"
-            android:text="@string/updateButtonText"
-            android:textColor="@color/colorTextWhite"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/touristSpotSwitch" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

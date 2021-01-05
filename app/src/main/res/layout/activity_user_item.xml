@@ -12,13 +12,45 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginStart="8dp"
-        android:contentDescription="@string/iconContentDescription"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.001" />
+        app:layout_constraintVertical_bias="0.001"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/userNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iconImageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/userIdTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorTextBlack"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
+        app:layout_constraintStart_toStartOf="@+id/userNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
+
+    <TextView
+        android:id="@+id/messageTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/colorTextBlack"
+        app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
+        app:layout_constraintStart_toStartOf="@+id/iconImageView"
+        app:layout_constraintTop_toBottomOf="@+id/userIdTextView" />
 
     <ImageView
         android:id="@+id/photoImageView"
@@ -40,6 +72,14 @@
         app:srcCompat="@drawable/ic_baseline_favorite_24"
         tools:ignore="ContentDescription" />
 
+    <TextView
+        android:id="@+id/goodCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+        app:layout_constraintStart_toEndOf="@+id/goodIcon"
+        app:layout_constraintTop_toTopOf="@+id/goodIcon" />
+
     <ImageView
         android:id="@+id/locationIcon"
         android:layout_width="wrap_content"
@@ -52,26 +92,12 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/userIdTextView"
-        android:layout_width="0dp"
+        android:id="@+id/latLngTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
-        app:layout_constraintStart_toStartOf="@+id/userNameTextView"
-        app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
-
-    <TextView
-        android:id="@+id/userNameTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:textColor="@color/colorTextBlack"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iconImageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
+        app:layout_constraintStart_toEndOf="@+id/locationIcon"
+        app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
     <TextView
         android:id="@+id/datetimeTextView"
@@ -82,29 +108,4 @@
         app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
         app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 
-    <TextView
-        android:id="@+id/messageTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/colorTextBlack"
-        app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
-        app:layout_constraintStart_toStartOf="@+id/iconImageView"
-        app:layout_constraintTop_toBottomOf="@+id/userIdTextView" />
-
-    <TextView
-        android:id="@+id/goodCountTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
-        app:layout_constraintStart_toEndOf="@+id/goodIcon"
-        app:layout_constraintTop_toTopOf="@+id/goodIcon" />
-
-    <TextView
-        android:id="@+id/latLngTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/goodIcon"
-        app:layout_constraintStart_toEndOf="@+id/locationIcon"
-        app:layout_constraintTop_toTopOf="@+id/goodIcon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

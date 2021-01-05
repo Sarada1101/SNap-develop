@@ -1,6 +1,5 @@
 package com.example.snap_develop.view.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -21,9 +20,9 @@ import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.databinding.ActivityPostBinding;
-import com.example.snap_develop.viewModel.MapViewModel;
-import com.example.snap_develop.viewModel.PostViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.MapViewModel;
+import com.example.snap_develop.view_model.PostViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,6 +30,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -42,7 +42,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private PostViewModel mPostViewModel;
     private MapViewModel mMapViewModel;
     private ActivityPostBinding mBinding;
-    private FusedLocationProviderClient mFusedLocationClient;
     private String mPhotoName = "";
     private Bitmap mBitMap;
     private static final int REQUEST_GALLERY = 0;
@@ -59,9 +58,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.postButton.setOnClickListener(this);
         mBinding.photoImageButton.setOnClickListener(this);
@@ -94,13 +94,13 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     private void insertPost() {
         Timber.i(MyDebugTree.START_LOG);
-        String post = mBinding.postTextInputEditText.getText().toString();
+        String post = Objects.requireNonNull(mBinding.postTextInputEditText.getText()).toString();
         if (!validateForm(post)) {
             return;
         }
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mMapViewModel.fetchDeviceLocation(mFusedLocationClient);
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        mMapViewModel.fetchDeviceLocation(fusedLocationClient);
     }
 
 
@@ -144,17 +144,14 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         if (resultCode != RESULT_OK || requestCode != REQUEST_GALLERY) {
             return;
         }
-        if (resultCode == Activity.RESULT_OK) {
-            Timber.i("画像取得");
-            if (data != null) {
-                Uri uri = data.getData();
-                mPhotoName = uri.getLastPathSegment();
-                try {
-                    mBitMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    mBinding.photoImageButton.setImageBitmap(mBitMap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if (data != null) {
+            Uri uri = data.getData();
+            mPhotoName = uri.getLastPathSegment();
+            try {
+                mBitMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                mBinding.photoImageButton.setImageBitmap(mBitMap);
+            } catch (IOException e) {
+                Timber.e(e.toString());
             }
         }
     }

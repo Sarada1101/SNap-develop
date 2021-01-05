@@ -3,18 +3,43 @@
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.ui.MapActivity">
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            map:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            map:cameraZoom="16"
+            map:layout_constraintBottom_toTopOf="@+id/divider"
+            map:layout_constraintEnd_toEndOf="parent"
+            map:layout_constraintStart_toStartOf="parent"
+            map:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/searchMapFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/colorSecondly"
+            android:clickable="true"
+            android:focusable="true"
+            android:tint="@color/colorTextWhite"
+            map:backgroundTint="@android:color/darker_gray"
+            map:fabSize="auto"
+            map:layout_constraintBottom_toTopOf="@+id/postMapFloatingActionButton"
+            map:layout_constraintEnd_toEndOf="@+id/postMapFloatingActionButton"
+            map:layout_constraintStart_toStartOf="@+id/postMapFloatingActionButton"
+            map:srcCompat="@drawable/baseline_search_black_24dp"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/postMapFloatingActionButton"
@@ -35,22 +60,12 @@
             map:srcCompat="@drawable/ic_baseline_add_circle_outline_24"
             tools:ignore="ContentDescription" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/searchMapFloatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/colorSecondly"
-            android:clickable="true"
-            android:focusable="true"
-            android:tint="@color/colorTextWhite"
-            map:backgroundTint="@android:color/darker_gray"
-            map:fabSize="auto"
-            map:layout_constraintBottom_toTopOf="@+id/postMapFloatingActionButton"
-            map:layout_constraintEnd_toEndOf="@+id/postMapFloatingActionButton"
-            map:layout_constraintStart_toStartOf="@+id/postMapFloatingActionButton"
-            map:srcCompat="@drawable/baseline_search_black_24dp"
-            tools:ignore="ContentDescription" />
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            map:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
@@ -84,20 +99,5 @@
                 android:icon="@drawable/ic_baseline_account_circle_24" />
         </com.google.android.material.tabs.TabLayout>
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            map:cameraZoom="16"
-            map:layout_constraintBottom_toTopOf="@+id/divider"
-            map:layout_constraintEnd_toEndOf="parent"
-            map:layout_constraintStart_toStartOf="parent"
-            map:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <data>
-
-    </data>
 </layout>

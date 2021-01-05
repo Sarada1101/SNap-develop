@@ -13,7 +13,7 @@ import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.view.ui.UserActivity;
-import com.example.snap_develop.view.viewHolder.ApprovalPendingFollowListViewHolder;
+import com.example.snap_develop.view.view_holder.ApprovalPendingFollowListViewHolder;
 
 import java.util.List;
 
@@ -21,13 +21,12 @@ import timber.log.Timber;
 
 public class ApprovalPendingFollowListAdapter extends RecyclerView.Adapter<ApprovalPendingFollowListViewHolder> {
 
-    private Context mContext;
-    private List<UserBean> mFollowList;
+    private final Context mContext;
+    private final List<UserBean> mFollowList;
 
     public ApprovalPendingFollowListAdapter(Context context, List<UserBean> followList) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "context", context, "followList",
-                followList));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "context", context, "followList", followList));
 
         this.mContext = context;
         this.mFollowList = followList;

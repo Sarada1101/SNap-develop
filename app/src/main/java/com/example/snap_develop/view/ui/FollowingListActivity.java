@@ -30,11 +30,12 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityFollowingListBinding;
 import com.example.snap_develop.view.adapter.FollowListAdapter;
-import com.example.snap_develop.viewModel.FollowViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.FollowViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -59,9 +60,10 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_following_list);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
@@ -105,13 +107,15 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
                                     public void onClick(DialogInterface dialog, int which) {
                                         cancelFollowing(mFollowList.get(swipedPosition).getUid(), mUid);
                                         listRemove(swipedPosition);
-                                        Toast.makeText(getApplication(), "フォローを解除しました", Toast.LENGTH_SHORT);
+                                        Toast.makeText(getApplication(), "フォローを解除しました", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .setNegativeButton(R.string.noMessage, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        mBinding.followingRecyclerView.getAdapter().notifyItemChanged(swipedPosition);
+                                        Objects.requireNonNull(
+                                                mBinding.followingRecyclerView.getAdapter()).notifyItemChanged(
+                                                swipedPosition);
                                     }
                                 })
                                 .create()
@@ -133,7 +137,8 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
                             return;
                         }
 
-                        Drawable deleteIcon = ContextCompat.getDrawable(getApplication(), R.drawable.ic_close);
+                        Drawable deleteIcon = Objects.requireNonNull(
+                                ContextCompat.getDrawable(getApplication(), R.drawable.ic_close));
                         ColorDrawable background = new ColorDrawable();
                         background.setColor(getResources().getColor(R.color.colorDanger));
                         background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(),
@@ -182,7 +187,7 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
 
     private void listRemove(int position) {
         mFollowList.remove(position);
-        mBinding.followingRecyclerView.getAdapter().notifyItemRemoved(position);
+        Objects.requireNonNull(mBinding.followingRecyclerView.getAdapter()).notifyItemRemoved(position);
         mBinding.followingRecyclerView.getAdapter().notifyItemRangeRemoved(position, mFollowList.size());
     }
 

@@ -5,11 +5,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="userViewModel"
-            type="com.example.snap_develop.viewModel.UserViewModel" />
-
-        <import type="android.view.View" />
+            type="com.example.snap_develop.view_model.UserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +17,40 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.ui.UserActivity">
+
+        <ImageView
+            android:id="@+id/iconImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:imageBitmap="@{userViewModel.user.icon}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{userViewModel.user.name}"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/followRequestButton"
+            app:layout_constraintStart_toEndOf="@+id/iconImageView"
+            app:layout_constraintTop_toTopOf="@+id/iconImageView" />
+
+        <TextView
+            android:id="@+id/userIdTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{userViewModel.user.uid}"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
+            app:layout_constraintStart_toStartOf="@+id/userNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
 
         <Button
             android:id="@+id/followRequestButton"
@@ -30,17 +64,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/iconImageView"
             tools:ignore="SmallSp" />
-
-        <ImageView
-            android:id="@+id/iconImageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:imageBitmap="@{userViewModel.user.icon}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/iconContentDescription" />
 
         <LinearLayout
             android:id="@+id/followButtonLinerLayout"
@@ -71,6 +94,34 @@
                 android:textColor="@color/colorTextWhite"
                 tools:ignore="ButtonStyle" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/messageTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{userViewModel.user.message}"
+            android:textColor="@color/colorTextBlack"
+            app:layout_constraintEnd_toEndOf="@+id/followRequestButton"
+            app:layout_constraintStart_toStartOf="@+id/iconImageView"
+            app:layout_constraintTop_toBottomOf="@+id/userIdTextView" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/followButtonLinerLayout" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
@@ -103,57 +154,6 @@
                 android:layout_height="wrap_content"
                 android:icon="@drawable/ic_baseline_account_circle_24" />
         </com.google.android.material.tabs.TabLayout>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
-
-        <TextView
-            android:id="@+id/userNameTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@{userViewModel.user.name}"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toStartOf="@+id/followRequestButton"
-            app:layout_constraintStart_toEndOf="@+id/iconImageView"
-            app:layout_constraintTop_toTopOf="@+id/iconImageView" />
-
-        <TextView
-            android:id="@+id/messageTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@{userViewModel.user.message}"
-            android:textColor="@color/colorTextBlack"
-            app:layout_constraintEnd_toEndOf="@+id/followRequestButton"
-            app:layout_constraintStart_toStartOf="@+id/iconImageView"
-            app:layout_constraintTop_toBottomOf="@+id/userIdTextView" />
-
-        <TextView
-            android:id="@+id/userIdTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{userViewModel.user.uid}"
-            android:textColor="@color/colorTextBlack"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/userNameTextView"
-            app:layout_constraintStart_toStartOf="@+id/userNameTextView"
-            app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/userRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/divider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/followButtonLinerLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

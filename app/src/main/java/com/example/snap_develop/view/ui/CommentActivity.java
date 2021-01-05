@@ -16,11 +16,12 @@ import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.databinding.ActivityCommentBinding;
-import com.example.snap_develop.viewModel.PostViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.PostViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Date;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -43,11 +44,12 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_comment);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
-        mBinding.postCommentButton.setOnClickListener(this);
+        mBinding.commentButton.setOnClickListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         mParentPostPath = getIntent().getStringExtra("postPath");
@@ -56,7 +58,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     private void insertComment() {
         Timber.i(MyDebugTree.START_LOG);
-        String comment = mBinding.commentTextInputEditText.getText().toString();
+        String comment = Objects.requireNonNull(mBinding.commentTextInputEditText.getText()).toString();
 
         if (!validateForm(comment)) {
             return;
@@ -101,7 +103,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         Timber.i(getResources().getResourceEntryName(i));
-        if (i == R.id.postCommentButton) {
+        if (i == R.id.commentButton) {
             if (mUserViewModel.getCurrentUser() == null) {
                 startActivity(new Intent(getApplication(), AuthActivity.class));
             } else {

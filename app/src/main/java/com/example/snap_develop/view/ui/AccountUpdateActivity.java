@@ -18,8 +18,10 @@ import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.databinding.ActivityAccountUpdateBinding;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -28,7 +30,6 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
 
     private UserViewModel mUserViewModel;
     private ActivityAccountUpdateBinding mBinding;
-    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +41,10 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_account_update);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.updateEmailButton.setOnClickListener(this);
         mBinding.updatePasswordButton.setOnClickListener(this);
@@ -54,6 +56,7 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
             public void onChanged(@Nullable final String updateResult) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "updateResult", updateResult));
+                Objects.requireNonNull(updateResult);
                 //上記の値が変更されたときにonChangedメソッドが発生し、中に記述されている処理が実行される
                 if (TextUtils.equals(updateResult, "updateEmail")) {
                     Toast.makeText(getApplication(), "メールアドレスを更新しました", Toast.LENGTH_SHORT).show();
@@ -68,15 +71,15 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
 
         mBinding.updateEmailTextInputEditText.setText(mUserViewModel.getCurrentUser().getEmail());
 
-        mUid = mUserViewModel.getCurrentUser().getUid();
-        mUserViewModel.fetchUserInfo(mUid);
+        String uid = mUserViewModel.getCurrentUser().getUid();
+        mUserViewModel.fetchUserInfo(uid);
         mBinding.setLifecycleOwner(this);
     }
 
 
     private void updateEmail() {
         Timber.i(MyDebugTree.START_LOG);
-        String email = mBinding.updateEmailTextInputEditText.getText().toString();
+        String email = Objects.requireNonNull(mBinding.updateEmailTextInputEditText.getText()).toString();
         if (!validateEmail(email)) {
             return;
         }
@@ -103,8 +106,8 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
 
     private void updatePassword() {
         Timber.i(MyDebugTree.START_LOG);
-        String password = mBinding.updatePasswordTextInputEditText.getText().toString();
-        String checkPassword = mBinding.checkPasswordTextInputEditText.getText().toString();
+        String password = Objects.requireNonNull(mBinding.updatePasswordTextInputEditText.getText()).toString();
+        String checkPassword = Objects.requireNonNull(mBinding.checkPasswordTextInputEditText.getText()).toString();
         if (!validatePassword(password, checkPassword)) {
             return;
         }
@@ -115,7 +118,8 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
     private boolean validatePassword(String password, String checkPassword) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(
-                String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "password", password, "checkPassword", checkPassword));
+                String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "password", password, "checkPassword",
+                        checkPassword));
         boolean isValidSuccess = false;
 
         if (TextUtils.isEmpty(password)) {
@@ -178,10 +182,12 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
 
     }
+
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {

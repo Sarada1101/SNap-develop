@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,7 +16,7 @@
             android:id="@+id/snapTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/snap"
+            android:text="@string/app_name"
             android:textColor="@color/colorTextBlack"
             android:textSize="50sp"
             android:visibility="visible"
@@ -37,7 +41,7 @@
                 android:id="@+id/emailTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/mailAddress"
+                android:hint="@string/emailAddress"
                 android:maxLines="1"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -62,19 +66,8 @@
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/notRegisterTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/notRegisterTextViwText"
-            android:textColor="@color/colorLink"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
-
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/LinearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -103,9 +96,17 @@
                 android:textColor="@color/colorTextWhite"
                 tools:ignore="ButtonStyle" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/notRegisterTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/notRegisterText"
+            android:textColor="@color/colorLink"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/LinearLayout" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <data>
-
-    </data>
 </layout>

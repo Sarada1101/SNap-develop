@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,8 +28,8 @@ import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityPostSearchBinding;
 import com.example.snap_develop.view.adapter.PostSearchAdapter;
-import com.example.snap_develop.viewModel.PostViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.PostViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -64,9 +66,10 @@ public class PostSearchActivity extends AppCompatActivity implements AdapterView
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_post_search);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
@@ -154,11 +157,11 @@ public class PostSearchActivity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        PostBean postBean = (PostBean) mPostDataMapList.get(position).get("postBean");
-        if (postBean.getType().equals("post")) {
+        PostBean postBean = Objects.requireNonNull((PostBean) mPostDataMapList.get(position).get("postBean"));
+        if (TextUtils.equals(postBean.getType(), "post")) {
             startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath",
                     postBean.getPostPath()));
-        } else if (postBean.getType().equals("comment")) {
+        } else if (TextUtils.equals(postBean.getType(), "comment")) {
             startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath",
                     postBean.getParentPost()));
         }

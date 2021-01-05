@@ -34,6 +34,22 @@
 
         </com.google.android.material.tabs.TabLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/applicatedFollowRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/listTabLayout" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/buttonTabLayout"
             android:layout_width="match_parent"
@@ -65,22 +81,6 @@
                 android:layout_height="wrap_content"
                 android:icon="@drawable/ic_baseline_account_circle_24" />
         </com.google.android.material.tabs.TabLayout>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/buttonTabLayout" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/applicatedFollowRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/divider"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listTabLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -19,9 +19,9 @@ import com.example.snap_develop.MainApplication;
 import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
-import com.example.snap_develop.viewModel.MapViewModel;
-import com.example.snap_develop.viewModel.PostViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.MapViewModel;
+import com.example.snap_develop.view_model.PostViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -50,7 +51,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private PostViewModel mPostViewModel;
     private MapViewModel mMapViewModel;
     private GoogleMap mGoogleMap;
-    private static final int REQUEST_PERMISSION = 0;
+    private final static int REQUEST_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mMapViewModel = new ViewModelProvider(this).get(MapViewModel.class);
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-
-        ((TabLayout) findViewById(R.id.buttonTabLayout)).getTabAt(MainApplication.MAP_POS).select();
-        ((TabLayout) findViewById(R.id.buttonTabLayout)).getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(((TabLayout) findViewById(R.id.buttonTabLayout)).getTabAt(
+                MainApplication.MAP_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         findViewById(R.id.postMapFloatingActionButton).setOnClickListener(this);
         findViewById(R.id.searchMapFloatingActionButton).setOnClickListener(this);
@@ -142,15 +144,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     //----------位置情報取得のパーミッション関係----------//
     public boolean checkPermission() {
         Timber.i(MyDebugTree.START_LOG);
-        boolean isChecked;
         // 既に許可している
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            isChecked = true;
-        } else {
-            // 拒否していた場合(初回起動も含めて)
-            isChecked = false;
-        }
+        // 拒否していた場合(初回起動も含めて)
+        boolean isChecked = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "isChecked", isChecked));
         return isChecked;
     }
@@ -183,9 +180,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 mGoogleMap.setMyLocationEnabled(true);
             } else {
                 Timber.i("onRequestPermissionsResult:False");
-
-                // 拒否された時の対応
-                return;
             }
         }
     }
@@ -197,7 +191,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "marker", marker));
 
-        String postPath = marker.getTag().toString();
+        String postPath = Objects.requireNonNull(marker.getTag()).toString();
         startActivity(new Intent(getApplication(), DisplayCommentActivity.class).putExtra("postPath", postPath));
     }
 
