@@ -2,15 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.snap_develop">
-    <!--
-        ACCESS_COARSE/FINE_LOCATIONのパーミッションは、
-        Google Maps Android API v2を利用する際には必要ありませんが、
-       「MyLocation」機能を利用する際には、
-        粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
-    -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MainApplication"
@@ -21,31 +12,59 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
-        <activity android:name=".view.ui.ApprovalPendingFollowListActivity" />
-        <activity android:name=".view.ui.ApplicatedFollowListActivity" />
-        <activity android:name=".view.ui.AuthActivity">
+        <activity
+            android:name=".view.ui.ApprovalPendingFollowListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.ApplicatedFollowListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.AuthActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.ui.CommentActivity" />
-        <activity android:name=".view.ui.DisplayCommentActivity" />
-        <activity android:name=".view.ui.EmailCheckActivity" />
-        <activity android:name=".view.ui.FollowerListActivity" />
-        <activity android:name=".view.ui.FollowingListActivity" />
+        <activity
+            android:name=".view.ui.CommentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.DisplayCommentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.EmailCheckActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.FollowerListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.FollowingListActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ui.MapActivity"
-            android:label="@string/title_activity_map" />
-        <activity android:name=".view.ui.PostActivity" />
-        <activity android:name=".view.ui.PostSearchActivity" />
-        <activity android:name=".view.ui.SettingActivity" />
-        <activity android:name=".view.ui.TimelineActivity" />
+            android:label="@string/title_activity_map"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.PostActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.PostSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.TimelineActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.ui.UserActivity"
-            android:label="UserActivity" />
-        <activity android:name=".view.ui.UserUpdateActivity" />
+            android:label="UserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ui.UserUpdateActivity"
+            android:screenOrientation="portrait" />
         <!--
             Google MapsベースのAPIのAPIキーは文字列リソースとして定義されています。
             ファイル「res/values/google_maps_api.xml」を参照）。
@@ -65,4 +84,15 @@
             </intent-filter>
         </service>
     </application>
+
+    <!--
+        ACCESS_COARSE/FINE_LOCATIONのパーミッションは、
+        Google Maps Android API v2を利用する際には必要ありませんが、
+       「MyLocation」機能を利用する際には、
+        粗い位置情報か細かい位置情報のパーミッションを指定する必要があります。
+    -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 </manifest>
