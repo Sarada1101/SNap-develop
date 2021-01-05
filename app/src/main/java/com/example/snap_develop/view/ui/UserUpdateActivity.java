@@ -1,6 +1,5 @@
 package com.example.snap_develop.view.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -23,10 +22,11 @@ import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityUserupdateBinding;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -50,9 +50,10 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_userupdate);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.updateIconImageButton.setOnClickListener(this);
         mBinding.updateButton.setOnClickListener(this);
@@ -79,8 +80,8 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
     private void updateUser() {
         Timber.i(MyDebugTree.START_LOG);
         //ユーザー情報を更新する処理
-        String name = mBinding.updateNameTextInputEditText.getText().toString();
-        String profile = mBinding.updateProfileTextInputEditText.getText().toString();
+        String name = Objects.requireNonNull(mBinding.updateNameTextInputEditText.getText()).toString();
+        String profile = Objects.requireNonNull(mBinding.updateProfileTextInputEditText.getText()).toString();
 
         if (!validateForm(name, profile)) {
             return;
@@ -91,7 +92,7 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
         updateBean.setName(name);
         updateBean.setMessage(profile);
         if (mBitMap == null) {
-            mBitMap = mUserViewModel.getUser().getValue().getIcon();
+            mBitMap = Objects.requireNonNull(mUserViewModel.getUser().getValue()).getIcon();
             mIconName = mUserViewModel.getUser().getValue().getIconName();
         }
         updateBean.setIcon(mBitMap);
@@ -152,17 +153,14 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
         if (resultCode != RESULT_OK || requestCode != REQUEST_GALLERY) {
             return;
         }
-        if (resultCode == Activity.RESULT_OK) {
-            Timber.i("画像取得");
-            if (data != null) {
-                Uri uri = data.getData();
-                mIconName = uri.getLastPathSegment();
-                try {
-                    mBitMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    mBinding.updateIconImageButton.setImageBitmap(mBitMap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        if (data != null) {
+            Uri uri = data.getData();
+            mIconName = uri.getLastPathSegment();
+            try {
+                mBitMap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                mBinding.updateIconImageButton.setImageBitmap(mBitMap);
+            } catch (IOException e) {
+                Timber.e(e.toString());
             }
         }
     }

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -36,10 +37,10 @@ public class ReceiveMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             messageBody = remoteMessage.getNotification().getBody();
 
-            if (remoteMessage.getNotification().getTitle().equals("good")) {
+            if (TextUtils.equals(remoteMessage.getNotification().getTitle(), "good")) {
                 mIntent = new Intent(this, DisplayCommentActivity.class)
                         .putExtra("parent_post", remoteMessage.getNotification().getTag());
-            } else if (remoteMessage.getNotification().getTitle().equals("applicated_follow")) {
+            } else if (TextUtils.equals(remoteMessage.getNotification().getTitle(), "applicated_follow")) {
                 mIntent = new Intent(this, ApplicatedFollowListActivity.class);
             }
         }

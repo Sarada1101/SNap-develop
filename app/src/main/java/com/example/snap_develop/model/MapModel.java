@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.Objects;
+
 import timber.log.Timber;
 
 public class MapModel {
@@ -39,7 +41,7 @@ public class MapModel {
                     deviceLatLng.setValue(latLng);
                 } else {
                     Timber.i(MyDebugTree.FAILURE_LOG);
-                    Timber.e(task.getException().toString());
+                    Timber.e(Objects.requireNonNull(task.getException()).toString());
                 }
             }
         });

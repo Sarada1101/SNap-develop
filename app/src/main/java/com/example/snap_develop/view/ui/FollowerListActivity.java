@@ -19,22 +19,24 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityFollowingListBinding;
 import com.example.snap_develop.view.adapter.FollowListAdapter;
-import com.example.snap_develop.viewModel.FollowViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.FollowViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
 public class FollowerListActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private UserViewModel mUserViewModel;
+    @SuppressWarnings("FieldCanBeLocal")
     private FollowViewModel mFollowViewModel;
     private ActivityFollowingListBinding mBinding;
     private FollowListAdapter mFollowListAdapter;
     private RecyclerView mRecyclerView;
-    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +49,10 @@ public class FollowerListActivity extends AppCompatActivity implements TabLayout
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_following_list);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
@@ -72,14 +75,14 @@ public class FollowerListActivity extends AppCompatActivity implements TabLayout
         });
 
         // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
-        mUid = getIntent().getStringExtra("uid");
-        if (mUid == null || mUid.equals(mUserViewModel.getCurrentUser().getUid())) {
+        String uid = getIntent().getStringExtra("uid");
+        if (uid == null || uid.equals(mUserViewModel.getCurrentUser().getUid())) {
             // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
-            mUid = mUserViewModel.getCurrentUser().getUid();
+            uid = mUserViewModel.getCurrentUser().getUid();
         }
-        Timber.i(String.format("%s=%s", "mUid", mUid));
+        Timber.i(String.format("%s=%s", "mUid", uid));
 
-        mFollowViewModel.fetchFollowerList(mUid);
+        mFollowViewModel.fetchFollowerList(uid);
     }
 
 

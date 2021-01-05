@@ -1,4 +1,4 @@
-package com.example.snap_develop.viewModel;
+package com.example.snap_develop.view_model;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

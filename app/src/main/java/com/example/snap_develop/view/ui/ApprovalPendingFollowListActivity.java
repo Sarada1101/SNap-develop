@@ -28,16 +28,18 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityApprovalPendingFollowListBinding;
 import com.example.snap_develop.view.adapter.ApprovalPendingFollowListAdapter;
-import com.example.snap_develop.viewModel.FollowViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.FollowViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
 public class ApprovalPendingFollowListActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityApprovalPendingFollowListBinding mBinding;
@@ -57,11 +59,12 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_approval_pending_follow_list);
 
-        mBinding.listTabLayout.getTabAt(0).select();
+        Objects.requireNonNull(mBinding.listTabLayout.getTabAt(0)).select();
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.listTabLayout.addOnTabSelectedListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
@@ -97,7 +100,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
                         int swipedPosition = viewHolder.getAdapterPosition();
                         cancelFollow(mFollowList.get(swipedPosition).getUid(), mUid);
                         listRemove(swipedPosition);
-                        Toast.makeText(getApplication(), "フォロー申請をキャンセルしました", Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplication(), "フォロー申請をキャンセルしました", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -115,9 +118,10 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
                             return;
                         }
 
-                        Drawable deleteIcon = ContextCompat.getDrawable(getApplication(), R.drawable.ic_close);
+                        Drawable deleteIcon = Objects.requireNonNull(
+                                ContextCompat.getDrawable(getApplication(), R.drawable.ic_close));
                         ColorDrawable background = new ColorDrawable();
-                        background.setColor(getResources().getColor(R.color.colorDanger));
+                        background.setColor(ContextCompat.getColor(getApplication(), R.color.colorDanger));
                         background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(),
                                 itemView.getBottom());
                         background.draw(c);
@@ -157,7 +161,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
 
     private void listRemove(int position) {
         mFollowList.remove(position);
-        mBinding.approvalPendingFollowRecyclerView.getAdapter().notifyItemRemoved(position);
+        Objects.requireNonNull(mBinding.approvalPendingFollowRecyclerView.getAdapter()).notifyItemRemoved(position);
         mBinding.approvalPendingFollowRecyclerView.getAdapter().notifyItemRangeRemoved(position, mFollowList.size());
     }
 
@@ -165,7 +169,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
-        int i = tab.parent.getId();
+        int i = Objects.requireNonNull(tab.parent).getId();
         Timber.i("parent = " + tab.parent + " pos = " + tab.getPosition());
 
         if (i == R.id.listTabLayout) {
@@ -200,7 +204,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
         Timber.i(MyDebugTree.START_LOG);
-        int i = tab.parent.getId();
+        int i = Objects.requireNonNull(tab.parent).getId();
 
         Timber.i("parent = " + tab.parent + " pos = " + tab.getPosition());
 

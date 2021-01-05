@@ -17,7 +17,9 @@ import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityAuthBinding;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
+
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -39,11 +41,13 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.loginButton.setOnClickListener(this);
         mBinding.notRegisterTextView.setOnClickListener(this);
 
-        if (mUserViewModel.getCurrentUser() != null
-                && !mUserViewModel.getCurrentUser().isEmailVerified()) { // メール認証がされてないなら
-            mUserViewModel.signOut();
-        } else if (mUserViewModel.getCurrentUser() != null && mUserViewModel.getCurrentUser().isEmailVerified()) {
-            startActivity(new Intent(getApplication(), MapActivity.class));
+        if (mUserViewModel.getCurrentUser() != null) {
+            boolean isVerified = mUserViewModel.getCurrentUser().isEmailVerified();
+            if (!isVerified) {  // メール認証されてないなら
+                mUserViewModel.signOut();
+            } else {
+                startActivity(new Intent(getApplication(), MapActivity.class));
+            }
         }
 
         //userViewModelのgetAuthResultメソッドで取得できる値を監視する
@@ -52,6 +56,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             public void onChanged(@Nullable final String authResult) {
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "authResult", authResult));
+                Objects.requireNonNull(authResult);
 
                 //上記の値が変更されたときにonChangedメソッドが発生し、中に記述されている処理が実行される
                 if (TextUtils.equals(authResult, "createAccountSuccess")) {
@@ -78,8 +83,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
     private void createAccount() {
         Timber.i(MyDebugTree.START_LOG);
-        String email = mBinding.emailTextInputEditText.getText().toString();
-        String password = mBinding.passwordTextInputEditText.getText().toString();
+        String email = Objects.requireNonNull(mBinding.emailTextInputEditText.getText()).toString();
+        String password = Objects.requireNonNull(mBinding.passwordTextInputEditText.getText()).toString();
 
         UserBean userBean = new UserBean();
         userBean.setMessage("よろしくお願いします。");
@@ -101,8 +106,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
     private void signIn() {
         Timber.i(MyDebugTree.START_LOG);
-        String email = mBinding.emailTextInputEditText.getText().toString();
-        String password = mBinding.passwordTextInputEditText.getText().toString();
+        String email = Objects.requireNonNull(mBinding.emailTextInputEditText.getText()).toString();
+        String password = Objects.requireNonNull(mBinding.passwordTextInputEditText.getText()).toString();
 
         if (!validateForm(email, password)) {
             return;
@@ -111,6 +116,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean validateForm(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));

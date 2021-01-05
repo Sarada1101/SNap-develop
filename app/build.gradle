@@ -6,13 +6,11 @@ android {
 
     defaultConfig {
         applicationId "com.example.snap_develop"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
         multiDexEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -38,15 +36,14 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.android.material:material:1.2.1'
-    // Firebase
     implementation 'com.google.firebase:firebase-core:18.0.0'
     implementation 'com.google.firebase:firebase-auth:20.0.1'  // Authentication
     implementation 'com.google.firebase:firebase-analytics'  // Analytics
-    implementation 'com.google.firebase:firebase-firestore:22.0.0'  // Firestore
-    implementation 'com.google.firebase:firebase-storage:19.2.0'
-    implementation 'com.google.firebase:firebase-functions:19.1.0'
-    implementation 'com.google.firebase:firebase-messaging:21.0.0'// CloudStorage
-
+    implementation 'com.google.firebase:firebase-firestore:22.0.1'  // Firestore
+    implementation 'com.google.firebase:firebase-storage:19.2.1'  // CloudStorage
+    implementation 'com.google.firebase:firebase-functions:19.2.0'  //Function
+    implementation 'com.google.firebase:firebase-messaging:21.0.1'  // Messaging
+    // MVVM
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"  // LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"  // ViewModel
@@ -58,17 +55,16 @@ dependencies {
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
     // lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
-
-    implementation 'com.google.android.gms:play-services-location:17.1.0'  // Google Maps
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'  // Google Maps
+    // GoogleMap
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    // google-play-service
     implementation 'com.google.android.gms:play-services-basement:17.5.0'
-    compile 'com.jakewharton.timber:timber:3.1.0'  // Timber
-
-    //    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.2.0'  // MySQL
+    // Timber
+    compile 'com.jakewharton.timber:timber:3.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

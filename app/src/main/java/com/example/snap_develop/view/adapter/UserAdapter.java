@@ -1,8 +1,10 @@
 package com.example.snap_develop.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,7 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.view.ui.DisplayCommentActivity;
-import com.example.snap_develop.view.viewHolder.UserViewHolder;
+import com.example.snap_develop.view.view_holder.UserViewHolder;
 
 import java.util.List;
 
@@ -23,9 +25,9 @@ import timber.log.Timber;
 
 public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
-    private Context mContext;
-    private List<PostBean> mPostBeanList;
-    private UserBean mUserBean;
+    private final Context mContext;
+    private final List<PostBean> mPostBeanList;
+    private final UserBean mUserBean;
 
     public UserAdapter(Context context, List<PostBean> postList, UserBean userBean) {
         Timber.i(MyDebugTree.START_LOG);
@@ -50,6 +52,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         Timber.i(MyDebugTree.START_LOG);
@@ -64,10 +67,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
 
         if (postBean.getPhoto() != null) holder.mPhotoImageView.setImageBitmap(postBean.getPhoto());
 
-        if (postBean.getType().equals("post")) {
+        if (TextUtils.equals(postBean.getType(), "post")) {
             holder.mGoodCountTextView.setText(Integer.toString(postBean.getGoodCount()));
             holder.mLatLngTextView.setText(
-                    String.format("%d, %d", (int) postBean.getLatLng().latitude, (int) postBean.getLatLng().longitude));
+                    String.format("%s, %s", postBean.getLatLng().latitude, postBean.getLatLng().longitude));
         }
 
         if (postBean.isDanger()) {

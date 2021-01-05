@@ -1,4 +1,4 @@
-package com.example.snap_develop.viewModel;
+package com.example.snap_develop.view_model;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -14,7 +14,7 @@ import timber.log.Timber;
 
 public class UserViewModel extends ViewModel {
 
-    UserModel userModel = new UserModel();
+    final UserModel userModel = new UserModel();
     private MutableLiveData<String> authResult;
     private MutableLiveData<String> updateResult;
     private MutableLiveData<UserBean> user;

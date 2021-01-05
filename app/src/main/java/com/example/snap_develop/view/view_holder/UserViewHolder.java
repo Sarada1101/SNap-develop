@@ -1,4 +1,4 @@
-package com.example.snap_develop.view.viewHolder;
+package com.example.snap_develop.view.view_holder;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -10,20 +10,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.snap_develop.R;
 
-public class TimelineViewHolder extends RecyclerView.ViewHolder {
+public class UserViewHolder extends RecyclerView.ViewHolder {
 
-    public ImageView mIconImageView;
-    public ImageView mPhotoImageView;
-    public TextView mUserNameTextView;
-    public TextView mUserIdTextView;
-    public TextView mMessageTextView;
-    public TextView mGoodCountTextView;
-    public TextView mLatLngTextView;
-    public TextView mDatetimeTextView;
-    public ConstraintLayout mConstraintLayout;
-    public ConstraintLayout mUserInfoConstraintLayout;
+    public final ImageView mIconImageView;
+    public final ImageView mPhotoImageView;
+    public final TextView mUserNameTextView;
+    public final TextView mUserIdTextView;
+    public final TextView mMessageTextView;
+    public final TextView mGoodCountTextView;
+    public final TextView mLatLngTextView;
+    public final TextView mDatetimeTextView;
+    public final ConstraintLayout mConstraintLayout;
 
-    public TimelineViewHolder(@NonNull View itemView) {
+    public UserViewHolder(@NonNull View itemView) {
         super(itemView);
         mIconImageView = itemView.findViewById(R.id.iconImageView);
         mPhotoImageView = itemView.findViewById(R.id.photoImageView);
@@ -34,6 +33,5 @@ public class TimelineViewHolder extends RecyclerView.ViewHolder {
         mLatLngTextView = itemView.findViewById(R.id.latLngTextView);
         mDatetimeTextView = itemView.findViewById(R.id.datetimeTextView);
         mConstraintLayout = itemView.findViewById(R.id.ConstraintLayout);
-        mUserInfoConstraintLayout = itemView.findViewById(R.id.userInfoConstraintLayout);
     }
 }

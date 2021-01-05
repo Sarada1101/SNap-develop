@@ -22,9 +22,9 @@ import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityTimelineBinding;
 import com.example.snap_develop.view.adapter.TimelineAdapter;
-import com.example.snap_develop.viewModel.FollowViewModel;
-import com.example.snap_develop.viewModel.PostViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.FollowViewModel;
+import com.example.snap_develop.view_model.PostViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -34,20 +34,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
 public class TimelineActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener {
 
+    @SuppressWarnings("FieldCanBeLocal")
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
+    @SuppressWarnings("FieldCanBeLocal")
     private FollowViewModel mFollowViewModel;
     private ActivityTimelineBinding mBinding;
     private TimelineAdapter mTimelineAdapter;
     private RecyclerView mRecyclerView;
     private List<Map<String, Object>> mTimelineDataMapList;
     private List<UserBean> mUserBeanList;
-    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +63,10 @@ public class TimelineActivity extends AppCompatActivity implements TabLayout.OnT
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_timeline);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.TIMELINE_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.TIMELINE_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.TIMELINE_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
@@ -123,8 +126,8 @@ public class TimelineActivity extends AppCompatActivity implements TabLayout.OnT
         });
 
         //現在ログイン中のユーザーのUidを取得する処理
-        mUid = mUserViewModel.getCurrentUser().getUid();
-        mFollowViewModel.fetchFollowingList(mUid);
+        String uid = mUserViewModel.getCurrentUser().getUid();
+        mFollowViewModel.fetchFollowingList(uid);
     }
 
 

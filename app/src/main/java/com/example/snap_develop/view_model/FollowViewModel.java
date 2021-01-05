@@ -1,4 +1,4 @@
-package com.example.snap_develop.viewModel;
+package com.example.snap_develop.view_model;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,10 +13,9 @@ import timber.log.Timber;
 
 public class FollowViewModel extends ViewModel {
 
-    private FollowModel mFollowModel = new FollowModel();
+    private final FollowModel mFollowModel = new FollowModel();
     private MutableLiveData<List<UserBean>> followList;
     private MutableLiveData<Boolean> following;
-    private MutableLiveData<Boolean> follower;
     private MutableLiveData<Boolean> approvalPendingFollow;
 
     public MutableLiveData<List<UserBean>> getFollowList() {
@@ -32,14 +31,6 @@ public class FollowViewModel extends ViewModel {
             following = new MutableLiveData<>();
         }
         return following;
-    }
-
-
-    public MutableLiveData<Boolean> getFollower() {
-        if (follower == null) {
-            follower = new MutableLiveData<>();
-        }
-        return follower;
     }
 
 
@@ -65,10 +56,10 @@ public class FollowViewModel extends ViewModel {
     }
 
 
-    public void insertApprovalPendingFollow(String toUid, String inseertUid) {
+    public void insertApprovalPendingFollow(String toUid, String insertUid) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", inseertUid));
-        mFollowModel.insertApprovalPendingFollow(toUid, inseertUid);
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "toUid", toUid, "insertUid", insertUid));
+        mFollowModel.insertApprovalPendingFollow(toUid, insertUid);
     }
 
 
@@ -154,16 +145,6 @@ public class FollowViewModel extends ViewModel {
             following = new MutableLiveData<>();
         }
         mFollowModel.checkFollowing(fromUid, checkUid, following);
-    }
-
-
-    public void checkFollower(String fromUid, String checkUid) {
-        Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "fromUid", fromUid, "checkUid", checkUid));
-        if (follower == null) {
-            follower = new MutableLiveData<>();
-        }
-        mFollowModel.checkFollower(fromUid, checkUid, follower);
     }
 
 

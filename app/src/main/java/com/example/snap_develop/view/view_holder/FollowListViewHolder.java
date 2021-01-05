@@ -1,4 +1,4 @@
-package com.example.snap_develop.view.viewHolder;
+package com.example.snap_develop.view.view_holder;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -12,10 +12,10 @@ import com.example.snap_develop.R;
 
 public class FollowListViewHolder extends RecyclerView.ViewHolder {
 
-    public ImageView mIconImageView;
-    public TextView mUserNameTextView;
-    public TextView mUserIdTextView;
-    public ConstraintLayout mConstraintLayout;
+    public final ImageView mIconImageView;
+    public final TextView mUserNameTextView;
+    public final TextView mUserIdTextView;
+    public final ConstraintLayout mConstraintLayout;
 
     public FollowListViewHolder(@NonNull View itemView) {
         super(itemView);

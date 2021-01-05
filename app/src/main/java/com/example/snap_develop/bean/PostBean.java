@@ -23,8 +23,15 @@ public class PostBean implements Serializable {
     private String strDatetime;
     private boolean danger;
     private boolean anonymous;
-    private String postPath;
-    private String uid;
     private String type;
+    private String uid;
+    private String postPath;
     private String parentPost;
+
+    public Date getDatetime() {
+        if (datetime == null) {
+            return null;
+        }
+        return (Date) datetime.clone();
+    }
 }

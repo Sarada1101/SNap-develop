@@ -5,6 +5,8 @@ import static com.example.snap_develop.MyDebugTree.INPUT_LOG;
 import static com.example.snap_develop.MyDebugTree.START_LOG;
 import static com.example.snap_develop.MyDebugTree.SUCCESS_LOG;
 
+import static java.util.Objects.requireNonNull;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -48,8 +50,9 @@ public class UserModel extends Firebase {
             final MutableLiveData<String> authResult) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "authResult", authResult));
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
-                new OnCompleteListener<AuthResult>() {
+
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Timber.i(MyDebugTree.START_LOG);
@@ -64,7 +67,7 @@ public class UserModel extends Firebase {
                             insertUser(userBean);
                         } else {
                             Timber.i(MyDebugTree.FAILURE_LOG);
-                            Timber.e(task.getException().toString());
+                            Timber.e(requireNonNull(task.getException()).toString());
                             authResult.setValue(String.valueOf(task.getException()));
                         }
                     }
@@ -100,7 +103,6 @@ public class UserModel extends Firebase {
                     public void onComplete(@NonNull Task<Void> task) {
                         Timber.i(MyDebugTree.SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
-
                         saveIcon(userBean);
                     }
                 })
@@ -117,8 +119,9 @@ public class UserModel extends Firebase {
     public void signIn(String email, String password, final MutableLiveData<String> authResult) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "authResult", authResult));
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(
-                new OnCompleteListener<AuthResult>() {
+
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Timber.i(MyDebugTree.START_LOG);
@@ -129,7 +132,7 @@ public class UserModel extends Firebase {
                             authResult.setValue("signInSuccess");
                         } else {
                             Timber.i(MyDebugTree.FAILURE_LOG);
-                            Timber.e(task.getException().toString());
+                            Timber.e(requireNonNull(task.getException()).toString());
                             authResult.setValue(String.valueOf(task.getException()));
                         }
                     }
@@ -139,6 +142,7 @@ public class UserModel extends Firebase {
 
     public void sendEmailVerification() {
         Timber.i(MyDebugTree.START_LOG);
+
         getCurrentUser().sendEmailVerification()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -164,8 +168,8 @@ public class UserModel extends Firebase {
 
     public void updateEmail(String email, final MutableLiveData<String> updateResult) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "updateResult",
-                updateResult));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "updateResult", updateResult));
+
         getCurrentUser().updateEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -187,8 +191,9 @@ public class UserModel extends Firebase {
 
     public void updatePassword(String password, final MutableLiveData<String> updateResult) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "password", password, "updateResult",
-                updateResult));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "password", password,
+                "updateResult", updateResult));
+
         getCurrentUser().updatePassword(password)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -217,21 +222,18 @@ public class UserModel extends Firebase {
 
         firestore.collection("users")
                 .document(userBean.getUid())
-                .update(
-                        "name", userBean.getName(),
+                .update("name", userBean.getName(),
                         "message", userBean.getMessage(),
-                        "icon", userBean.getIconName()
-                )
-                .addOnCompleteListener(
-                        new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Timber.i(SUCCESS_LOG);
-                                Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
-                                updateResult.setValue("success");
+                        "icon", userBean.getIconName())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.i(SUCCESS_LOG);
+                        Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
+                        updateResult.setValue("success");
 
-                            }
-                        })
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -258,17 +260,14 @@ public class UserModel extends Firebase {
                 .child("icon")
                 .child(userBean.getUid())
                 .child(userBean.getIconName())
-                .putBytes(baos.toByteArray()).addOnSuccessListener(
-                new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                .putBytes(baos.toByteArray())
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Timber.i(SUCCESS_LOG);
-                        Timber.i(
-                                String.format("%s %s=%s", INPUT_LOG, "taskSnapshot",
-                                        taskSnapshot));
+                        Timber.i(String.format("%s %s=%s", INPUT_LOG, "taskSnapshot", taskSnapshot));
                         Timber.i(String.format("save image path: %s",
-                                String.format("icon/%s/%s", userBean.getUid(),
-                                        userBean.getIconName())));
+                                String.format("icon/%s/%s", userBean.getUid(), userBean.getIconName())));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -320,8 +319,6 @@ public class UserModel extends Firebase {
         this.firestoreConnect();
         this.storageConnect();
 
-        final UserBean userBean = new UserBean();
-
         //datetimeが1時間前より大きいかつ、typeがpostの投稿を取得する
         //users/{uid}
         firestore.collection("users")
@@ -333,22 +330,9 @@ public class UserModel extends Firebase {
                         Timber.i(MyDebugTree.START_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
 
-                        if (task.isSuccessful()) {
-                            Timber.i(MyDebugTree.SUCCESS_LOG);
-                            DocumentSnapshot document = task.getResult();
-                            userBean.setName(document.getString("name"));
-                            userBean.setUid(document.getId());
-                            userBean.setMessage(document.getString("message"));
-                            userBean.setIconName(document.getString("icon"));
-                            userBean.setFollowingCount(
-                                    Integer.parseInt(document.getLong("following_count").toString()));
-                            userBean.setFollowerCount(
-                                    Integer.parseInt(document.getLong("follower_count").toString()));
-                            userBean.setFollowNotice(document.getBoolean("follow_notice"));
-                            userBean.setGoodNotice(document.getBoolean("good_notice"));
-                            userBean.setCommentNotice(document.getBoolean("comment_notice"));
-                            userBean.setPublicationArea(document.getString("publication_area"));
-                        }
+                        Timber.i(MyDebugTree.SUCCESS_LOG);
+                        DocumentSnapshot document = task.getResult();
+                        final UserBean userBean = setUserBean(document);
 
                         // icon/{uid}/{iconName}
                         storage.getReference()
@@ -397,8 +381,7 @@ public class UserModel extends Firebase {
 
         final List<UserBean> userBeanList = new ArrayList<>();
 
-        for (int i = 0; i < uidList.size(); i++) {
-            String uid = uidList.get(i);
+        for (String uid : uidList) {
             firestore.collection("users")
                     .document(uid)
                     .get()
@@ -409,19 +392,7 @@ public class UserModel extends Firebase {
                             Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
 
                             DocumentSnapshot document = task.getResult();
-                            final UserBean userBean = new UserBean();
-                            userBean.setName(document.getString("name"));
-                            userBean.setUid(document.getId());
-                            userBean.setMessage(document.getString("message"));
-                            userBean.setIconName(document.getString("icon"));
-                            userBean.setFollowingCount(
-                                    Integer.parseInt(document.getLong("following_count").toString()));
-                            userBean.setFollowerCount(
-                                    Integer.parseInt(document.getLong("follower_count").toString()));
-                            userBean.setFollowNotice(document.getBoolean("follow_notice"));
-                            userBean.setGoodNotice(document.getBoolean("good_notice"));
-                            userBean.setCommentNotice(document.getBoolean("comment_notice"));
-                            userBean.setPublicationArea(document.getString("publication_area"));
+                            final UserBean userBean = setUserBean(document);
 
                             // icon/{uid}/{iconName}
                             storage.getReference()
@@ -464,6 +435,28 @@ public class UserModel extends Firebase {
                         }
                     });
         }
+    }
+
+
+    private UserBean setUserBean(DocumentSnapshot document) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "document", document));
+
+        final UserBean userBean = new UserBean();
+        userBean.setName(document.getString("name"));
+        userBean.setUid(document.getId());
+        userBean.setMessage(document.getString("message"));
+        userBean.setIconName(document.getString("icon"));
+        userBean.setFollowingCount(
+                Math.toIntExact(requireNonNull(document.getLong("following_count"))));
+        userBean.setFollowerCount(
+                Math.toIntExact(requireNonNull(document.getLong("follower_count"))));
+        userBean.setFollowNotice(requireNonNull(document.getBoolean("follow_notice")));
+        userBean.setGoodNotice(requireNonNull(document.getBoolean("good_notice")));
+        userBean.setCommentNotice(requireNonNull(document.getBoolean("comment_notice")));
+        userBean.setPublicationArea(requireNonNull(document.getString("publication_area")));
+
+        return userBean;
     }
 
 

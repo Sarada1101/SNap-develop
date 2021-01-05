@@ -2,6 +2,7 @@ package com.example.snap_develop.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +16,18 @@ import com.example.snap_develop.R;
 import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.view.ui.UserActivity;
-import com.example.snap_develop.view.viewHolder.DisplayCommentViewHolder;
+import com.example.snap_develop.view.view_holder.DisplayCommentViewHolder;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
 public class DisplayCommentAdapter extends RecyclerView.Adapter<DisplayCommentViewHolder> {
 
-    private Context mContext;
-    private List<Map<String, Object>> mCommentDataMapList;
+    private final Context mContext;
+    private final List<Map<String, Object>> mCommentDataMapList;
 
     public DisplayCommentAdapter(Context context, List<Map<String, Object>> commentDataMapList) {
         Timber.i(MyDebugTree.START_LOG);
@@ -54,8 +56,8 @@ public class DisplayCommentAdapter extends RecyclerView.Adapter<DisplayCommentVi
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "holder", holder, "position", position));
 
-        final UserBean userBean = (UserBean) mCommentDataMapList.get(position).get("userBean");
-        PostBean postBean = (PostBean) mCommentDataMapList.get(position).get("postBean");
+        final UserBean userBean = Objects.requireNonNull((UserBean) mCommentDataMapList.get(position).get("userBean"));
+        PostBean postBean = Objects.requireNonNull((PostBean) mCommentDataMapList.get(position).get("postBean"));
         holder.mIconImageView.setImageBitmap(userBean.getIcon());
         holder.mUserNameTextView.setText(userBean.getName());
         holder.mUserIdTextView.setText(userBean.getUid());
@@ -69,21 +71,18 @@ public class DisplayCommentAdapter extends RecyclerView.Adapter<DisplayCommentVi
             }
         });
 
-        if (postBean.isAnonymous()) {
-            holder.mIconImageView.setImageBitmap(
-                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
-            holder.mUserNameTextView.setText("匿名");
-            holder.mUserIdTextView.setText("匿名");
-            holder.mConstraintLayout.setOnClickListener(null);
+        if (postBean.isAnonymous() || TextUtils.equals(userBean.getPublicationArea(), "anonymous")) {
+            setAnonymousUser(holder);
         }
+    }
 
-        if (userBean.getPublicationArea().equals("anonymous")) {
-            holder.mIconImageView.setImageBitmap(
-                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
-            holder.mUserNameTextView.setText("匿名");
-            holder.mUserIdTextView.setText("匿名");
-            holder.mConstraintLayout.setOnClickListener(null);
-        }
+
+    private void setAnonymousUser(DisplayCommentViewHolder holder) {
+        holder.mIconImageView.setImageBitmap(
+                MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+        holder.mUserNameTextView.setText("匿名");
+        holder.mUserIdTextView.setText("匿名");
+        holder.mConstraintLayout.setOnClickListener(null);
     }
 
 

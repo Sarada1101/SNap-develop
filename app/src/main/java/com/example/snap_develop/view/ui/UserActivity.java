@@ -24,12 +24,13 @@ import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityUserBinding;
 import com.example.snap_develop.view.adapter.UserAdapter;
-import com.example.snap_develop.viewModel.FollowViewModel;
-import com.example.snap_develop.viewModel.PostViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.FollowViewModel;
+import com.example.snap_develop.view_model.PostViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -56,9 +57,10 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.followingButton.setOnClickListener(this);
         mBinding.followerButton.setOnClickListener(this);
@@ -129,7 +131,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mUserViewModel.fetchUserInfo(mUid);
 
         if (!mUserViewModel.getCurrentUser().getUid().equals(mUid)) {
-            Timber.d("check");
             mFollowViewModel.checkFollowing(mUserViewModel.getCurrentUser().getUid(), mUid);
             mFollowViewModel.checkApprovalPendingFollow(mUserViewModel.getCurrentUser().getUid(), mUid);
         }

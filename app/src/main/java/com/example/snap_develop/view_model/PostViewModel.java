@@ -1,4 +1,4 @@
-package com.example.snap_develop.viewModel;
+package com.example.snap_develop.view_model;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -15,7 +15,7 @@ import timber.log.Timber;
 
 public class PostViewModel extends ViewModel {
 
-    PostModel mPostModel = new PostModel();
+    final PostModel mPostModel = new PostModel();
     MutableLiveData<PostBean> post;
     MutableLiveData<List<PostBean>> postList;
 

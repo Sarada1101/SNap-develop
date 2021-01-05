@@ -17,8 +17,10 @@ import com.example.snap_develop.MyDebugTree;
 import com.example.snap_develop.R;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivitySettingBinding;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -39,9 +41,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_setting);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.settingUpdateButton.setOnClickListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
@@ -52,12 +55,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "userBean", userBean));
 
-                if (userBean.getPublicationArea().equals("public")) {
-                    mBinding.publicRadioButton.setChecked(true);
-                } else if (userBean.getPublicationArea().equals("followPublic")) {
-                    mBinding.followerPublicRadioButton.setChecked(true);
-                } else if (userBean.getPublicationArea().equals("anonymous")) {
-                    mBinding.anonymousRadioButton.setChecked(true);
+                switch (userBean.getPublicationArea()) {
+                    case "public":
+                        mBinding.publicRadioButton.setChecked(true);
+                        break;
+                    case "followPublic":
+                        mBinding.followerPublicRadioButton.setChecked(true);
+                        break;
+                    case "anonymous":
+                        mBinding.anonymousRadioButton.setChecked(true);
+                        break;
                 }
                 mBinding.followSwitch.setChecked(userBean.isFollowNotice());
                 mBinding.goodSwitch.setChecked(userBean.isGoodNotice());

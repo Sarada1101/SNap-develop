@@ -3,6 +3,7 @@ package com.example.snap_develop.view.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,17 +18,18 @@ import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.view.ui.DisplayCommentActivity;
 import com.example.snap_develop.view.ui.UserActivity;
-import com.example.snap_develop.view.viewHolder.PostSearchViewHolder;
+import com.example.snap_develop.view.view_holder.PostSearchViewHolder;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
 public class PostSearchAdapter extends RecyclerView.Adapter<PostSearchViewHolder> {
 
-    private Context mContext;
-    private List<Map<String, Object>> mPostDataMapList;
+    private final Context mContext;
+    private final List<Map<String, Object>> mPostDataMapList;
 
     public PostSearchAdapter(Context context, List<Map<String, Object>> postDataMapList) {
         Timber.i(MyDebugTree.START_LOG);
@@ -56,8 +58,8 @@ public class PostSearchAdapter extends RecyclerView.Adapter<PostSearchViewHolder
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "holder", holder, "position", position));
 
-        final UserBean userBean = (UserBean) mPostDataMapList.get(position).get("userBean");
-        final PostBean postBean = (PostBean) mPostDataMapList.get(position).get("postBean");
+        final UserBean userBean = Objects.requireNonNull((UserBean) mPostDataMapList.get(position).get("userBean"));
+        final PostBean postBean = Objects.requireNonNull((PostBean) mPostDataMapList.get(position).get("postBean"));
         holder.mIconImageView.setImageBitmap(userBean.getIcon());
         holder.mUserNameTextView.setText(userBean.getName());
         holder.mUserIdTextView.setText(userBean.getUid());
@@ -66,10 +68,10 @@ public class PostSearchAdapter extends RecyclerView.Adapter<PostSearchViewHolder
 
         if (postBean.getPhoto() != null) holder.mPhotoImageView.setImageBitmap(postBean.getPhoto());
 
-        if (postBean.getType().equals("post")) {
-            holder.mGoodCountTextView.setText(Integer.toString(postBean.getGoodCount()));
+        if (TextUtils.equals(postBean.getType(), "post")) {
+            holder.mGoodCountTextView.setText(postBean.getGoodCount());
             holder.mLatLngTextView.setText(
-                    String.format("%d, %d", (int) postBean.getLatLng().latitude, (int) postBean.getLatLng().longitude));
+                    String.format("%s, %s", postBean.getLatLng().latitude, postBean.getLatLng().longitude));
         }
 
         holder.mUserInfoConstraintLayout.setOnClickListener(new View.OnClickListener() {
@@ -79,20 +81,8 @@ public class PostSearchAdapter extends RecyclerView.Adapter<PostSearchViewHolder
             }
         });
 
-        if (postBean.isAnonymous()) {
-            holder.mIconImageView.setImageBitmap(
-                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
-            holder.mUserNameTextView.setText("匿名");
-            holder.mUserIdTextView.setText("匿名");
-            holder.mUserInfoConstraintLayout.setOnClickListener(null);
-        }
-
-        if (userBean.getPublicationArea().equals("anonymous")) {
-            holder.mIconImageView.setImageBitmap(
-                    MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
-            holder.mUserNameTextView.setText("匿名");
-            holder.mUserIdTextView.setText("匿名");
-            holder.mUserInfoConstraintLayout.setOnClickListener(null);
+        if (postBean.isAnonymous() || TextUtils.equals(userBean.getPublicationArea(), "anonymous")) {
+            setAnonymousUser(holder);
         }
 
         if (postBean.isDanger()) {
@@ -102,15 +92,24 @@ public class PostSearchAdapter extends RecyclerView.Adapter<PostSearchViewHolder
         holder.mConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (postBean.getType().equals("post")) {
+                if (TextUtils.equals(postBean.getType(), "post")) {
                     mContext.startActivity(new Intent(mContext, DisplayCommentActivity.class).putExtra("postPath",
                             postBean.getPostPath()));
-                } else if (postBean.getType().equals("comment")) {
+                } else if (TextUtils.equals(postBean.getType(), "comment")) {
                     mContext.startActivity(new Intent(mContext, DisplayCommentActivity.class).putExtra("postPath",
                             postBean.getParentPost()));
                 }
             }
         });
+    }
+
+
+    private void setAnonymousUser(PostSearchViewHolder holder) {
+        holder.mIconImageView.setImageBitmap(
+                MainApplication.getBitmapFromVectorDrawable(mContext, R.drawable.ic_baseline_account_circle_24));
+        holder.mUserNameTextView.setText("匿名");
+        holder.mUserIdTextView.setText("匿名");
+        holder.mConstraintLayout.setOnClickListener(null);
     }
 
 

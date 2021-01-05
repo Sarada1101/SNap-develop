@@ -7,7 +7,7 @@
 
         <variable
             name="userViewModel"
-            type="com.example.snap_develop.viewModel.UserViewModel" />
+            type="com.example.snap_develop.view_model.UserViewModel" />
 
         <import type="android.view.View" />
     </data>

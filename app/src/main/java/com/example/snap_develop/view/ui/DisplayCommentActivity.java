@@ -1,5 +1,6 @@
 package com.example.snap_develop.view.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -24,9 +25,9 @@ import com.example.snap_develop.bean.PostBean;
 import com.example.snap_develop.bean.UserBean;
 import com.example.snap_develop.databinding.ActivityDisplayCommentBinding;
 import com.example.snap_develop.view.adapter.DisplayCommentAdapter;
-import com.example.snap_develop.viewModel.FollowViewModel;
-import com.example.snap_develop.viewModel.PostViewModel;
-import com.example.snap_develop.viewModel.UserViewModel;
+import com.example.snap_develop.view_model.FollowViewModel;
+import com.example.snap_develop.view_model.PostViewModel;
+import com.example.snap_develop.view_model.UserViewModel;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -66,9 +68,10 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
         mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_display_comment);
 
-        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).select();
-        mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS).getIcon().setColorFilter(
-                ContextCompat.getColor(this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+        TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.MAP_POS));
+        tabAt.select();
+        Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
+                PorterDuff.Mode.SRC_IN);
 
         mBinding.goodIcon.setOnClickListener(this);
         mBinding.commentButton.setOnClickListener(this);
@@ -109,20 +112,24 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
 
                 mUid = userBean.getUid();
 
-                if (userBean.getPublicationArea().equals("anonymous")) {
-                    mBinding.iconImageView.setImageBitmap(
-                            MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
-                                    R.drawable.ic_baseline_account_circle_24));
-                    mBinding.userNameTextView.setText("匿名");
-                    mBinding.userIdTextView.setText("匿名");
-                    mBinding.userInfoConstraintLayout.setOnClickListener(null);
-                } else if (userBean.getPublicationArea().equals("public")) {
-                    mBinding.iconImageView.setImageBitmap(userBean.getIcon());
-                    mBinding.userNameTextView.setText(userBean.getName());
-                    mBinding.userIdTextView.setText(userBean.getUid());
-                } else if (userBean.getPublicationArea().equals("followPublic")) {
-                    mUserBean = userBean;
-                    mFollowViewModel.checkFollowing(mUid, mUserViewModel.getCurrentUser().getUid());
+                switch (userBean.getPublicationArea()) {
+                    case "anonymous":
+                        mBinding.iconImageView.setImageBitmap(
+                                MainApplication.getBitmapFromVectorDrawable(DisplayCommentActivity.this,
+                                        R.drawable.ic_baseline_account_circle_24));
+                        mBinding.userNameTextView.setText("匿名");
+                        mBinding.userIdTextView.setText("匿名");
+                        mBinding.userInfoConstraintLayout.setOnClickListener(null);
+                        break;
+                    case "public":
+                        mBinding.iconImageView.setImageBitmap(userBean.getIcon());
+                        mBinding.userNameTextView.setText(userBean.getName());
+                        mBinding.userIdTextView.setText(userBean.getUid());
+                        break;
+                    case "followPublic":
+                        mUserBean = userBean;
+                        mFollowViewModel.checkFollowing(mUid, mUserViewModel.getCurrentUser().getUid());
+                        break;
                 }
             }
         });
@@ -222,6 +229,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     }
 
 
+    @SuppressLint("SetTextI18n")
     private void addGood() {
         int goodCount = Integer.parseInt(mBinding.goodCountTextView.getText().toString());
         mBinding.goodCountTextView.setText(Integer.toString(goodCount + 1));
