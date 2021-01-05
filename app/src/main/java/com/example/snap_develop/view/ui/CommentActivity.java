@@ -49,7 +49,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
                 PorterDuff.Mode.SRC_IN);
 
-        mBinding.postCommentButton.setOnClickListener(this);
+        mBinding.commentButton.setOnClickListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
         mParentPostPath = getIntent().getStringExtra("postPath");

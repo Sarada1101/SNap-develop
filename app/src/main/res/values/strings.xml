@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SNap</string>
     <string name="emailAddress">メールアドレス</string>
+    <string name="latLng">%d, %d</string>
     <string name="password">パスワード</string>
     <string name="login">ログイン</string>
     <string name="username">ユーザー名</string>
