@@ -13,6 +13,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
         <activity
+            android:name=".view.ui.AccountUpdateActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.ui.ApprovalPendingFollowListActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -84,7 +87,6 @@
             </intent-filter>
         </service>
     </application>
-
     <!--
         ACCESS_COARSE/FINE_LOCATIONのパーミッションは、
         Google Maps Android API v2を利用する際には必要ありませんが、
