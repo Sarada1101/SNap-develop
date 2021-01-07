@@ -1,5 +1,6 @@
 package com.example.snap_develop.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -53,6 +54,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineViewHolder> {
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull TimelineViewHolder holder, int position) {
         Timber.i(MyDebugTree.START_LOG);
@@ -69,7 +71,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineViewHolder> {
         if (postBean.getPhoto() != null) holder.mPhotoImageView.setImageBitmap(postBean.getPhoto());
 
         if (TextUtils.equals(postBean.getType(), "post")) {
-            holder.mGoodCountTextView.setText(postBean.getGoodCount());
+            holder.mGoodCountTextView.setText(Integer.toString(postBean.getGoodCount()));
             holder.mLatLngTextView.setText(
                     String.format("%s, %s", (int) postBean.getLatLng().latitude, (int) postBean.getLatLng().longitude));
         }
