@@ -46,6 +46,9 @@
             android:name=".view.ui.FollowingListActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".view.ui.ForgetPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.ui.MapActivity"
             android:label="@string/title_activity_map"
             android:screenOrientation="portrait" />
