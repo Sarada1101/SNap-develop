@@ -49,6 +49,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/username"
+                android:minLines="1"
+                android:singleLine="true"
                 android:text="@{userViewModel.user.name}" />
         </com.google.android.material.textfield.TextInputLayout>
 
