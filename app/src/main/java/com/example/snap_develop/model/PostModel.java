@@ -722,6 +722,9 @@ public class PostModel extends Firebase {
 
         if (postBean.getType().equals("post")) {
             postBean.setPhotoName(document.getString("picture"));
+            if (postBean.getPhotoName() == null || postBean.getPhotoName().equals("")) {
+                postBean.setPhotoName(" ");
+            }
             postBean.setDanger(requireNonNull(document.getBoolean("danger")));
             postBean.setGoodCount(Math.toIntExact(requireNonNull(document.getLong("good_count"))));
             LatLng geopoint = new LatLng(
