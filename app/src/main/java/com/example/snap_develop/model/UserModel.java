@@ -160,6 +160,29 @@ public class UserModel extends Firebase {
     }
 
 
+    public void sendResetPasswordEmail(String email) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+
+        firebaseAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Timber.i("Email sent.");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Timber.i(FAILURE_LOG);
+                        Timber.e(e.toString());
+                    }
+                });
+    }
+
+
     public void signOut() {
         Timber.i(MyDebugTree.START_LOG);
         firebaseAuth.signOut();
