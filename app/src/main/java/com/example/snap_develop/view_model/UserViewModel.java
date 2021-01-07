@@ -87,6 +87,12 @@ public class UserViewModel extends ViewModel {
         userModel.sendEmailVerification();
     }
 
+    public void sendResetPasswordEmail(String email) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        userModel.sendResetPasswordEmail(email);
+    }
+
 
     public void signOut() {
         Timber.i(MyDebugTree.START_LOG);

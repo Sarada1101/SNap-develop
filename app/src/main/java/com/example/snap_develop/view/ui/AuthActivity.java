@@ -39,6 +39,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
         mBinding.createAccountButton.setOnClickListener(this);
         mBinding.loginButton.setOnClickListener(this);
+        mBinding.forgetPasswordTextView.setOnClickListener(this);
         mBinding.notRegisterTextView.setOnClickListener(this);
 
         if (mUserViewModel.getCurrentUser() != null) {
@@ -165,6 +166,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
             createAccount();
         } else if (i == R.id.loginButton) {
             signIn();
+        } else if (i == R.id.forgetPasswordTextView) {
+            startActivity(new Intent(getApplication(), ForgetPasswordActivity.class));
         } else if (i == R.id.notRegisterTextView) {
             startActivity(new Intent(getApplication(), MapActivity.class));
         }
