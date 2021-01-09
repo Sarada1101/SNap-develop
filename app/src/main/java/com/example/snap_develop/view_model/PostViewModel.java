@@ -51,6 +51,13 @@ public class PostViewModel extends ViewModel {
     }
 
 
+    public void deletePost(PostBean postBean) {
+        Timber.i(MyDebugTree.START_LOG);
+        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postBean", postBean));
+        mPostModel.deletePost(postBean);
+    }
+
+
     public void fetchPost(String postPath) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postPath", postPath));
