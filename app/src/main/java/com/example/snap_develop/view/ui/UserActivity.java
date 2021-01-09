@@ -1,19 +1,28 @@
 package com.example.snap_develop.view.ui;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +52,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private ActivityUserBinding mBinding;
     private UserAdapter mUserAdapter;
     private RecyclerView mRecyclerView;
+    private List<PostBean> mPostList;
     private String mUid;
 
     @Override
@@ -92,6 +102,77 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
                 mRecyclerView.setAdapter(mUserAdapter);
+
+                mPostList = postList;
+
+                ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                            @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+                        final int swipedPosition = viewHolder.getAdapterPosition();
+
+                        new AlertDialog.Builder(viewHolder.itemView.getContext())
+                                .setMessage("投稿を削除しますか？")
+                                .setPositiveButton(R.string.yesMessage, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        deletePost(mPostList.get(swipedPosition));
+                                        listRemove(swipedPosition);
+                                        Toast.makeText(getApplication(), "投稿を削除しました", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton(R.string.noMessage, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Objects.requireNonNull(
+                                                mBinding.userRecyclerView.getAdapter()).notifyItemChanged(
+                                                swipedPosition);
+                                    }
+                                })
+                                .create()
+                                .show();
+                    }
+
+                    @Override
+                    public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                            @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState,
+                            boolean isCurrentlyActive) {
+                        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                        View itemView = viewHolder.itemView;
+
+                        // キャンセルされた時
+                        if (dX == 0f && !isCurrentlyActive) {
+                            clearCanvas(c, itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(),
+                                    itemView.getBottom());
+                            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, false);
+                            return;
+                        }
+
+                        Drawable deleteIcon = Objects.requireNonNull(
+                                ContextCompat.getDrawable(getApplication(), R.drawable.ic_delete));
+                        ColorDrawable background = new ColorDrawable();
+                        background.setColor(getResources().getColor(R.color.colorDanger));
+                        background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(),
+                                itemView.getBottom());
+                        background.draw(c);
+                        int deleteIconTop =
+                                itemView.getTop() + (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
+                        int deleteIconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
+                        int deleteIconLeft =
+                                itemView.getRight() - deleteIconMargin - deleteIcon.getIntrinsicWidth();
+                        int deleteIconRight = itemView.getRight() - deleteIconMargin;
+                        int deleteIconBottom = deleteIconTop + deleteIcon.getIntrinsicHeight();
+
+                        deleteIcon.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
+                        deleteIcon.draw(c);
+                    }
+                };
+                new ItemTouchHelper(callback).attachToRecyclerView(mRecyclerView);
             }
         });
 
@@ -137,6 +218,25 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         mBinding.setUserViewModel(mUserViewModel);
         mBinding.setLifecycleOwner(this);
+    }
+
+
+    private void clearCanvas(Canvas c, int left, int top, int right, int bottom) {
+        Paint paint = new Paint();
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        c.drawRect(left, top, right, bottom, paint);
+    }
+
+
+    private void deletePost(PostBean postBean) {
+        mPostViewModel.deletePost(postBean);
+    }
+
+
+    private void listRemove(int position) {
+        mPostList.remove(position);
+        Objects.requireNonNull(mBinding.userRecyclerView.getAdapter()).notifyItemRemoved(position);
+        mBinding.userRecyclerView.getAdapter().notifyItemRangeRemoved(position, mPostList.size());
     }
 
 

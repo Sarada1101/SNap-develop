@@ -101,7 +101,7 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
                         final int swipedPosition = viewHolder.getAdapterPosition();
 
                         new AlertDialog.Builder(viewHolder.itemView.getContext())
-                                .setMessage(R.string.dialogMessage)
+                                .setMessage("フォローを解除しますか？")
                                 .setPositiveButton(R.string.yesMessage, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

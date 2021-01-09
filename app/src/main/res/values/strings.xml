@@ -35,7 +35,6 @@
     <string name="settingText">設定</string>
     <string name="updateUserText">ユーザー情報変更</string>
     <string name="applicatedFollow">申請</string>
-    <string name="dialogMessage">フォローを解除しますか？</string>
     <string name="yesMessage">はい</string>
     <string name="noMessage">いいえ</string>
     <string name="updateAccountText">アカウント情報変更</string>
