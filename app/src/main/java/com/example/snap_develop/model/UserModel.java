@@ -244,18 +244,20 @@ public class UserModel extends Firebase {
 
         this.firestoreConnect();
 
+        Map<String, Object> update = new HashMap<>();
+        update.put("name", userBean.getName());
+        update.put("message", userBean.getMessage());
+        update.put("icon", userBean.getIconName());
+
         firestore.collection("users")
                 .document(userBean.getUid())
-                .update("name", userBean.getName(),
-                        "message", userBean.getMessage(),
-                        "icon", userBean.getIconName())
+                .update(update)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         Timber.i(SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
                         updateResult.setValue("success");
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
