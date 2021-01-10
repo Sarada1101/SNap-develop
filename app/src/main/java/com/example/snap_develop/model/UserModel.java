@@ -24,6 +24,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
@@ -37,7 +39,6 @@ import timber.log.Timber;
 public class UserModel extends Firebase {
 
     private final long IMAGE_SIZE = 1024 * 1024 * 100;
-
     private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
     public FirebaseUser getCurrentUser() {
@@ -276,21 +277,64 @@ public class UserModel extends Firebase {
 
         storageConnect();
 
-        // アイコン画像を保存
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        userBean.getIcon().compress(Bitmap.CompressFormat.JPEG, 100, baos);
         storage.getReference()
                 .child("icon")
                 .child(userBean.getUid())
-                .child(userBean.getIconName())
-                .putBytes(baos.toByteArray())
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                .listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    public void onSuccess(ListResult listResult) {
                         Timber.i(SUCCESS_LOG);
-                        Timber.i(String.format("%s %s=%s", INPUT_LOG, "taskSnapshot", taskSnapshot));
-                        Timber.i(String.format("save image path: %s",
-                                String.format("icon/%s/%s", userBean.getUid(), userBean.getIconName())));
+                        Timber.i(String.format("%s %s=%s", INPUT_LOG, "listResult", listResult));
+
+                        // アイコン更新前に前回のアイコンを削除する
+                        for (StorageReference item : listResult.getItems()) {
+                            storage.getReference()
+                                    .child("icon")
+                                    .child(userBean.getUid())
+                                    .child(item.getName())
+                                    .delete()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Timber.i(SUCCESS_LOG);
+                                            Timber.i(String.format("%s %s=%s", INPUT_LOG, "task", task));
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Timber.i(FAILURE_LOG);
+                                            Timber.e(e.toString());
+                                        }
+                                    });
+                        }
+
+                        // アイコン画像を保存
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        userBean.getIcon().compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                        storage.getReference()
+                                .child("icon")
+                                .child(userBean.getUid())
+                                .child(userBean.getIconName())
+                                .putBytes(baos.toByteArray())
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Timber.i(SUCCESS_LOG);
+                                        Timber.i(String.format("%s %s=%s", INPUT_LOG, "taskSnapshot", taskSnapshot));
+                                        Timber.i(String.format("save image path: %s",
+                                                String.format("icon/%s/%s", userBean.getUid(),
+                                                        userBean.getIconName())));
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Timber.i(FAILURE_LOG);
+                                        Timber.e(e.toString());
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
