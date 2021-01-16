@@ -14,31 +14,31 @@ import timber.log.Timber;
 
 public class MapViewModel extends ViewModel {
 
-    private final MapModel mMapModel = new MapModel();
-    private MutableLiveData<LatLng> mDeviceLatLng;
+    private final MapModel mapModel = new MapModel();
+    private MutableLiveData<LatLng> deviceLatLng;
 
     public MutableLiveData<LatLng> getDeviceLatLng() {
         Timber.i(MyDebugTree.START_LOG);
-        if (mDeviceLatLng == null) {
-            mDeviceLatLng = new MutableLiveData<>();
+        if (deviceLatLng == null) {
+            deviceLatLng = new MutableLiveData<>();
         }
-        return mDeviceLatLng;
+        return deviceLatLng;
     }
 
 
     public void fetchDeviceLocation(FusedLocationProviderClient fusedLocationClient) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "fusedLocationClient", fusedLocationClient));
-        if (mDeviceLatLng == null) {
-            mDeviceLatLng = new MutableLiveData<>();
+        if (deviceLatLng == null) {
+            deviceLatLng = new MutableLiveData<>();
         }
-        mMapModel.fetchDeviceLocation(fusedLocationClient, mDeviceLatLng);
+        mapModel.fetchDeviceLocation(fusedLocationClient, deviceLatLng);
     }
 
 
     public VisibleRegion fetchVisibleRegion(GoogleMap googleMap) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "googleMap", googleMap));
-        return mMapModel.fetchVisibleRegion(googleMap);
+        return mapModel.fetchVisibleRegion(googleMap);
     }
 }

@@ -15,9 +15,9 @@ import timber.log.Timber;
 
 public class PostViewModel extends ViewModel {
 
-    final PostModel mPostModel = new PostModel();
-    MutableLiveData<PostBean> post;
-    MutableLiveData<List<PostBean>> postList;
+    private final PostModel postModel = new PostModel();
+    private MutableLiveData<PostBean> post;
+    private MutableLiveData<List<PostBean>> postList;
 
     public MutableLiveData<PostBean> getPost() {
         Timber.i(MyDebugTree.START_LOG);
@@ -40,21 +40,21 @@ public class PostViewModel extends ViewModel {
     public void insertPost(PostBean postBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postBean", postBean));
-        mPostModel.insertPost(postBean);
+        postModel.insertPost(postBean);
     }
 
 
     public void insertComment(PostBean postBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postBean", postBean));
-        mPostModel.insertComment(postBean);
+        postModel.insertComment(postBean);
     }
 
 
     public void deletePost(PostBean postBean) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postBean", postBean));
-        mPostModel.deletePost(postBean);
+        postModel.deletePost(postBean);
     }
 
 
@@ -64,7 +64,7 @@ public class PostViewModel extends ViewModel {
         if (post == null) {
             post = new MutableLiveData<>();
         }
-        mPostModel.fetchPost(postPath, post);
+        postModel.fetchPost(postPath, post);
     }
 
 
@@ -74,7 +74,7 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        mPostModel.fetchPostList(uid, postList);
+        postModel.fetchPostList(uid, postList);
     }
 
 
@@ -83,7 +83,7 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        mPostModel.fetchPostCommentList(postPath, postList);
+        postModel.fetchPostCommentList(postPath, postList);
     }
 
 
@@ -93,7 +93,7 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        mPostModel.fetchMapPostList(visibleRegion, postList);
+        postModel.fetchMapPostList(visibleRegion, postList);
     }
 
 
@@ -103,7 +103,7 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        mPostModel.fetchTimeLine(userBeanList, postList);
+        postModel.fetchTimeLine(userBeanList, postList);
     }
 
 
@@ -113,13 +113,13 @@ public class PostViewModel extends ViewModel {
         if (postList == null) {
             postList = new MutableLiveData<>();
         }
-        mPostModel.fetchSearchPost(searchWord, postList);
+        postModel.fetchSearchPost(searchWord, postList);
     }
 
 
     public void addGood(String uid, String postPath) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "uid", uid, "postPath", postPath));
-        mPostModel.addGood(uid, postPath);
+        postModel.addGood(uid, postPath);
     }
 }

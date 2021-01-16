@@ -14,7 +14,7 @@ import timber.log.Timber;
 
 public class UserViewModel extends ViewModel {
 
-    final UserModel userModel = new UserModel();
+    private final UserModel userModel = new UserModel();
     private MutableLiveData<String> authResult;
     private MutableLiveData<String> updateResult;
     private MutableLiveData<UserBean> user;
