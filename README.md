@@ -65,13 +65,6 @@
 * Google Maps Platform
 * Android Studio
 
-## 関連リポジトリ
-検索API<br>
-https://github.com/NekoSarada1101/SNap-search-api
-
-Firebase Cloud Function<br>
-https://github.com/NekoSarada1101/SNap-sync-mysql
-
 ## アプリ機能
 * ログイン、新規登録
 * メール認証
@@ -91,6 +84,13 @@ https://github.com/NekoSarada1101/SNap-sync-mysql
 
 ## システム構成
 <img src="https://user-images.githubusercontent.com/46714670/104811834-a50ad080-5841-11eb-851c-a0a41477cb84.png">
+
+## 関連リポジトリ
+検索API<br>
+https://github.com/NekoSarada1101/SNap-search-api
+
+Firebase Cloud Function<br>
+https://github.com/NekoSarada1101/SNap-sync-mysql
 
 ## 使用方法
 ```
