@@ -46,7 +46,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityApplicatedFollowListBinding mBinding;
-    private ApplicatedFollowListAdapter mApplicatedFollowListAdapter;
+    private ApplicatedFollowListAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private List<UserBean> mFollowList;
     private String mUid;
@@ -79,7 +79,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "followList", followList));
 
-                mApplicatedFollowListAdapter = new ApplicatedFollowListAdapter(ApplicatedFollowListActivity.this,
+                mAdapter = new ApplicatedFollowListAdapter(ApplicatedFollowListActivity.this,
                         followList);
                 mRecyclerView = mBinding.applicatedFollowRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(ApplicatedFollowListActivity.this);
@@ -87,7 +87,7 @@ public class ApplicatedFollowListActivity extends AppCompatActivity implements T
                 ItemDecoration itemDecoration = new DividerItemDecoration(
                         ApplicatedFollowListActivity.this, DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mApplicatedFollowListAdapter);
+                mRecyclerView.setAdapter(mAdapter);
 
                 mFollowList = followList;
 

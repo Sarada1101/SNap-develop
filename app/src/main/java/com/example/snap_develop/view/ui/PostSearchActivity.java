@@ -50,9 +50,9 @@ public class PostSearchActivity extends AppCompatActivity implements AdapterView
     private UserViewModel mUserViewModel;
     private PostViewModel mPostViewModel;
     private ActivityPostSearchBinding mBinding;
-    private PostSearchAdapter mPostSearchAdapter;
+    private PostSearchAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    List<Map<String, Object>> mPostDataMapList;
+    private List<Map<String, Object>> mPostDataMapList;
     private List<PostBean> mPostBeanList;
 
     @Override
@@ -116,14 +116,14 @@ public class PostSearchActivity extends AppCompatActivity implements AdapterView
                     mPostDataMapList.add(postDataMap);
                 }
 
-                mPostSearchAdapter = new PostSearchAdapter(PostSearchActivity.this, mPostDataMapList);
+                mAdapter = new PostSearchAdapter(PostSearchActivity.this, mPostDataMapList);
                 mRecyclerView = mBinding.searchPostRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(PostSearchActivity.this);
                 mRecyclerView.setLayoutManager(llm);
                 RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(PostSearchActivity.this,
                         DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mPostSearchAdapter);
+                mRecyclerView.setAdapter(mAdapter);
             }
         });
     }

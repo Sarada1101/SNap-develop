@@ -44,7 +44,7 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityFollowingListBinding mBinding;
-    private FollowListAdapter mFollowListAdapter;
+    private FollowListAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private List<UserBean> mFollowList;
     private String mUid;
@@ -74,14 +74,14 @@ public class FollowingListActivity extends AppCompatActivity implements TabLayou
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "followList", followList));
 
-                mFollowListAdapter = new FollowListAdapter(FollowingListActivity.this, followList);
+                mAdapter = new FollowListAdapter(FollowingListActivity.this, followList);
                 mRecyclerView = mBinding.followingRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(FollowingListActivity.this);
                 mRecyclerView.setLayoutManager(llm);
                 RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(FollowingListActivity.this,
                         DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mFollowListAdapter);
+                mRecyclerView.setAdapter(mAdapter);
 
                 mFollowList = followList;
 

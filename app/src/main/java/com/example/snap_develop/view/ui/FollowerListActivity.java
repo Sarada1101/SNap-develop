@@ -35,7 +35,7 @@ public class FollowerListActivity extends AppCompatActivity implements TabLayout
     @SuppressWarnings("FieldCanBeLocal")
     private FollowViewModel mFollowViewModel;
     private ActivityFollowingListBinding mBinding;
-    private FollowListAdapter mFollowListAdapter;
+    private FollowListAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
     @Override
@@ -63,14 +63,14 @@ public class FollowerListActivity extends AppCompatActivity implements TabLayout
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "followList", followList));
 
-                mFollowListAdapter = new FollowListAdapter(FollowerListActivity.this, followList);
+                mAdapter = new FollowListAdapter(FollowerListActivity.this, followList);
                 mRecyclerView = mBinding.followingRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(FollowerListActivity.this);
                 mRecyclerView.setLayoutManager(llm);
                 RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(FollowerListActivity.this,
                         DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mFollowListAdapter);
+                mRecyclerView.setAdapter(mAdapter);
             }
         });
 

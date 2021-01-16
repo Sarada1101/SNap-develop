@@ -46,7 +46,7 @@ public class TimelineActivity extends AppCompatActivity implements TabLayout.OnT
     @SuppressWarnings("FieldCanBeLocal")
     private FollowViewModel mFollowViewModel;
     private ActivityTimelineBinding mBinding;
-    private TimelineAdapter mTimelineAdapter;
+    private TimelineAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private List<Map<String, Object>> mTimelineDataMapList;
     private List<UserBean> mUserBeanList;
@@ -114,14 +114,14 @@ public class TimelineActivity extends AppCompatActivity implements TabLayout.OnT
                     mTimelineDataMapList.add(timelineDataMap);
                 }
 
-                mTimelineAdapter = new TimelineAdapter(TimelineActivity.this, mTimelineDataMapList);
+                mAdapter = new TimelineAdapter(TimelineActivity.this, mTimelineDataMapList);
                 mRecyclerView = mBinding.timelineRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(TimelineActivity.this);
                 mRecyclerView.setLayoutManager(llm);
                 RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(TimelineActivity.this,
                         DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mTimelineAdapter);
+                mRecyclerView.setAdapter(mAdapter);
             }
         });
 

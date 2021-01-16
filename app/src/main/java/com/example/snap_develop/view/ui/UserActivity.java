@@ -50,7 +50,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityUserBinding mBinding;
-    private UserAdapter mUserAdapter;
+    private UserAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private List<PostBean> mPostList;
     private String mUid;
@@ -94,14 +94,14 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postList", postList));
 
-                mUserAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue());
+                mAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue());
                 mRecyclerView = mBinding.userRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(UserActivity.this);
                 mRecyclerView.setLayoutManager(llm);
                 RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(UserActivity.this,
                         DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mUserAdapter);
+                mRecyclerView.setAdapter(mAdapter);
 
                 mPostList = postList;
 

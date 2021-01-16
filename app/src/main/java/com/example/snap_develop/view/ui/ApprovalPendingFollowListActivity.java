@@ -43,7 +43,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
     private UserViewModel mUserViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityApprovalPendingFollowListBinding mBinding;
-    private ApprovalPendingFollowListAdapter mApprovalPendingFollowListAdapter;
+    private ApprovalPendingFollowListAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private List<UserBean> mFollowList;
     private String mUid;
@@ -76,7 +76,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "followList", followList));
 
-                mApprovalPendingFollowListAdapter = new ApprovalPendingFollowListAdapter(
+                mAdapter = new ApprovalPendingFollowListAdapter(
                         ApprovalPendingFollowListActivity.this, followList);
                 mRecyclerView = mBinding.approvalPendingFollowRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(ApprovalPendingFollowListActivity.this);
@@ -84,7 +84,7 @@ public class ApprovalPendingFollowListActivity extends AppCompatActivity impleme
                 RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(
                         ApprovalPendingFollowListActivity.this, DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mApprovalPendingFollowListAdapter);
+                mRecyclerView.setAdapter(mAdapter);
 
                 mFollowList = followList;
 

@@ -48,7 +48,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
     private PostViewModel mPostViewModel;
     private FollowViewModel mFollowViewModel;
     private ActivityDisplayCommentBinding mBinding;
-    private DisplayCommentAdapter mDisplayCommentAdapter;
+    private DisplayCommentAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private List<PostBean> mPostBeanList;
     private List<Map<String, Object>> mCommentDataMapList;
@@ -183,7 +183,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                     }
                     mCommentDataMapList.add(commentDataMap);
                 }
-                mDisplayCommentAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this, mCommentDataMapList);
+                mAdapter = new DisplayCommentAdapter(DisplayCommentActivity.this, mCommentDataMapList);
                 mRecyclerView = mBinding.commentListRecyclerView;
                 // setLayoutManager()に渡すLayoutManagerによって，RecyclerViewに1列表示なのか，Grid表示なのかなどを教える
                 LinearLayoutManager llm = new LinearLayoutManager(DisplayCommentActivity.this);
@@ -192,7 +192,7 @@ public class DisplayCommentActivity extends AppCompatActivity implements View.On
                 RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(DisplayCommentActivity.this,
                         DividerItemDecoration.VERTICAL);
                 mRecyclerView.addItemDecoration(itemDecoration);
-                mRecyclerView.setAdapter(mDisplayCommentAdapter);
+                mRecyclerView.setAdapter(mAdapter);
             }
         });
 
