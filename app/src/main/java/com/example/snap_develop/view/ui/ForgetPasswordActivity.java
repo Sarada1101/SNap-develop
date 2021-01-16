@@ -34,7 +34,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
     }
 
 
-    public void ResetPassword() {
+    private void resetPassword() {
         Timber.i(MyDebugTree.START_LOG);
         String email = mBinding.emailTextInputEditText.getText().toString();
 
@@ -69,7 +69,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
         Timber.i(MyDebugTree.START_LOG);
         int i = view.getId();
         if (i == R.id.sendMailButton) {
-            ResetPassword();
+            resetPassword();
         }
     }
 }
