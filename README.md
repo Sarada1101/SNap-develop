@@ -90,7 +90,7 @@
 https://github.com/NekoSarada1101/SNap-search-api
 
 Firebase Cloud Function<br>
-https://github.com/NekoSarada1101/SNap-firebase-cloud-function.git
+https://github.com/NekoSarada1101/SNap-firebase-cloud-function
 
 ## 使用方法
 ```
