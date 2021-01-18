@@ -85,6 +85,8 @@
 ## システム構成
 <img src="https://user-images.githubusercontent.com/46714670/104811834-a50ad080-5841-11eb-851c-a0a41477cb84.png">
 
+## [リンク集](https://github.com/NekoSarada1101/SNap-develop/wiki/Link)
+
 ## 関連リポジトリ
 検索API<br>
 https://github.com/NekoSarada1101/SNap-search-api
