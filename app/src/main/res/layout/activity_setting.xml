@@ -43,7 +43,7 @@
                 android:textSize="14sp" />
 
             <RadioButton
-                android:id="@+id/followerPublicRadioButton"
+                android:id="@+id/followPublicRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/following"
