@@ -88,20 +88,31 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
     }
 
 
-    private boolean validateEmail(String email) {
+    private boolean validateEmail(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
-        boolean isValidSuccess = false;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "password", password));
+        boolean isValidEmail;
+        boolean isValidPassword;
 
         if (TextUtils.isEmpty(email)) {
             mBinding.updateEmailTextInputLayout.setError("メールアドレスを入力してください");
+            isValidEmail = false;
         } else {
             mBinding.updateEmailTextInputLayout.setError(null);
-            isValidSuccess = true;
+            isValidEmail = true;
         }
 
-        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
-        return isValidSuccess;
+        if (TextUtils.isEmpty(password)) {
+            mBinding.emailPasswordTextInputLayout.setError("パスワードを入力してください");
+            isValidPassword = false;
+        } else {
+            mBinding.emailPasswordTextInputLayout.setError(null);
+            isValidPassword = true;
+        }
+
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidEmail", isValidEmail));
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidPassword", isValidPassword));
+        return isValidEmail && isValidPassword;
     }
 
 
