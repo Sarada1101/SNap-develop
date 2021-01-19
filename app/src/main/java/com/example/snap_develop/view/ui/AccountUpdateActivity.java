@@ -170,6 +170,14 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
             mBinding.updateEmailTextInputLayout.setError("メールアドレスが既に登録済みです");
         } else if (updateResult.contains("The given password is invalid.")) {
             mBinding.updatePasswordTextInputLayout.setError("パスワード6文字以上入力してください");
+        } else if (updateResult.contains("The password is invalid or the user does not have a password.")) {
+            if (TextUtils.isEmpty(mBinding.emailPasswordTextInputEditText.getText())) {
+                //パスワード変更時
+                mBinding.currentPasswordTextInputLayout.setError("パスワードが異なります");
+            } else {
+                //メールアドレス変更時
+                mBinding.emailPasswordTextInputLayout.setError("パスワードが異なります");
+            }
         }
     }
 
