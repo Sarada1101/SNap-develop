@@ -128,12 +128,19 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
     }
 
 
-    private boolean validatePassword(String password, String checkPassword) {
+    private boolean validatePassword(String currentPassword, String password, String checkPassword) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(
-                String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "password", password, "checkPassword",
-                        checkPassword));
-        boolean isValidSuccess = false;
+                String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "currentPassword", currentPassword,
+                        "password", password, "checkPassword", checkPassword));
+        boolean isValidCurrentPassword = true;
+        boolean isValidPassword = false;
+
+        mBinding.currentPasswordTextInputLayout.setError("");
+        if (TextUtils.isEmpty(currentPassword)) {
+            mBinding.currentPasswordTextInputLayout.setError("パスワードを入力してください");
+            isValidCurrentPassword = false;
+        }
 
         if (TextUtils.isEmpty(password)) {
             mBinding.updatePasswordTextInputLayout.setError("パスワードを入力してください");
@@ -147,11 +154,12 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
         } else {
             mBinding.updatePasswordTextInputLayout.setError(null);
             mBinding.checkPasswordTextInputLayout.setError(null);
-            isValidSuccess = true;
+            isValidPassword = true;
         }
 
-        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
-        return isValidSuccess;
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidCurrentPassword", isValidCurrentPassword));
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidPassword", isValidPassword));
+        return isValidPassword && isValidCurrentPassword;
     }
 
 
