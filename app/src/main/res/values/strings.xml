@@ -45,5 +45,6 @@
     <string name="resetPasswordText">パスワード再設定</string>
     <string name="inputGuideText">登録されているメールアドレスを入力してください</string>
     <string name="sendMailText">メール送信</string>
+    <string name="currentPassword">現在のパスワード</string>
 
 </resources>
