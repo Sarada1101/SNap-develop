@@ -155,15 +155,15 @@ public class PostModel extends Firebase {
         Timber.i(START_LOG);
         Timber.i(String.format("%s %s=%s", INPUT_LOG, "postBean", postBean));
 
+        this.firestoreConnect();
+
         final Map<String, Object> post = new HashMap<>();
         post.put("message", postBean.getMessage());
         post.put("datetime", postBean.getDatetime());
         post.put("anonymous", postBean.isAnonymous());
         post.put("uid", postBean.getUid());
         post.put("type", postBean.getType());
-        post.put("parent_post", firestore.document(postBean.getPostPath()));
-
-        this.firestoreConnect();
+        post.put("parent_post", firestore.document(postBean.getParentPost()));
 
         firestore.collection("posts")
                 .add(post)
@@ -203,7 +203,7 @@ public class PostModel extends Firebase {
                         //パスをpostsコレクションに追加
                         path.put("path", documentReference);
                         // posts/{parentPostPath}/comments
-                        firestore.document(postBean.getPostPath())
+                        firestore.document(postBean.getParentPost())
                                 .collection("comments")
                                 .add(path)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -240,7 +240,7 @@ public class PostModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
                 })
@@ -260,7 +260,7 @@ public class PostModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
 
                         firestore.collection("users")
@@ -271,7 +271,7 @@ public class PostModel extends Firebase {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Timber.i(MyDebugTree.INPUT_LOG);
+                                        Timber.i(SUCCESS_LOG);
                                         Timber.i(
                                                 String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                                     }
@@ -301,7 +301,7 @@ public class PostModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
                 })

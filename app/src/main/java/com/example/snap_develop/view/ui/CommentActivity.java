@@ -70,7 +70,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         commentBean.setDatetime(new Date());
         commentBean.setUid(mUserViewModel.getCurrentUser().getUid());
         commentBean.setType("comment");
-        commentBean.setPostPath(mParentPostPath);
+        commentBean.setParentPost(mParentPostPath);
 
         mPostViewModel.insertComment(commentBean);
         startActivity(new Intent(CommentActivity.this, DisplayCommentActivity.class).putExtra("postPath",
