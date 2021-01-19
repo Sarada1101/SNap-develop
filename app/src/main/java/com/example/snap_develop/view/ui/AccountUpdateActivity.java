@@ -80,47 +80,67 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
     private void updateEmail() {
         Timber.i(MyDebugTree.START_LOG);
         String email = Objects.requireNonNull(mBinding.updateEmailTextInputEditText.getText()).toString();
-        if (!validateEmail(email)) {
+        String password = Objects.requireNonNull(mBinding.emailPasswordTextInputEditText.getText()).toString();
+        if (!validateEmail(email, password)) {
             return;
         }
-        mUserViewModel.updateEmail(email);
+        mUserViewModel.updateEmail(email, password);
     }
 
 
-    private boolean validateEmail(String email) {
+    private boolean validateEmail(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
-        boolean isValidSuccess = false;
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "password", password));
+        boolean isValidEmail;
+        boolean isValidPassword;
 
         if (TextUtils.isEmpty(email)) {
             mBinding.updateEmailTextInputLayout.setError("メールアドレスを入力してください");
+            isValidEmail = false;
         } else {
             mBinding.updateEmailTextInputLayout.setError(null);
-            isValidSuccess = true;
+            isValidEmail = true;
         }
 
-        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
-        return isValidSuccess;
+        if (TextUtils.isEmpty(password)) {
+            mBinding.emailPasswordTextInputLayout.setError("パスワードを入力してください");
+            isValidPassword = false;
+        } else {
+            mBinding.emailPasswordTextInputLayout.setError(null);
+            isValidPassword = true;
+        }
+
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidEmail", isValidEmail));
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidPassword", isValidPassword));
+        return isValidEmail && isValidPassword;
     }
 
 
     private void updatePassword() {
         Timber.i(MyDebugTree.START_LOG);
+        String currentPassword = Objects.requireNonNull(mBinding.currentPasswordTextInputEditText.getText()).toString();
         String password = Objects.requireNonNull(mBinding.updatePasswordTextInputEditText.getText()).toString();
         String checkPassword = Objects.requireNonNull(mBinding.checkPasswordTextInputEditText.getText()).toString();
-        if (!validatePassword(password, checkPassword)) {
+        if (!validatePassword(currentPassword, password, checkPassword)) {
             return;
         }
-        mUserViewModel.updatePassword(password);
+        mUserViewModel.updatePassword(currentPassword, password);
     }
 
 
-    private boolean validatePassword(String password, String checkPassword) {
+    private boolean validatePassword(String currentPassword, String password, String checkPassword) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(
-                String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "password", password, "checkPassword",
-                        checkPassword));
-        boolean isValidSuccess = false;
+                String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "currentPassword", currentPassword,
+                        "password", password, "checkPassword", checkPassword));
+        boolean isValidCurrentPassword = true;
+        boolean isValidPassword = false;
+
+        mBinding.currentPasswordTextInputLayout.setError("");
+        if (TextUtils.isEmpty(currentPassword)) {
+            mBinding.currentPasswordTextInputLayout.setError("パスワードを入力してください");
+            isValidCurrentPassword = false;
+        }
 
         if (TextUtils.isEmpty(password)) {
             mBinding.updatePasswordTextInputLayout.setError("パスワードを入力してください");
@@ -134,11 +154,12 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
         } else {
             mBinding.updatePasswordTextInputLayout.setError(null);
             mBinding.checkPasswordTextInputLayout.setError(null);
-            isValidSuccess = true;
+            isValidPassword = true;
         }
 
-        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
-        return isValidSuccess;
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidCurrentPassword", isValidCurrentPassword));
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidPassword", isValidPassword));
+        return isValidPassword && isValidCurrentPassword;
     }
 
 
@@ -149,6 +170,14 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
             mBinding.updateEmailTextInputLayout.setError("メールアドレスが既に登録済みです");
         } else if (updateResult.contains("The given password is invalid.")) {
             mBinding.updatePasswordTextInputLayout.setError("パスワード6文字以上入力してください");
+        } else if (updateResult.contains("The password is invalid or the user does not have a password.")) {
+            if (TextUtils.isEmpty(mBinding.emailPasswordTextInputEditText.getText())) {
+                //パスワード変更時
+                mBinding.currentPasswordTextInputLayout.setError("パスワードが異なります");
+            } else {
+                //メールアドレス変更時
+                mBinding.emailPasswordTextInputLayout.setError("パスワードが異なります");
+            }
         }
     }
 
