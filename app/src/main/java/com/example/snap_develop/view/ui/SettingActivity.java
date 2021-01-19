@@ -60,7 +60,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         mBinding.publicRadioButton.setChecked(true);
                         break;
                     case "followPublic":
-                        mBinding.followerPublicRadioButton.setChecked(true);
+                        mBinding.followPublicRadioButton.setChecked(true);
                         break;
                     case "anonymous":
                         mBinding.anonymousRadioButton.setChecked(true);
@@ -87,8 +87,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         int checkedRadioButtonId = mBinding.publicationRadioGroup.getCheckedRadioButtonId();
         if (checkedRadioButtonId == R.id.publicRadioButton) {
             publication = "public";
-        } else if (checkedRadioButtonId == R.id.followerPublicRadioButton) {
-            publication = "followerPublic";
+        } else if (checkedRadioButtonId == R.id.followPublicRadioButton) {
+            publication = "followPublic";
         } else if (checkedRadioButtonId == R.id.anonymousRadioButton) {
             publication = "anonymous";
         }
