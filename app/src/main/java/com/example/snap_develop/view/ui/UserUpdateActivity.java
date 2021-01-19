@@ -107,24 +107,24 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "name", name, "profile", profile));
         boolean isValidSuccess = false;
 
-        final int MAX_NAME_LENGTH = 30;
+        final int MAX_NAME_LENGTH = 15;
         if (TextUtils.isEmpty(name)) {
-            mBinding.updateNameTextInputEditText.setError("ユーザー名を入力してください");
+            mBinding.updateNameTextInputLayout.setError("ユーザー名を入力してください");
         } else if (name.length() > MAX_NAME_LENGTH) {
-            mBinding.updateNameTextInputEditText.setError("ユーザー名は30文字以内にしてください");
+            mBinding.updateNameTextInputLayout.setError("ユーザー名は15文字以内にしてください");
         } else {
-            mBinding.updateNameTextInputEditText.setError(null);
             isValidSuccess = true;
+            mBinding.updateNameTextInputLayout.setError(null);
         }
 
-        final int MAX_PROFILE_LENGTH = 200;
+        final int MAX_PROFILE_LENGTH = 100;
         if (TextUtils.isEmpty(profile)) {
-            mBinding.updateProfileTextInputEditText.setError("プロフィールを入力してください");
-        } else if (name.length() > MAX_PROFILE_LENGTH) {
-            mBinding.updateNameTextInputEditText.setError("プロフィールは200文字以内にしてください");
+            mBinding.updateProfileTextInputLayout.setError("プロフィールを入力してください");
+        } else if (profile.length() > MAX_PROFILE_LENGTH) {
+            mBinding.updateProfileTextInputLayout.setError("プロフィールは100文字以内にしてください");
         } else {
-            mBinding.updateProfileTextInputEditText.setError(null);
             isValidSuccess = true;
+            mBinding.updateProfileTextInputLayout.setError(null);
         }
 
         Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));

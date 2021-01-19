@@ -111,9 +111,9 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         int MAX_LENGTH = 200;
         if (TextUtils.isEmpty(post)) {
-            mBinding.postTextInputLayout.setError("コメントを入力してください");
+            mBinding.postTextInputLayout.setError("投稿内容を入力してください");
         } else if (post.length() > MAX_LENGTH) {
-            mBinding.postTextInputLayout.setError("コメントは200文字以内にしてください");
+            mBinding.postTextInputLayout.setError("投稿内容は200文字以内にしてください");
         } else {
             mBinding.postTextInputLayout.setError(null);
             isValidSuccess = true;
