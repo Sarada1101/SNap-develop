@@ -121,24 +121,28 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
     private boolean validateForm(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
-        boolean isValidSuccess = false;
+        boolean isValidEmail;
+        boolean isValidPassword;
 
         if (TextUtils.isEmpty(email)) {
             mBinding.emailTextInputLayout.setError("メールアドレスを入力してください");
+            isValidEmail = false;
         } else {
             mBinding.emailTextInputLayout.setError(null);
-            isValidSuccess = true;
+            isValidEmail = true;
         }
 
         if (TextUtils.isEmpty(password)) {
             mBinding.passwordTextInputLayout.setError("パスワードを入力してください");
+            isValidPassword = false;
         } else {
             mBinding.passwordTextInputLayout.setError(null);
-            isValidSuccess = true;
+            isValidPassword = true;
         }
 
-        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
-        return isValidSuccess;
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidEmail", isValidEmail));
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidPassword", isValidPassword));
+        return isValidEmail && isValidPassword;
     }
 
 

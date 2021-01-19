@@ -105,30 +105,36 @@ public class UserUpdateActivity extends AppCompatActivity implements View.OnClic
     private boolean validateForm(String name, String profile) {
         Timber.i(MyDebugTree.START_LOG);
         Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "name", name, "profile", profile));
-        boolean isValidSuccess = false;
+        boolean isValidName;
+        boolean isValidProfile;
 
         final int MAX_NAME_LENGTH = 15;
         if (TextUtils.isEmpty(name)) {
             mBinding.updateNameTextInputLayout.setError("ユーザー名を入力してください");
+            isValidName = false;
         } else if (name.length() > MAX_NAME_LENGTH) {
             mBinding.updateNameTextInputLayout.setError("ユーザー名は15文字以内にしてください");
+            isValidName = false;
         } else {
-            isValidSuccess = true;
             mBinding.updateNameTextInputLayout.setError(null);
+            isValidName = true;
         }
 
         final int MAX_PROFILE_LENGTH = 100;
         if (TextUtils.isEmpty(profile)) {
             mBinding.updateProfileTextInputLayout.setError("プロフィールを入力してください");
+            isValidProfile = false;
         } else if (profile.length() > MAX_PROFILE_LENGTH) {
             mBinding.updateProfileTextInputLayout.setError("プロフィールは100文字以内にしてください");
+            isValidProfile = false;
         } else {
-            isValidSuccess = true;
             mBinding.updateProfileTextInputLayout.setError(null);
+            isValidProfile = true;
         }
 
-        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidSuccess", isValidSuccess));
-        return isValidSuccess;
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidName", isValidName));
+        Timber.i(String.format("%s %s=%s", MyDebugTree.RETURN_LOG, "isValidProfile", isValidProfile));
+        return isValidName && isValidProfile;
     }
 
 
