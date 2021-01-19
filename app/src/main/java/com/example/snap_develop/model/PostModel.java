@@ -240,7 +240,7 @@ public class PostModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
                 })
@@ -260,7 +260,7 @@ public class PostModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
 
                         firestore.collection("users")
@@ -271,7 +271,7 @@ public class PostModel extends Firebase {
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Timber.i(MyDebugTree.INPUT_LOG);
+                                        Timber.i(SUCCESS_LOG);
                                         Timber.i(
                                                 String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                                     }
@@ -301,7 +301,7 @@ public class PostModel extends Firebase {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Timber.i(MyDebugTree.INPUT_LOG);
+                        Timber.i(SUCCESS_LOG);
                         Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "task", task));
                     }
                 })
