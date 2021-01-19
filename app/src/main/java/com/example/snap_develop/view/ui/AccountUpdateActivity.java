@@ -118,12 +118,13 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
 
     private void updatePassword() {
         Timber.i(MyDebugTree.START_LOG);
+        String currentPassword = Objects.requireNonNull(mBinding.currentPasswordTextInputEditText.getText()).toString();
         String password = Objects.requireNonNull(mBinding.updatePasswordTextInputEditText.getText()).toString();
         String checkPassword = Objects.requireNonNull(mBinding.checkPasswordTextInputEditText.getText()).toString();
-        if (!validatePassword(password, checkPassword)) {
+        if (!validatePassword(currentPassword, password, checkPassword)) {
             return;
         }
-        mUserViewModel.updatePassword(password);
+        mUserViewModel.updatePassword(currentPassword, password);
     }
 
 

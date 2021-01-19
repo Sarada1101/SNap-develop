@@ -236,25 +236,48 @@ public class UserModel extends Firebase {
     }
 
 
-    public void updatePassword(String password, final MutableLiveData<String> updateResult) {
+    public void updatePassword(String currentPassword, final String password,
+            final MutableLiveData<String> updateResult) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "password", password,
-                "updateResult", updateResult));
+        Timber.i(String.format("%s %s=%s, %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "currentPassword", currentPassword,
+                "password", password, "updateResult", updateResult));
 
-        getCurrentUser().updatePassword(password)
+        final FirebaseUser user = getCurrentUser();
+
+        user.reauthenticate(EmailAuthProvider.getCredential(user.getEmail(), currentPassword))
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Timber.i("Password update");
-                        updateResult.setValue("updatePassword");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Timber.i(FAILURE_LOG);
-                        Timber.e(e.toString());
-                        updateResult.setValue(e.toString());
+                        if (task.isSuccessful()) {
+                            Timber.i(SUCCESS_LOG);
+
+                            user.updatePassword(password)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Timber.i("Password update");
+                                            if (task.isSuccessful()) {
+                                                updateResult.setValue("updatePassword");
+                                            } else {
+                                                Timber.i(MyDebugTree.FAILURE_LOG);
+                                                Timber.e(requireNonNull(task.getException()).toString());
+                                                updateResult.setValue(String.valueOf(task.getException()));
+                                            }
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Timber.i(FAILURE_LOG);
+                                            Timber.e(e.toString());
+                                            updateResult.setValue(e.toString());
+                                        }
+                                    });
+                        } else {
+                            Timber.i(MyDebugTree.FAILURE_LOG);
+                            Timber.e(requireNonNull(task.getException()).toString());
+                            updateResult.setValue(String.valueOf(task.getException()));
+                        }
                     }
                 });
     }
