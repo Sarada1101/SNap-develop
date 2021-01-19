@@ -100,13 +100,13 @@ public class UserViewModel extends ViewModel {
     }
 
 
-    public void updateEmail(String email) {
+    public void updateEmail(String email, String password) {
         Timber.i(MyDebugTree.START_LOG);
-        Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "email", email));
+        Timber.i(String.format("%s %s=%s, %s=%s", MyDebugTree.INPUT_LOG, "email", email, "password", password));
         if (updateResult == null) {
             updateResult = new MutableLiveData<>();
         }
-        userModel.updateEmail(email, updateResult);
+        userModel.updateEmail(email, password, updateResult);
     }
 
 

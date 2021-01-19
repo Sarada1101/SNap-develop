@@ -80,10 +80,11 @@ public class AccountUpdateActivity extends AppCompatActivity implements View.OnC
     private void updateEmail() {
         Timber.i(MyDebugTree.START_LOG);
         String email = Objects.requireNonNull(mBinding.updateEmailTextInputEditText.getText()).toString();
-        if (!validateEmail(email)) {
+        String password = Objects.requireNonNull(mBinding.emailPasswordTextInputEditText.getText()).toString();
+        if (!validateEmail(email, password)) {
             return;
         }
-        mUserViewModel.updateEmail(email);
+        mUserViewModel.updateEmail(email, password);
     }
 
 
