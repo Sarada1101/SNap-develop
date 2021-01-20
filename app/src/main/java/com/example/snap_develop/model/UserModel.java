@@ -434,7 +434,6 @@ public class UserModel extends Firebase {
         this.firestoreConnect();
         this.storageConnect();
 
-        //datetimeが1時間前より大きいかつ、typeがpostの投稿を取得する
         //users/{uid}
         firestore.collection("users")
                 .document(uid)

@@ -62,11 +62,14 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_user);
         setTitle("ユーザー情報");
 
+        // ViewModelの初期化
         mUserViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         mPostViewModel = new ViewModelProvider(this).get(PostViewModel.class);
         mFollowViewModel = new ViewModelProvider(this).get(FollowViewModel.class);
+        // DataBindingと画面の紐付け
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_user);
 
+        // 画面下部のタブの表示
         TabLayout.Tab tabAt = Objects.requireNonNull(mBinding.buttonTabLayout.getTabAt(MainApplication.USER_POS));
         tabAt.select();
         Objects.requireNonNull(tabAt.getIcon()).setColorFilter(ContextCompat.getColor(this, R.color.colorPrimary),
@@ -77,7 +80,9 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mBinding.followRequestButton.setOnClickListener(this);
         mBinding.buttonTabLayout.addOnTabSelectedListener(this);
 
-        // ユーザー情報を取得したら投稿リストを取得する
+        // mUserViewModelでgetUserメソッドで取得できるuserをobserveで監視
+        // 監視しているuserが変更されたらonChangedを実行
+        // userに格納されたユーザー情報はDataBindingで自動的に画面に表示
         mUserViewModel.getUser().observe(this, new Observer<UserBean>() {
             @Override
             public void onChanged(UserBean userBean) {
@@ -94,6 +99,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 Timber.i(MyDebugTree.START_LOG);
                 Timber.i(String.format("%s %s=%s", MyDebugTree.INPUT_LOG, "postList", postList));
 
+                // リスト表示
                 mAdapter = new UserAdapter(UserActivity.this, postList, mUserViewModel.getUser().getValue());
                 mRecyclerView = mBinding.userRecyclerView;
                 LinearLayoutManager llm = new LinearLayoutManager(UserActivity.this);
@@ -105,6 +111,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
                 mPostList = postList;
 
+                // リストの項目をスワイプできるようにする
                 ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
                     @Override
                     public boolean onMove(@NonNull RecyclerView recyclerView,
@@ -112,10 +119,12 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         return false;
                     }
 
+                    // 項目を端までスワイプした時に実行
                     @Override
                     public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
                         final int swipedPosition = viewHolder.getAdapterPosition();
 
+                        // 確認のダイアログを表示
                         new AlertDialog.Builder(viewHolder.itemView.getContext())
                                 .setMessage("投稿を削除しますか？")
                                 .setPositiveButton(R.string.yesMessage, new DialogInterface.OnClickListener() {
@@ -138,6 +147,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                                 .show();
                     }
 
+                    // 項目をスワイプする時に実行
+                    // ここではスワイプしたときに表示されるアイコンや背景の色を設定している
                     @Override
                     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
                             @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState,
@@ -145,7 +156,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                         View itemView = viewHolder.itemView;
 
-                        // キャンセルされた時
+                        // キャンセルされた時にもとのリストに戻す
                         if (dX == 0f && !isCurrentlyActive) {
                             clearCanvas(c, itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(),
                                     itemView.getBottom());
@@ -153,8 +164,10 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                             return;
                         }
 
+                        // 表示するアイコン
                         Drawable deleteIcon = Objects.requireNonNull(
                                 ContextCompat.getDrawable(getApplication(), R.drawable.ic_delete));
+                        // 背景の色
                         ColorDrawable background = new ColorDrawable();
                         background.setColor(getResources().getColor(R.color.colorDanger));
                         background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(),
@@ -216,6 +229,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             mFollowViewModel.checkApprovalPendingFollow(mUserViewModel.getCurrentUser().getUid(), mUid);
         }
 
+        // DataBindingにmUserViewModelを紐付け
         mBinding.setUserViewModel(mUserViewModel);
         mBinding.setLifecycleOwner(this);
     }
@@ -233,6 +247,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    // リストから項目を削除する
     private void listRemove(int position) {
         mPostList.remove(position);
         Objects.requireNonNull(mBinding.userRecyclerView.getAdapter()).notifyItemRemoved(position);
@@ -240,6 +255,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    // 画面右上のメニューアイコンを表示
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Timber.i(MyDebugTree.START_LOG);
@@ -249,6 +265,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    // メニューの項目を選択した時
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Timber.i(MyDebugTree.START_LOG);
