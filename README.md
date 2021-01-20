@@ -95,9 +95,13 @@ Firebase Cloud Function<br>
 https://github.com/NekoSarada1101/SNap-firebase-cloud-function
 
 ## 使用方法
+Gitでのクローン
 ```
 git clone https://github.com/NekoSarada1101/SNap-develop.git
 ```
+またはダウンロード  
+<img width=500px src="https://user-images.githubusercontent.com/46714670/105123895-43d24e00-5b1c-11eb-941a-d9efebc7f6b2.png">
+
 
 ## ライセンス
 [MIT](https://github.com/NekoSarada1101/SNap-develop/blob/main/LICENSE)
