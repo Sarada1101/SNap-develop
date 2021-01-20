@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -215,7 +216,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         // 他人のユーザー情報を表示する時（uidがIntentに設定されている時）
         mUid = getIntent().getStringExtra("uid");
-        if (mUid == null || mUid.equals(mUserViewModel.getCurrentUser().getUid())) {
+        if (TextUtils.isEmpty(mUid) || TextUtils.equals(mUid, mUserViewModel.getCurrentUser().getUid())) {
             // 自分のユーザー情報を表示する時（uidがIntentに設定されていない時）
             mUid = mUserViewModel.getCurrentUser().getUid();
             mBinding.followRequestButton.setText("フォロー申請/承認");
@@ -224,7 +225,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         mUserViewModel.fetchUserInfo(mUid);
 
-        if (!mUserViewModel.getCurrentUser().getUid().equals(mUid)) {
+        if (!TextUtils.equals(mUid, mUserViewModel.getCurrentUser().getUid())) {
             mFollowViewModel.checkFollowing(mUserViewModel.getCurrentUser().getUid(), mUid);
             mFollowViewModel.checkApprovalPendingFollow(mUserViewModel.getCurrentUser().getUid(), mUid);
         }
